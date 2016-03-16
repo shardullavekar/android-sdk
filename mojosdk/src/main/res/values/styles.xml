@@ -1,0 +1,11 @@
+<resources>
+
+    <style name="BaseTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="spinnerStyle">@style/Base.Widget.AppCompat.Spinner.Underlined</item>
+    </style>
+
+    <style name="SdkTheme" parent="@style/BaseTheme" />
+
+</resources>

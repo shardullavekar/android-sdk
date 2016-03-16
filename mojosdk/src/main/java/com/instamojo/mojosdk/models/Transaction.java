@@ -1,27 +1,34 @@
 package com.instamojo.mojosdk.models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
-
-import java.util.HashMap;
 
 /**
  * Authored by vedhavyas on 11/03/16.
  */
 
-public class Transaction {
+public class Transaction implements Parcelable {
 
-    private static final String URL = "url";
-    private static final String MERCHANT_ID = "merchant_id";
-    private String orderID;
+    @SuppressWarnings("unused")
+    public static final Parcelable.Creator<Transaction> CREATOR = new Parcelable.Creator<Transaction>() {
+        @Override
+        public Transaction createFromParcel(Parcel in) {
+            return new Transaction(in);
+        }
+
+        @Override
+        public Transaction[] newArray(int size) {
+            return new Transaction[size];
+        }
+    };
     private String name;
     private String email;
     private String phone;
     private String amount;
     private String purpose;
-    private String authToken;
-    private HashMap<String, String> extraParams = new HashMap<>();
-    private HashMap<String, String> debitCardOptions;
-    private HashMap<String, String> netBankingOptions;
+    private DebitCardOptions debitCardOptions;
+    private NetBankingOptions netBankingOptions;
 
     /**
      * Transaction model with all the Mandatory Parameters passed
@@ -31,31 +38,32 @@ public class Transaction {
      * @param phone     - Phone number of the buyer
      * @param amount    - Transaction amount
      * @param purpose   - Transaction purpose
-     * @param authToken - Auth token generated using Private Auth
      */
     public Transaction(@NonNull String name, @NonNull String email, @NonNull String phone,
-                       @NonNull String amount, @NonNull String purpose, @NonNull String authToken) {
+                       @NonNull String amount, @NonNull String purpose) {
         this.name = name;
         this.email = email;
         this.phone = phone;
         this.amount = amount;
         this.purpose = purpose;
-        this.authToken = authToken;
     }
 
-    public String getOrderID() {
-        return orderID;
-    }
-
-    public void setOrderID(String orderID) {
-        this.orderID = orderID;
+    @SuppressWarnings("unchecked")
+    protected Transaction(Parcel in) {
+        name = in.readString();
+        email = in.readString();
+        phone = in.readString();
+        amount = in.readString();
+        purpose = in.readString();
+        debitCardOptions = in.readParcelable(DebitCardOptions.class.getClassLoader());
+        netBankingOptions = in.readParcelable(NetBankingOptions.class.getClassLoader());
     }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(@NonNull String name) {
         this.name = name;
     }
 
@@ -63,7 +71,7 @@ public class Transaction {
         return email;
     }
 
-    public void setEmail(String email) {
+    public void setEmail(@NonNull String email) {
         this.email = email;
     }
 
@@ -71,7 +79,7 @@ public class Transaction {
         return phone;
     }
 
-    public void setPhone(String phone) {
+    public void setPhone(@NonNull String phone) {
         this.phone = phone;
     }
 
@@ -79,7 +87,7 @@ public class Transaction {
         return amount;
     }
 
-    public void setAmount(String amount) {
+    public void setAmount(@NonNull String amount) {
         this.amount = amount;
     }
 
@@ -87,75 +95,39 @@ public class Transaction {
         return purpose;
     }
 
-    public void setPurpose(String purpose) {
+    public void setPurpose(@NonNull String purpose) {
         this.purpose = purpose;
     }
 
-    public String getAuthToken() {
-        return authToken;
+    public DebitCardOptions getDebitCardOptions() {
+        return debitCardOptions;
     }
 
-    public void setAuthToken(String authToken) {
-        this.authToken = authToken;
-    }
-
-    /**
-     * Extra params that needs to be sent along with MojoRequest
-     *
-     * @param key   - Parameter key
-     * @param value - Parameter value
-     */
-    public void setExtraParam(String key, String value) {
-        this.extraParams.put(key, value);
-    }
-
-    public String getExtraParam(String key) {
-        return this.extraParams.get(key);
-    }
-
-    public void setDebitCardOptions(HashMap<String, String> debitCardOptions) {
+    public void setDebitCardOptions(DebitCardOptions debitCardOptions) {
         this.debitCardOptions = debitCardOptions;
     }
 
-    public void setNetBankingOptions(HashMap<String, String> netBankingOptions) {
+    public NetBankingOptions getNetBankingOptions() {
+        return netBankingOptions;
+    }
+
+    public void setNetBankingOptions(NetBankingOptions netBankingOptions) {
         this.netBankingOptions = netBankingOptions;
     }
 
-    /**
-     * Check if the current transaction has Debit card Payment Option
-     *
-     * @return true if available else false
-     */
-    public boolean isDebitCardAvailable() {
-        return this.debitCardOptions != null;
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
-    /**
-     * Check if the current transaction has Netbanking Payment option
-     *
-     * @return true if available else false
-     */
-    public boolean isNetBankingAvailable() {
-        return this.netBankingOptions != null;
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(name);
+        dest.writeString(email);
+        dest.writeString(phone);
+        dest.writeString(amount);
+        dest.writeString(purpose);
+        dest.writeParcelable(debitCardOptions, flags);
+        dest.writeParcelable(netBankingOptions, flags);
     }
-
-    /**
-     * Return merchant ID of the transaction. Should check {@link #isDebitCardAvailable()} before proceeding
-     *
-     * @return merchant ID if debit option is available else {@code null}
-     */
-    public String getMerchantId() {
-        return this.debitCardOptions.get(MERCHANT_ID);
-    }
-
-    /**
-     * Return payment url of the transaction. Should check {@link #isDebitCardAvailable()} before proceeding
-     *
-     * @return payment url if debit option is available else {@code null}
-     */
-    public String getDebitCardUrl() {
-        return this.debitCardOptions.get(URL);
-    }
-
-    //// TODO: 11/03/16 Implement netbanking methods
 }

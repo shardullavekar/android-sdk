@@ -1,3 +1,19 @@
 <resources>
     <string name="app_name">Mojo SDK</string>
+    <string name="new_payment">New Payment</string>
+    <string name="status_bar">Status bar replacement</string>
+    <string name="net_banking">Net Banking</string>
+    <string name="credit_debit_card">Credit/Debit Card</string>
+    <string name="card_number">Card Number</string>
+    <string name="date_hint">MM/YY</string>
+    <string name="name_on_card">Name on Card</string>
+    <string name="cvv_hint">CVV</string>
+    <string name="checkout">Checkout</string>
+    <string name="bank">Bank</string>
+    <string name="sbi">SBI</string>
+    <string name="icici">ICICI</string>
+    <string name="hdfc">HDFC</string>
+    <string name="axis">Axis</string>
+    <string name="pnb">PNB</string>
+    <string name="kotak">Kotak</string>
 </resources>

@@ -1,1 +1,1 @@
-include ':app', ':mojosdk'
+include ':app', ':mojosdk', ':godel-0.6.6'
