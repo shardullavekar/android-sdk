@@ -31,7 +31,7 @@ public class Transaction implements Parcelable {
     private String amount;
     private String purpose;
     private String currency;
-    private String sellerAccountID;
+    private String sellerID;
     private String webHook;
     private String mode;
     private String authToken;
@@ -47,19 +47,19 @@ public class Transaction implements Parcelable {
      * @param buyerPhone     - Phone number of the buyer
      * @param amount    - Transaction amount
      * @param purpose   - Transaction purpose
-     * @param sellerAccountID - seller account id
+     * @param sellerID - seller id
      * @param authToken - App access token generated using client id and secret
      *
      */
     public Transaction(@NonNull String buyerName, @NonNull String buyerEmail, @NonNull String buyerPhone,
-                       @NonNull String amount, @NonNull String purpose, @NonNull String sellerAccountID,
+                       @NonNull String amount, @NonNull String purpose, @NonNull String sellerID,
                        @NonNull String authToken) {
         this.buyerName = buyerName;
         this.buyerEmail = buyerEmail;
         this.buyerPhone = buyerPhone;
         this.amount = amount;
         this.purpose = purpose;
-        this.sellerAccountID = sellerAccountID;
+        this.sellerID = sellerID;
         this.currency = "INR";
         this.mode = "Android_SDK";
         this.authToken = authToken;
@@ -75,7 +75,7 @@ public class Transaction implements Parcelable {
         amount = in.readString();
         purpose = in.readString();
         currency = in.readString();
-        sellerAccountID = in.readString();
+        sellerID = in.readString();
         mode = in.readString();
         webHook = in.readString();
         authToken = in.readString();
@@ -94,7 +94,7 @@ public class Transaction implements Parcelable {
         dest.writeString(amount);
         dest.writeString(purpose);
         dest.writeString(currency);
-        dest.writeString(sellerAccountID);
+        dest.writeString(sellerID);
         dest.writeString(mode);
         dest.writeString(webHook);
         dest.writeString(authToken);
@@ -151,12 +151,12 @@ public class Transaction implements Parcelable {
         this.currency = currency;
     }
 
-    public String getSellerAccountID() {
-        return sellerAccountID;
+    public String getSellerID() {
+        return sellerID;
     }
 
-    public void setSellerAccountID(@NonNull String sellerAccountID) {
-        this.sellerAccountID = sellerAccountID;
+    public void setSellerID(@NonNull String sellerID) {
+        this.sellerID = sellerID;
     }
 
     public String getMode() {

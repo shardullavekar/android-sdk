@@ -127,7 +127,7 @@ public class Request {
                 .add("buyer_phone", transaction.getBuyerPhone())
                 .add("amount", transaction.getAmount())
                 .add("currency", transaction.getCurrency())
-                .add("seller_id", transaction.getSellerAccountID())
+                .add("seller_id", transaction.getSellerID())
                 .add("mode", transaction.getMode());
         if (transaction.getWebHook() != null) {
             builder.add("webhook", transaction.getWebHook());
