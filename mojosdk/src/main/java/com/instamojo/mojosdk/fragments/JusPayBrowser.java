@@ -1,36 +1,22 @@
 package com.instamojo.mojosdk.fragments;
 
+/**
+ * Authored by vedhavyas on 02/04/16.
+ */
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.ProgressDialog;
-import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
 
-import com.instamojo.mojosdk.R;
 import com.instamojo.mojosdk.activities.PaymentActivity;
+import com.instamojo.mojosdk.network.JavaScriptInterface;
 
+import in.juspay.godel.ui.JuspayBrowserFragment;
 
-public class JusPayBrowser extends Fragment {
-
-    private static final String content = "<!DOCTYPE html>\n" +
-            "<html lang=\"en\">\n" +
-            "<head>\n" +
-            "    <meta charset=\"UTF-8\">\n" +
-            "    <title></title>\n" +
-            "</head>\n" +
-            "<body>\n" +
-            "<script>MojoScriptInterface.onTransactionComplete(\"12345\", \"Success\")</script>\n" +
-            "</body>\n" +
-            "</html>";
-    private WebView webView;
+public class JusPayBrowser extends JuspayBrowserFragment {
 
     public JusPayBrowser() {
         // Required empty public constructor
@@ -39,40 +25,24 @@ public class JusPayBrowser extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_juspay_browser, container, false);
-        inflateXML(view);
-        return view;
+        return super.onCreateView(inflater, container, savedInstanceState);
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        loadWebView();
     }
 
     @SuppressLint({"SetJavaScriptEnabled", "AddJavascriptInterface"})
-    private void inflateXML(View view) {
-        webView = (WebView) view.findViewById(R.id.web_view);
-        webView.setWebViewClient(new WebViewClient());
-        webView.addJavascriptInterface(new JavaScriptInterface(), "MojoScriptInterface");
-        webView.getSettings().setJavaScriptEnabled(true);
-        final ProgressDialog dialog = ProgressDialog.show(getActivity(), "", "Processing...", true, false);
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
+    private void loadWebView() {
+        setupJuspayBackButtonCallbackInterface(new JuspayBackButtonCallback() {
             @Override
-            public void run() {
-                dialog.dismiss();
-                webView.loadData(content, "text/html; charset=UTF-8;", null);
+            public void transactionCancelled() {
+                ((PaymentActivity) getActivity()).returnResult(Activity.RESULT_CANCELED);
             }
-        }, 3000);
-    }
-
-    private class JavaScriptInterface {
-
-        public JavaScriptInterface() {
-        }
-
-        @android.webkit.JavascriptInterface
-        public void onTransactionComplete(String paymentID, String status) {
-            //// TODO: 15/03/16 do a check here for the payment success or failure
-            Intent intent = new Intent();
-            intent.putExtra(PaymentActivity.ORDER_ID, paymentID);
-            intent.putExtra(PaymentActivity.TRANSACTION_STATUS, status);
-            ((PaymentActivity) getActivity()).returnResult(intent, Activity.RESULT_OK);
-        }
+        });
+        getWebView().addJavascriptInterface(new JavaScriptInterface(getActivity()), "AndroidScriptInterface");
+        getWebView().getSettings().setJavaScriptEnabled(true);
     }
 }

@@ -11,17 +11,11 @@ import com.instamojo.mojosdk.models.Transaction;
  */
 public interface MojoRequestCallBack {
     /**
-     * Gets called when the Network call fails
+     * Gets called when the Network call is finished
      *
-     * @param transaction - original transaction
-     * @param exception   - Cause of Failure
+     * @param transaction - original transaction if the error is not null
+     * @param error   - Cause of Failure
      */
-    void onError(Transaction transaction, Exception exception);
+    void onFinish(Transaction transaction, Exception error);
 
-    /**
-     * Gets called on Successful network call
-     *
-     * @param transaction - Transaction with additional payment options retrieved from server
-     */
-    void onSuccess(Transaction transaction);
 }

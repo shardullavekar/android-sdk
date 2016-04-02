@@ -139,7 +139,7 @@ public class DebitCardForm extends Fragment implements View.OnClickListener {
         cvvBox.addValidator(new Validators.EmptyFieldValidator());
     }
 
-    private void changeEditBoxesState(boolean enable) {
+    public void changeEditBoxesState(boolean enable) {
         cardNumberBox.setEnabled(enable);
         nameOnCardBox.setEnabled(enable);
         dateBox.setEnabled(enable);
@@ -174,7 +174,7 @@ public class DebitCardForm extends Fragment implements View.OnClickListener {
             card.setCvv(cvv);
         }
 
-        ((FormActivity) getActivity()).checkOutWithCard(card);
+        ((FormActivity) getActivity()).checkOutWithCard(this, card);
     }
 
     @Override

@@ -10,10 +10,4 @@
     <string name="cvv_hint">CVV</string>
     <string name="checkout">Checkout</string>
     <string name="bank">Bank</string>
-    <string name="sbi">SBI</string>
-    <string name="icici">ICICI</string>
-    <string name="hdfc">HDFC</string>
-    <string name="axis">Axis</string>
-    <string name="pnb">PNB</string>
-    <string name="kotak">Kotak</string>
 </resources>

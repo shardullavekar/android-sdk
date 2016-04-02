@@ -62,9 +62,6 @@ public class NetBankingOptions implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(url);
-        if (banks == null) {
-            return;
-        }
         dest.writeInt(banks.size());
         for (HashMap.Entry<String, String> entry : banks.entrySet()) {
             dest.writeString(entry.getKey());

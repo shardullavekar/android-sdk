@@ -22,65 +22,109 @@ public class Transaction implements Parcelable {
             return new Transaction[size];
         }
     };
-    private String name;
-    private String email;
-    private String phone;
+
+    private String id;
+    private String paymentRequestID;
+    private String buyerName;
+    private String buyerEmail;
+    private String buyerPhone;
     private String amount;
     private String purpose;
+    private String currency;
+    private String sellerAccountID;
+    private String webHook;
+    private String mode;
+    private String authToken;
+    private String resourceURI;
     private DebitCardOptions debitCardOptions;
     private NetBankingOptions netBankingOptions;
 
     /**
      * Transaction model with all the Mandatory Parameters passed
      *
-     * @param name      - Name of the buyer
-     * @param email     - Email of the buyer
-     * @param phone     - Phone number of the buyer
+     * @param buyerName      - Name of the buyer
+     * @param buyerEmail     - Email of the buyer
+     * @param buyerPhone     - Phone number of the buyer
      * @param amount    - Transaction amount
      * @param purpose   - Transaction purpose
+     * @param sellerAccountID - seller account id
+     * @param authToken - App access token generated using client id and secret
+     *
      */
-    public Transaction(@NonNull String name, @NonNull String email, @NonNull String phone,
-                       @NonNull String amount, @NonNull String purpose) {
-        this.name = name;
-        this.email = email;
-        this.phone = phone;
+    public Transaction(@NonNull String buyerName, @NonNull String buyerEmail, @NonNull String buyerPhone,
+                       @NonNull String amount, @NonNull String purpose, @NonNull String sellerAccountID,
+                       @NonNull String authToken) {
+        this.buyerName = buyerName;
+        this.buyerEmail = buyerEmail;
+        this.buyerPhone = buyerPhone;
         this.amount = amount;
         this.purpose = purpose;
+        this.sellerAccountID = sellerAccountID;
+        this.currency = "INR";
+        this.mode = "Android_SDK";
+        this.authToken = authToken;
     }
 
     @SuppressWarnings("unchecked")
     protected Transaction(Parcel in) {
-        name = in.readString();
-        email = in.readString();
-        phone = in.readString();
+        id = in.readString();
+        paymentRequestID = in.readString();
+        buyerName = in.readString();
+        buyerEmail = in.readString();
+        buyerPhone = in.readString();
         amount = in.readString();
         purpose = in.readString();
+        currency = in.readString();
+        sellerAccountID = in.readString();
+        mode = in.readString();
+        webHook = in.readString();
+        authToken = in.readString();
+        resourceURI = in.readString();
         debitCardOptions = in.readParcelable(DebitCardOptions.class.getClassLoader());
         netBankingOptions = in.readParcelable(NetBankingOptions.class.getClassLoader());
     }
 
-    public String getName() {
-        return name;
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
+        dest.writeString(paymentRequestID);
+        dest.writeString(buyerName);
+        dest.writeString(buyerEmail);
+        dest.writeString(buyerPhone);
+        dest.writeString(amount);
+        dest.writeString(purpose);
+        dest.writeString(currency);
+        dest.writeString(sellerAccountID);
+        dest.writeString(mode);
+        dest.writeString(webHook);
+        dest.writeString(authToken);
+        dest.writeString(resourceURI);
+        dest.writeParcelable(debitCardOptions, flags);
+        dest.writeParcelable(netBankingOptions, flags);
     }
 
-    public void setName(@NonNull String name) {
-        this.name = name;
+    public String getBuyerName() {
+        return buyerName;
     }
 
-    public String getEmail() {
-        return email;
+    public void setBuyerName(@NonNull String buyerName) {
+        this.buyerName = buyerName;
     }
 
-    public void setEmail(@NonNull String email) {
-        this.email = email;
+    public String getBuyerEmail() {
+        return buyerEmail;
     }
 
-    public String getPhone() {
-        return phone;
+    public void setBuyerEmail(@NonNull String buyerEmail) {
+        this.buyerEmail = buyerEmail;
     }
 
-    public void setPhone(@NonNull String phone) {
-        this.phone = phone;
+    public String getBuyerPhone() {
+        return buyerPhone;
+    }
+
+    public void setBuyerPhone(@NonNull String buyerPhone) {
+        this.buyerPhone = buyerPhone;
     }
 
     public String getAmount() {
@@ -97,6 +141,66 @@ public class Transaction implements Parcelable {
 
     public void setPurpose(@NonNull String purpose) {
         this.purpose = purpose;
+    }
+
+    public String getCurrency() {
+        return currency;
+    }
+
+    public void setCurrency(@NonNull String currency) {
+        this.currency = currency;
+    }
+
+    public String getSellerAccountID() {
+        return sellerAccountID;
+    }
+
+    public void setSellerAccountID(@NonNull String sellerAccountID) {
+        this.sellerAccountID = sellerAccountID;
+    }
+
+    public String getMode() {
+        return mode;
+    }
+
+    public String getWebHook() {
+        return webHook;
+    }
+
+    public void setWebHook(@NonNull String webHook) {
+        this.webHook = webHook;
+    }
+
+    public String getAuthToken() {
+        return authToken;
+    }
+
+    public void setAuthToken(@NonNull String authToken) {
+        this.authToken = authToken;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getPaymentRequestID() {
+        return paymentRequestID;
+    }
+
+    public void setPaymentRequestID(String paymentRequestID) {
+        this.paymentRequestID = paymentRequestID;
+    }
+
+    public String getResourceURI() {
+        return resourceURI;
+    }
+
+    public void setResourceURI(String resourceURI) {
+        this.resourceURI = resourceURI;
     }
 
     public DebitCardOptions getDebitCardOptions() {
@@ -120,14 +224,4 @@ public class Transaction implements Parcelable {
         return 0;
     }
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(name);
-        dest.writeString(email);
-        dest.writeString(phone);
-        dest.writeString(amount);
-        dest.writeString(purpose);
-        dest.writeParcelable(debitCardOptions, flags);
-        dest.writeParcelable(netBankingOptions, flags);
-    }
 }

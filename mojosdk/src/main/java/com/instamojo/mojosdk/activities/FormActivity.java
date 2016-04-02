@@ -1,17 +1,18 @@
 package com.instamojo.mojosdk.activities;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.Toast;
 
 import com.instamojo.mojosdk.R;
 import com.instamojo.mojosdk.adapters.FormAdapter;
 import com.instamojo.mojosdk.callbacks.JusPayRequestCallback;
 import com.instamojo.mojosdk.fragments.DebitCardForm;
+import com.instamojo.mojosdk.fragments.NetBankingBrowser;
 import com.instamojo.mojosdk.fragments.NetBankingForm;
 import com.instamojo.mojosdk.models.Card;
 import com.instamojo.mojosdk.models.Transaction;
@@ -43,11 +44,7 @@ public class FormActivity extends BaseActivity implements View.OnClickListener {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 9) {
-            if (resultCode == RESULT_OK) {
-                returnResult(data, resultCode);
-            } else {
-                returnResult(RESULT_CANCELED);
-            }
+            returnResult(data.getExtras(), resultCode);
         }
     }
 
@@ -87,33 +84,44 @@ public class FormActivity extends BaseActivity implements View.OnClickListener {
         });
     }
 
-    public void checkOutWithCard(Card card) {
+    public void checkOutWithCard(final DebitCardForm debitCardFormFragment, Card card) {
         hideKeyboard();
+        debitCardFormFragment.changeEditBoxesState(false);
+        final ProgressDialog dialog = ProgressDialog.show(this, "", "please wait...", true, false);
         Request request = new Request(transaction, card, new JusPayRequestCallback() {
             @Override
-            public void onError(Exception e) {
-                Toast.makeText(FormActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
-            }
+            public void onFinish(Bundle bundle, Exception error) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        debitCardFormFragment.changeEditBoxesState(true);
+                    }
+                });
+                dialog.dismiss();
+                if (error != null) {
 
-            @Override
-            public void onSuccess(Bundle args) {
-                Intent intent = new Intent(FormActivity.this, PaymentActivity.class);
-                intent.putExtras(getIntent());
-                intent.putExtra(PaymentActivity.PAYMENT_BUNDLE, args);
-                startActivityForResult(intent, 9);
+                    return;
+                }
+                startPaymentActivity(PaymentActivity.Method.Juspay, bundle);
             }
         });
         request.execute();
     }
 
-    public void checkOutWithNetBanking(String bankCode) {
-        //// TODO: 16/03/16 netbanking here
+    public void startPaymentActivity(PaymentActivity.Method method, Bundle bundle) {
         Intent intent = new Intent(this, PaymentActivity.class);
         intent.putExtras(getIntent());
-        Bundle args = new Bundle();
-        args.putString("url", transaction.getNetBankingOptions().getUrl());
-        intent.putExtra(PaymentActivity.PAYMENT_BUNDLE, args);
+        intent.putExtra(PaymentActivity.METHOD, method);
+        intent.putExtra(PaymentActivity.PAYMENT_BUNDLE, bundle);
         startActivityForResult(intent, 9);
+    }
+
+    public void checkOutWithNetBanking(String bankCode) {
+        Bundle bundle = new Bundle();
+        bundle.putString(NetBankingBrowser.URL, transaction.getNetBankingOptions().getUrl());
+        bundle.putString(NetBankingBrowser.BANK_CODE, bankCode);
+        bundle.putString(NetBankingBrowser.TOKEN, transaction.getAuthToken());
+        startPaymentActivity(PaymentActivity.Method.NetBanking, bundle);
     }
 
     private void loadFragments() {

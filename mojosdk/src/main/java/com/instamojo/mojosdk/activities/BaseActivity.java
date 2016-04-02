@@ -2,6 +2,7 @@ package com.instamojo.mojosdk.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -39,10 +40,10 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
     }
 
-    public void returnResult(Intent resultIntent, int result) {
+    public void returnResult(Bundle bundle, int result) {
         Intent intent = new Intent();
-        if (resultIntent != null) {
-            intent.putExtras(resultIntent);
+        if (bundle != null) {
+            intent.putExtras(bundle);
         }
         setResult(result, intent);
         finish();

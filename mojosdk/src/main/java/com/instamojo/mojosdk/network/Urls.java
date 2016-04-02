@@ -5,6 +5,12 @@ package com.instamojo.mojosdk.network;
  */
 
 class Urls {
-    private static final String SERVER = "http://192.168.0.117:8090";
-    public static final String MOJO_TRANSACTION_INIT_URL = SERVER + "/payment/request";
+    private static final String SERVER = "https://staging.instamojo.com/v2";
+
+    public static final String MOJO_TRANSACTION_INIT_URL = SERVER + "/integrations/payments/";
+
+    public static String getMojoTransactionInitUrl() {
+        return MOJO_TRANSACTION_INIT_URL;
+    }
+
 }

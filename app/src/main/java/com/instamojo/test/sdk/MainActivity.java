@@ -1,5 +1,6 @@
 package com.instamojo.test.sdk;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -11,6 +12,7 @@ import android.widget.Toast;
 import com.instamojo.mojosdk.activities.FormActivity;
 import com.instamojo.mojosdk.activities.PaymentActivity;
 import com.instamojo.mojosdk.callbacks.MojoRequestCallBack;
+import com.instamojo.mojosdk.models.Errors;
 import com.instamojo.mojosdk.models.Transaction;
 import com.instamojo.mojosdk.network.Request;
 
@@ -26,17 +28,28 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Transaction transaction = new Transaction("vedhavyas",
-                        "vedhavyas@instamojo.com", "9663556657", "100.00", "Test purpose");
+                        "vedhavyas@instamojo.com", "9663556657",
+                        "100.00", "Test purpose", "e4ba29bce5e84aaf92e8399300ade605", "CNPtj12yUDwZ6itxsfNILIxYH0QeND");
 
-                Request request = new Request(transaction, "123456", new MojoRequestCallBack() {
+                final ProgressDialog dialog = ProgressDialog.show(MainActivity.this, "", "please wait...", true, false);
+                Request request = new Request(transaction, new MojoRequestCallBack() {
                     @Override
-                    public void onError(Transaction transaction, Exception exception) {
-                        Log.d("app", exception.getMessage());
-                        //Handle issue here
-                    }
+                    public void onFinish(Transaction transaction, Exception error) {
+                        dialog.dismiss();
+                        if (error != null) {
+                            if (error instanceof Errors.ConnectionException) {
+                                //handle no internet connection
+                                Log.d("App", "No internet connection");
+                            } else if (error instanceof Errors.ServerException) {
+                                //handle form level errors
+                                Log.d("App", "Sever error - " + error.getMessage());
+                            } else {
+                                //handle other errors
+                                Log.d("App", error.getMessage());
+                            }
+                            return;
+                        }
 
-                    @Override
-                    public void onSuccess(Transaction transaction) {
                         Intent intent = new Intent(MainActivity.this, FormActivity.class);
                         intent.putExtra(FormActivity.TRANSACTION, transaction);
                         startActivityForResult(intent, 9);
@@ -44,8 +57,13 @@ public class MainActivity extends AppCompatActivity {
                 });
 
                 request.execute();
+
             }
         });
+    }
+
+    private void showResult(Intent data) {
+
     }
 
     @Override
@@ -53,10 +71,12 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 9) {
             if (resultCode == RESULT_OK) {
+                //handle successful transaction here
                 String status = data.getStringExtra(PaymentActivity.TRANSACTION_STATUS);
                 String id = data.getStringExtra(PaymentActivity.ORDER_ID);
                 Toast.makeText(this, status + " - " + id, Toast.LENGTH_LONG).show();
             } else {
+                //handle failed transaction here
                 Toast.makeText(this, "Cancelled", Toast.LENGTH_LONG).show();
             }
         }

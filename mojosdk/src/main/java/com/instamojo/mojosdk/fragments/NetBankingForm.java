@@ -20,7 +20,6 @@ import com.instamojo.mojosdk.activities.FormActivity;
 import com.instamojo.mojosdk.adapters.SpinnerAdapter;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -31,7 +30,6 @@ import java.util.Map;
 public class NetBankingForm extends Fragment {
 
     public static final String BANKS = "banks";
-    private static final ArrayList<String> favBanksCode = new ArrayList<>(Arrays.asList("HDFC", "ICICI", "Kotak", "SBI", "PNB", "Axis"));
     private View favBanks;
     private LinearLayout favBanks1, favBanks2;
     private HashMap<String, String> banks, favBanksAvailable, otherBanks;
@@ -72,12 +70,13 @@ public class NetBankingForm extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (position == 0) {
+                    selectedBank = "";
                     return;
                 }
                 String selectedName = otherBanksName.get(position);
                 for (Map.Entry<String, String> entry : otherBanks.entrySet()) {
-                    if (entry.getValue().equalsIgnoreCase(selectedName)) {
-                        selectedBank = entry.getKey();
+                    if (entry.getKey().equalsIgnoreCase(selectedName)) {
+                        selectedBank = entry.getValue();
                         invalidateFavBanks();
                         break;
                     }
@@ -106,8 +105,9 @@ public class NetBankingForm extends Fragment {
         favBanksAvailable = new HashMap<>();
         otherBanks = new HashMap<>();
         for (Map.Entry<String, String> entry : banks.entrySet()) {
-            if (favBanksCode.contains(entry.getKey())) {
-                favBanksAvailable.put(entry.getKey(), entry.getValue());
+            String shortCode = getBankShort(entry.getKey());
+            if (shortCode != null) {
+                favBanksAvailable.put(shortCode, entry.getValue());
             } else {
                 otherBanks.put(entry.getKey(), entry.getValue());
             }
@@ -121,7 +121,7 @@ public class NetBankingForm extends Fragment {
             return;
         }
 
-        otherBanksName = new ArrayList<>(this.otherBanks.values());
+        otherBanksName = new ArrayList<>(this.otherBanks.keySet());
         Collections.sort(otherBanksName);
         otherBanksName.add(0, "Select Other Bank");
         SpinnerAdapter adapter = new SpinnerAdapter(getContext(), otherBanksName);
@@ -141,14 +141,14 @@ public class NetBankingForm extends Fragment {
             View view = LayoutInflater.from(getContext()).inflate(R.layout.bank_layout,
                     new LinearLayout(getContext()), false);
             ImageButton bank = (ImageButton) view.findViewById(R.id.bank_image);
-            if (entry.getKey().equalsIgnoreCase(selectedBank)) {
+            if (entry.getValue().equalsIgnoreCase(selectedBank)) {
                 bank.setBackgroundResource(R.drawable.circle_selected);
             }
             bank.setImageDrawable(getBankDrawable(entry.getKey()));
             bank.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    selectedBank = entry.getKey();
+                    selectedBank = entry.getValue();
                     invalidateFavBanks();
                     otherBanksSpinner.setSelection(0);
                 }
@@ -187,6 +187,26 @@ public class NetBankingForm extends Fragment {
                 return ContextCompat.getDrawable(getContext(), R.drawable.ic_kotak);
             case "PNB":
                 return ContextCompat.getDrawable(getContext(), R.drawable.ic_pnb);
+
+            default:
+                return null;
+        }
+    }
+
+    private String getBankShort(String bankName) {
+        switch (bankName) {
+            case "State Bank of India":
+                return "SBI";
+            case "ICICI Bank":
+                return "ICICI";
+            case "HDFC Bank":
+                return "HDFC";
+            case "Axis Bank":
+                return "Axis";
+            case "Kotak Mahindra Bank":
+                return "Kotak";
+            case "Punjab National Bank":
+                return "PNB";
 
             default:
                 return null;
