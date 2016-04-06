@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 
 import com.instamojo.mojosdk.callbacks.JusPayRequestCallback;
 import com.instamojo.mojosdk.callbacks.MojoRequestCallBack;
+import com.instamojo.mojosdk.fragments.JusPaySafeBrowser;
 import com.instamojo.mojosdk.models.Card;
 import com.instamojo.mojosdk.models.DebitCardOptions;
 import com.instamojo.mojosdk.models.Errors;
@@ -111,9 +112,9 @@ public class Request {
         JSONObject responseObject = new JSONObject(responseBody);
         String url = responseObject.getJSONObject("payment").getJSONObject("authentication").getString("url");
         final Bundle args = new Bundle();
-        args.putString("url", url);
-        args.putString("merchantId", transaction.getDebitCardOptions().getMerchantID());
-        args.putString("orderId", transaction.getDebitCardOptions().getOrderID());
+        args.putString(JusPaySafeBrowser.URL, url);
+        args.putString(JusPaySafeBrowser.MERCHANT_ID, transaction.getDebitCardOptions().getMerchantID());
+        args.putString(JusPaySafeBrowser.ORDER_ID, transaction.getDebitCardOptions().getOrderID());
         return args;
     }
 
@@ -127,7 +128,6 @@ public class Request {
                 .add("buyer_phone", transaction.getBuyerPhone())
                 .add("amount", transaction.getAmount())
                 .add("currency", transaction.getCurrency())
-                .add("seller_id", transaction.getSellerID())
                 .add("mode", transaction.getMode());
         if (transaction.getWebHook() != null) {
             builder.add("webhook", transaction.getWebHook());

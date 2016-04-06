@@ -2,6 +2,7 @@ package com.instamojo.mojosdk.network;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.instamojo.mojosdk.activities.PaymentActivity;
 
@@ -18,6 +19,7 @@ public class JavaScriptInterface {
 
     @android.webkit.JavascriptInterface
     public void onTransactionComplete(String status, String orderID) {
+        Log.d("sdk", status + " - " + orderID);
         if (!status.equalsIgnoreCase("Credit")) {
             ((PaymentActivity) activity).returnResult(Activity.RESULT_CANCELED);
             return;

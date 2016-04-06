@@ -16,9 +16,14 @@ import com.instamojo.mojosdk.network.JavaScriptInterface;
 
 import in.juspay.godel.ui.JuspayBrowserFragment;
 
-public class JusPayBrowser extends JuspayBrowserFragment {
+public class JusPaySafeBrowser extends JuspayBrowserFragment {
 
-    public JusPayBrowser() {
+    public static final String URL = "url";
+    public static final String MERCHANT_ID = "merchantId";
+    public static final String ORDER_ID = "orderId";
+    public static final String POST_DATA = "postData";
+
+    public JusPaySafeBrowser() {
         // Required empty public constructor
     }
 

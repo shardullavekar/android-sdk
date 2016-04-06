@@ -16,7 +16,8 @@
             android:name=".activities.PaymentActivity"
             android:label="Payment"
             android:screenOrientation="portrait"
-            android:theme="@style/SdkTheme" />
+            android:theme="@style/SdkTheme"
+            android:windowSoftInputMode="adjustResize" />
     </application>
 
 </manifest>

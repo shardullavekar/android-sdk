@@ -5,15 +5,13 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
 
 import com.instamojo.mojosdk.R;
-import com.instamojo.mojosdk.fragments.JusPayBrowser;
-import com.instamojo.mojosdk.fragments.NetBankingBrowser;
+import com.instamojo.mojosdk.fragments.JusPaySafeBrowser;
 
 public class PaymentActivity extends BaseActivity {
 
     public static final String PAYMENT_BUNDLE = "payment_bundle";
     public static final String ORDER_ID = "order_id";
     public static final String TRANSACTION_STATUS = "transaction_status";
-    public static final String METHOD = "method";
     private Fragment currentFragment;
 
     @Override
@@ -30,19 +28,13 @@ public class PaymentActivity extends BaseActivity {
     }
 
     private void showFragment() {
-        Method method = (Method) getIntent().getSerializableExtra(METHOD);
         Bundle sourceArgs = getIntent().getBundleExtra(PAYMENT_BUNDLE);
         if (sourceArgs == null) {
             returnResult(RESULT_CANCELED);
             return;
         }
 
-        Fragment fragment;
-        if (method.equals(Method.Juspay)) {
-            fragment = new JusPayBrowser();
-        } else {
-            fragment = new NetBankingBrowser();
-        }
+        JusPaySafeBrowser fragment = new JusPaySafeBrowser();
         fragment.setArguments(sourceArgs);
         getSupportFragmentManager().beginTransaction().add(R.id.container, fragment).commit();
         currentFragment = fragment;
@@ -50,15 +42,10 @@ public class PaymentActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        if (currentFragment instanceof JusPayBrowser) {
-            ((JusPayBrowser) currentFragment).juspayBackPressedHandler(true);
+        if (currentFragment instanceof JusPaySafeBrowser) {
+            ((JusPaySafeBrowser) currentFragment).juspayBackPressedHandler(true);
         } else {
             returnResult(RESULT_CANCELED);
         }
-    }
-
-    public enum Method {
-        Juspay,
-        NetBanking
     }
 }

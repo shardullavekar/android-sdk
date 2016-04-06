@@ -5,7 +5,7 @@ package com.instamojo.mojosdk.network;
  */
 
 class Urls {
-    private static final String SERVER = "https://staging.instamojo.com/v2";
+    private static final String SERVER = "https://www.instamojo.com/v2";
 
     public static final String MOJO_TRANSACTION_INIT_URL = SERVER + "/integrations/payments/";
 

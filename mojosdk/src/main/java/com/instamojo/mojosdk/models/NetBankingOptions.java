@@ -54,6 +54,10 @@ public class NetBankingOptions implements Parcelable {
         return banks;
     }
 
+    public String getPostData(String authToken, String bankCode) {
+        return "access_token=" + authToken + "&bank_code=" + bankCode;
+    }
+
     @Override
     public int describeContents() {
         return 0;

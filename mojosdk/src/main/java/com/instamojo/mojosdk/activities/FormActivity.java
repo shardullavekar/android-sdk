@@ -12,7 +12,7 @@ import com.instamojo.mojosdk.R;
 import com.instamojo.mojosdk.adapters.FormAdapter;
 import com.instamojo.mojosdk.callbacks.JusPayRequestCallback;
 import com.instamojo.mojosdk.fragments.DebitCardForm;
-import com.instamojo.mojosdk.fragments.NetBankingBrowser;
+import com.instamojo.mojosdk.fragments.JusPaySafeBrowser;
 import com.instamojo.mojosdk.fragments.NetBankingForm;
 import com.instamojo.mojosdk.models.Card;
 import com.instamojo.mojosdk.models.Transaction;
@@ -99,29 +99,28 @@ public class FormActivity extends BaseActivity implements View.OnClickListener {
                 });
                 dialog.dismiss();
                 if (error != null) {
-
+                    //// TODO: 06/04/16 check for error here
                     return;
                 }
-                startPaymentActivity(PaymentActivity.Method.Juspay, bundle);
+                startPaymentActivity(bundle);
             }
         });
         request.execute();
     }
 
-    public void startPaymentActivity(PaymentActivity.Method method, Bundle bundle) {
+    public void startPaymentActivity(Bundle bundle) {
         Intent intent = new Intent(this, PaymentActivity.class);
         intent.putExtras(getIntent());
-        intent.putExtra(PaymentActivity.METHOD, method);
         intent.putExtra(PaymentActivity.PAYMENT_BUNDLE, bundle);
         startActivityForResult(intent, 9);
     }
 
     public void checkOutWithNetBanking(String bankCode) {
         Bundle bundle = new Bundle();
-        bundle.putString(NetBankingBrowser.URL, transaction.getNetBankingOptions().getUrl());
-        bundle.putString(NetBankingBrowser.BANK_CODE, bankCode);
-        bundle.putString(NetBankingBrowser.TOKEN, transaction.getAuthToken());
-        startPaymentActivity(PaymentActivity.Method.NetBanking, bundle);
+        bundle.putString(JusPaySafeBrowser.URL, transaction.getNetBankingOptions().getUrl());
+        bundle.putString(JusPaySafeBrowser.POST_DATA, transaction.
+                getNetBankingOptions().getPostData(transaction.getAuthToken(), bankCode));
+        startPaymentActivity(bundle);
     }
 
     private void loadFragments() {

@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.instamojo.mojosdk.activities.FormActivity;
@@ -16,7 +17,21 @@ import com.instamojo.mojosdk.models.Errors;
 import com.instamojo.mojosdk.models.Transaction;
 import com.instamojo.mojosdk.network.Request;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+
 public class MainActivity extends AppCompatActivity {
+
+    private String accessToken = "KglNfa06U9LEZ3DpNeKuzk9lqN9MCD";
 
     @SuppressWarnings("ConstantConditions")
     @Override
@@ -27,10 +42,12 @@ public class MainActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Transaction transaction = new Transaction("vedhavyas",
-                        "vedhavyas@instamojo.com", "9663556657",
-                        "100.00", "Test purpose", "e4ba29bce5e84aaf92e8399300ade605", "CNPtj12yUDwZ6itxsfNILIxYH0QeND");
-
+                String name = ((EditText) findViewById(R.id.name)).getText().toString();
+                String email = ((EditText) findViewById(R.id.email)).getText().toString();
+                String phone = ((EditText) findViewById(R.id.phone)).getText().toString();
+                String amount = ((EditText) findViewById(R.id.amount)).getText().toString();
+                String purpose = ((EditText) findViewById(R.id.purpose)).getText().toString();
+                Transaction transaction = new Transaction(name, email, phone, amount, purpose, accessToken);
                 final ProgressDialog dialog = ProgressDialog.show(MainActivity.this, "", "please wait...", true, false);
                 Request request = new Request(transaction, new MojoRequestCallBack() {
                     @Override
@@ -60,10 +77,51 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
+        Button updateToken = (Button) findViewById(R.id.update_token);
+        updateToken.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                updateToken();
+            }
+        });
     }
 
-    private void showResult(Intent data) {
+    private void updateToken() {
+        final ProgressDialog dialog = ProgressDialog.show(this, "", "Please wait...", true, false);
+        OkHttpClient client = new OkHttpClient();
+        RequestBody body = new FormBody.Builder()
+                .add("grant_type", "client_credentials")
+                .add("client_id", "cNrgex0RQ3P176F0jCjFfEyCy2UnXjunM1AZCIT8")
+                .add("client_secret", "SEqtkfR4GriSPtZkwgBWKEEYCpA8nxa7Q8bDRHqJSWEX1nPyTdNL8hglzYYNvI6kCVGlLr7abPWZ0L9S77VwpBDUTGdaSM9EdZdatQQjmmeykTlyyMqiNuSQs6N6WBsW")
+                .build();
 
+        okhttp3.Request request = new okhttp3.Request.Builder()
+                .url("https://www.instamojo.com/oauth2/token/")
+                .post(body)
+                .build();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                dialog.dismiss();
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                String responseBody = response.body().string();
+                response.body().close();
+                try {
+                    JSONObject responseObject = new JSONObject(responseBody);
+                    accessToken = responseObject.getString("access_token");
+                    Log.d("App", accessToken);
+                    Log.d("App", "Updated token");
+                } catch (JSONException e) {
+                    Log.d("App", "Failed to update token");
+                }
+
+                dialog.dismiss();
+            }
+        });
     }
 
     @Override
