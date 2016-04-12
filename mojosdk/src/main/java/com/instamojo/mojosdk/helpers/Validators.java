@@ -2,13 +2,25 @@ package com.instamojo.mojosdk.helpers;
 
 import android.support.annotation.NonNull;
 
+import com.rengwuxian.materialedittext.MaterialEditText;
 import com.rengwuxian.materialedittext.validation.METValidator;
 
 /**
- * Authored by vedhavyas on 03/11/15.
+ * {@link MaterialEditText} related Validators.
+ * Can be assigned through {@link MaterialEditText#addValidator(METValidator)}
+ * and {@link MaterialEditText#validate()} should be called to validate the Edit Text.
+ *
+ *
+ * @author vedhavyas
+ * @version 1.0
+ * @since 14/03/16
  */
 public class Validators {
 
+    /**
+     * Empty field validator with Required as Default Message.
+     * Use {@link #EmptyFieldValidator(String)} to set a custom error message.
+     */
     public static class EmptyFieldValidator extends METValidator {
 
         public EmptyFieldValidator(String errorMessage) {
@@ -25,6 +37,9 @@ public class Validators {
         }
     }
 
+    /**
+     * Date validator to check the expiry date of the card.
+     */
     public static class DateValidator extends METValidator {
 
         public DateValidator() {
@@ -37,6 +52,9 @@ public class Validators {
         }
     }
 
+    /**
+     * Card validator to check the validity of the card number with all the Edge cases considered.
+     */
     public static class CardValidator extends METValidator {
 
         public CardValidator() {

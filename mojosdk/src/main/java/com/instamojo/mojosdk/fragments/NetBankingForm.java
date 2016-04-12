@@ -25,7 +25,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * A simple {@link Fragment} subclass.
+ * A simple {@link Fragment} subclass. The {@link Fragment} to show Netbamking options to User.
+ *
+ *
+ * @author vedhavyas
+ * @version 1.0
+ * @since 14/03/16
  */
 public class NetBankingForm extends Fragment {
 
@@ -38,6 +43,9 @@ public class NetBankingForm extends Fragment {
     private AppCompatSpinner otherBanksSpinner;
     private String selectedBank = "";
 
+    /**
+     * Creates a new Instance of Fragment.
+     */
     public NetBankingForm() {
         // Required empty public constructor
     }

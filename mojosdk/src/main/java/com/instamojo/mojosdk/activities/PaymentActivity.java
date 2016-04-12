@@ -7,11 +7,30 @@ import android.support.v7.widget.Toolbar;
 import com.instamojo.mojosdk.R;
 import com.instamojo.mojosdk.fragments.JusPaySafeBrowser;
 
+/**
+ * Activity subclass extending {@link BaseActivity}. Activity for {@link JusPaySafeBrowser} fragment.
+ *
+ * @author vedhavyas
+ * @version 1.0
+ * @since 14/03/16
+ */
 public class PaymentActivity extends BaseActivity {
 
+    /**
+     * Extra Bundle key passed to JuspaySafe browser.
+     */
     public static final String PAYMENT_BUNDLE = "payment_bundle";
+
+    /**
+     * Extra Bundle key for Order ID which is passed back from SDK.
+     */
     public static final String ORDER_ID = "order_id";
+
+    /**
+     * Extra Bundle key for Transaction Status which is passed back from SDK.
+     */
     public static final String TRANSACTION_STATUS = "transaction_status";
+
     private Fragment currentFragment;
 
     @Override

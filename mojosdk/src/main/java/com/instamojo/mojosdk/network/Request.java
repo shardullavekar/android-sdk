@@ -30,7 +30,12 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 /**
- * Authored by vedhavyas on 11/03/16.
+ * Network Request Class.
+ *
+ *
+ * @author vedhavyas
+ * @version 1.0
+ * @since 14/03/16
  */
 
 public class Request {
@@ -41,16 +46,23 @@ public class Request {
     private Card card;
 
     /**
-     * Network Request to retrieve the necessary data from Server
+     * Network Request to create an order ID from MOJO server.
      *
-     * @param transaction         - Transaction model with all the mandatory fields set\
-     * @param mojoRequestCallBack - Callback interface for the Asynchronous Network Call
+     * @param transaction Transaction model with all the mandatory fields set.
+     * @param mojoRequestCallBack Callback interface for the Asynchronous Network Call.
      */
     public Request(@NonNull Transaction transaction, @NonNull MojoRequestCallBack mojoRequestCallBack) {
         this.transaction = transaction;
         this.mojoRequestCallBack = mojoRequestCallBack;
     }
 
+    /**
+     * Network Request to get order details from Juspay for JuspaySafeBrowser.
+     *
+     * @param transaction           Transaction model with all the mandatory fields set.
+     * @param card                  Card with all the proper validations done.
+     * @param jusPayRequestCallback Callback for Asynchronous network call.
+     */
     public Request(@NonNull Transaction transaction, @NonNull Card card, @NonNull JusPayRequestCallback jusPayRequestCallback) {
         this.card = card;
         this.transaction = transaction;
@@ -58,7 +70,7 @@ public class Request {
     }
 
     /**
-     * Executes the call to the server and callbacks on the callback passed with either updated Data or error
+     * Executes the call to the server and calls the callback with  {@link Exception} if failed.
      */
     public void execute() {
         if (card == null) {
@@ -97,12 +109,15 @@ public class Request {
             }
 
             @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                String responseBody = response.body().string();
-                response.body().close();
+            public void onResponse(Call call, Response response) {
+                String responseBody;
                 try {
+                    responseBody = response.body().string();
+                    response.body().close();
                     Bundle bundle = parseJusPayResponse(responseBody);
                     jusPayRequestCallback.onFinish(bundle, null);
+                } catch (IOException e) {
+                    jusPayRequestCallback.onFinish(null, new Errors.ConnectionException(e.getMessage()));
                 } catch (JSONException e) {
                     jusPayRequestCallback.onFinish(null, e);
                 }
@@ -154,14 +169,17 @@ public class Request {
             }
 
             @Override
-            public void onResponse(Call call, Response r) throws IOException {
-                String response = r.body().string();
-                r.body().close();
+            public void onResponse(Call call, Response r) {
+                String responseBody = "";
                 try {
-                    updateTransactionDetails(response);
+                    responseBody = r.body().string();
+                    r.body().close();
+                    updateTransactionDetails(responseBody);
                     mojoRequestCallBack.onFinish(transaction, null);
-                } catch (Exception e) {
-                    mojoRequestCallBack.onFinish(transaction, new Errors.ServerException(response));
+                } catch (IOException e) {
+                    mojoRequestCallBack.onFinish(transaction, new Errors.ConnectionException(e.getMessage()));
+                } catch (JSONException e) {
+                    mojoRequestCallBack.onFinish(transaction, new Errors.ServerException(responseBody));
                 }
             }
         });
@@ -170,7 +188,6 @@ public class Request {
     private void updateTransactionDetails(String responseBody) throws JSONException {
         JSONObject responseObject = new JSONObject(responseBody);
         transaction.setId(responseObject.getString("id"));
-        transaction.setPaymentRequestID(responseObject.getString("payment_request_id"));
         transaction.setResourceURI(responseObject.getString("resource_uri"));
         if (responseObject.has("resource_cards")) {
             JSONObject resourceCards = responseObject.getJSONObject("resource_cards");

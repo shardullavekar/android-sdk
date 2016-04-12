@@ -1,7 +1,11 @@
 package com.instamojo.mojosdk.fragments;
 
 /**
- * Authored by vedhavyas on 02/04/16.
+ * JuspaySafe Brwoser Fragment extending {@link in.juspay.godel.ui.JuspayBrowserFragment}.
+ *
+ * @author vedhavyas
+ * @version 1.0
+ * @since 14/03/16
  */
 
 import android.annotation.SuppressLint;
@@ -23,6 +27,9 @@ public class JusPaySafeBrowser extends JuspayBrowserFragment {
     public static final String ORDER_ID = "orderId";
     public static final String POST_DATA = "postData";
 
+    /**
+     * Creates new instance of Fragment.
+     */
     public JusPaySafeBrowser() {
         // Required empty public constructor
     }

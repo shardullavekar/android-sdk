@@ -2,24 +2,32 @@ package com.instamojo.mojosdk.network;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.util.Log;
 
 import com.instamojo.mojosdk.activities.PaymentActivity;
 
 /**
- * Authored by vedhavyas on 02/04/16.
+ * JavaScript interface to transfer control from Webview to Application.
+ *
+ *
+ * @author vedhavyas
+ * @version 1.0
+ * @since 14/03/16
  */
 public class JavaScriptInterface {
 
     private Activity activity;
 
+    /**
+     * Constructor for ScriptInterface.
+     *
+     * @param activity This activity must be a subclass of {@link com.instamojo.mojosdk.activities.BaseActivity}.
+     */
     public JavaScriptInterface(Activity activity) {
         this.activity = activity;
     }
 
     @android.webkit.JavascriptInterface
     public void onTransactionComplete(String status, String orderID) {
-        Log.d("sdk", status + " - " + orderID);
         if (!status.equalsIgnoreCase("Credit")) {
             ((PaymentActivity) activity).returnResult(Activity.RESULT_CANCELED);
             return;

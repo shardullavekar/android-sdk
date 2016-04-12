@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.Toast;
 
 import com.instamojo.mojosdk.R;
 import com.instamojo.mojosdk.adapters.FormAdapter;
@@ -15,14 +16,28 @@ import com.instamojo.mojosdk.fragments.DebitCardForm;
 import com.instamojo.mojosdk.fragments.JusPaySafeBrowser;
 import com.instamojo.mojosdk.fragments.NetBankingForm;
 import com.instamojo.mojosdk.models.Card;
+import com.instamojo.mojosdk.models.NetBankingOptions;
 import com.instamojo.mojosdk.models.Transaction;
 import com.instamojo.mojosdk.network.Request;
 
 import java.util.ArrayList;
 
+/**
+ * Form activity extending the {@link BaseActivity}. Activity holding {@link DebitCardForm}
+ * and {@link NetBankingForm} fragments.
+ *
+ * @author vedhavyas
+ * @version 1.0
+ * @since 14/03/16
+ */
 public class FormActivity extends BaseActivity implements View.OnClickListener {
 
+    /**
+     * Extra key for the {@link Transaction} object that is sent through Bundle.
+     */
     public static final String TRANSACTION = "transaction";
+
+
     private ViewPager pager;
     private View debitIndicator, netBankingIndicator;
     private Transaction transaction;
@@ -84,10 +99,21 @@ public class FormActivity extends BaseActivity implements View.OnClickListener {
         });
     }
 
+    /**
+     * Request the order url from Juspay using the {@link Request Object}.
+     * The response JSON will contain the final url that will be passed on to JuspaySafe Browser for
+     * next step.
+     *
+     * @param debitCardFormFragment Fragment instance used to restore the editbox states in the fragment
+     *                              before moving to JuspaySafe.
+     * @param card                  Validated Card user object. No futher validations will be done from here and
+     *                              assumes proper validation is already done.
+     */
+
     public void checkOutWithCard(final DebitCardForm debitCardFormFragment, Card card) {
         hideKeyboard();
         debitCardFormFragment.changeEditBoxesState(false);
-        final ProgressDialog dialog = ProgressDialog.show(this, "", "please wait...", true, false);
+        final ProgressDialog dialog = ProgressDialog.show(this, "", getString(R.string.please_wait), true, false);
         Request request = new Request(transaction, card, new JusPayRequestCallback() {
             @Override
             public void onFinish(Bundle bundle, Exception error) {
@@ -99,7 +125,8 @@ public class FormActivity extends BaseActivity implements View.OnClickListener {
                 });
                 dialog.dismiss();
                 if (error != null) {
-                    //// TODO: 06/04/16 check for error here
+                    Toast.makeText(FormActivity.this, R.string.error_message_juspay,
+                            Toast.LENGTH_SHORT).show();
                     return;
                 }
                 startPaymentActivity(bundle);
@@ -108,12 +135,20 @@ public class FormActivity extends BaseActivity implements View.OnClickListener {
         request.execute();
     }
 
-    public void startPaymentActivity(Bundle bundle) {
+    private void startPaymentActivity(Bundle bundle) {
         Intent intent = new Intent(this, PaymentActivity.class);
         intent.putExtras(getIntent());
         intent.putExtra(PaymentActivity.PAYMENT_BUNDLE, bundle);
         startActivityForResult(intent, 9);
     }
+
+    /**
+     * Start the JupaySafe with the Netbanking url and bank code as
+     * received when order is generated.
+     *
+     * @param bankCode Code for the User selected bank.
+     *                 Codes list can be retrieved from {@link NetBankingOptions#getBanks()} if not null.
+     */
 
     public void checkOutWithNetBanking(String bankCode) {
         Bundle bundle = new Bundle();

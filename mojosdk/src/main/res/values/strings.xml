@@ -10,4 +10,6 @@
     <string name="cvv_hint">CVV</string>
     <string name="checkout">Checkout</string>
     <string name="bank">Bank</string>
+    <string name="error_message_juspay">Failed to Initiate Payment. Please try again!</string>
+    <string name="please_wait">please wait…</string>
 </resources>

@@ -7,7 +7,12 @@ import android.support.annotation.NonNull;
 import java.util.HashMap;
 
 /**
- * Authored by vedhavyas on 15/03/16.
+ * Netbanking options details for a transaction.
+ *
+ *
+ * @author vedhavyas
+ * @version 1.0
+ * @since 14/03/16
  */
 public class NetBankingOptions implements Parcelable {
     @SuppressWarnings("unused")
@@ -25,6 +30,12 @@ public class NetBankingOptions implements Parcelable {
     private String url;
     private HashMap<String, String> banks;
 
+    /**
+     * Constructor for Netbanking options.
+     *
+     * @param url   Url for Netbanking Options. Must not be null.
+     * @param banks HashMap with bankcode and Bank Name. Must not be null or empty.
+     */
     public NetBankingOptions(@NonNull String url, @NonNull HashMap<String, String> banks) {
         this.url = url;
         this.banks = banks;
@@ -46,15 +57,29 @@ public class NetBankingOptions implements Parcelable {
         }
     }
 
+    /**
+     * @return Netbanking URl.
+     */
     public String getUrl() {
         return url;
     }
 
+    /**
+     * @return HashMap of BankCode and BanksList.
+     */
     public HashMap<String, String> getBanks() {
         return banks;
     }
 
-    public String getPostData(String authToken, String bankCode) {
+    /**
+     * PostData to be posted with Netbanking URl.
+     *
+     * @param authToken AuthToken retrieved using Dev's Client auth keys.
+     *                  Should not use these keys in Application.
+     * @param bankCode  Bank code of the Bank user selected.
+     * @return string with form query format.
+     */
+    public String getPostData(@NonNull String authToken, @NonNull String bankCode) {
         return "access_token=" + authToken + "&bank_code=" + bankCode;
     }
 

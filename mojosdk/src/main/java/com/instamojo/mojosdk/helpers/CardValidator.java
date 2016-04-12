@@ -9,14 +9,19 @@ import java.util.Date;
 import java.util.Locale;
 
 /**
- * Authored by Vedhavyas on 12/07/15.
+ * Card Validator class to validate card details.
+ *
+ * @author vedhavyas
+ * @version 1.0
+ * @since 14/03/16
  */
 public class CardValidator {
+
     /**
-     * Luhn Alogrithm
-     *
-     * @param card card value
-     * @return valid value 0 or 1
+     * Luhn's algorithm implementation to validate the card passed.
+     * @param card Card number. Require atleast first 4 to give a valid result.
+     * @param skipLengthCheck skip the length check for Maestro cards.
+     * @return 1 for valid card , 0 for invalid card.
      */
     public static int isValid(String card, boolean skipLengthCheck) {
 
@@ -40,7 +45,7 @@ public class CardValidator {
         }
     }
 
-    public static int getDigit(int number) {
+    private static int getDigit(int number) {
 
         if (number <= 9) {
             return number;
@@ -52,7 +57,7 @@ public class CardValidator {
         }
     }
 
-    public static int sumOfOddPlace(long number) {
+    private static int sumOfOddPlace(long number) {
         int result = 0;
 
         while (number > 0) {
@@ -63,7 +68,7 @@ public class CardValidator {
         return result;
     }
 
-    public static int sumOfDoubleEvenPlace(long number) {
+    private static int sumOfDoubleEvenPlace(long number) {
 
         int result = 0;
         long temp;
@@ -77,7 +82,7 @@ public class CardValidator {
         return result;
     }
 
-    public static int prefixMatched(long number, int d) {
+    private static int prefixMatched(long number, int d) {
 
         if ((getPrefix(number, d) == 3)
                 || (getPrefix(number, d) == 4)
@@ -101,7 +106,7 @@ public class CardValidator {
         }
     }
 
-    public static int getSize(long d) {
+    private static int getSize(long d) {
 
         int count = 0;
 
@@ -115,11 +120,7 @@ public class CardValidator {
 
     }
 
-    /**
-     * Return the first k number of digits from number. If the number of digits
-     * in number is less than k, return number.
-     */
-    public static long getPrefix(long number, int k) {
+    private static long getPrefix(long number, int k) {
 
         if (getSize(number) < k) {
             return number;
@@ -137,6 +138,13 @@ public class CardValidator {
 
     }
 
+    /**
+     * Check for Visa Card.
+     *
+     * @param card Card number to be validated.
+     * @return True if card is Visa.
+     */
+
     public static boolean visaCard(String card) {
         String PREFIX = "4";
         return (
@@ -144,62 +152,119 @@ public class CardValidator {
                         && (card.length() == 13 || card.length() == 16));
     }
 
+    /**
+     * Check for Discover Card.
+     *
+     * @param card Card number to be validated.
+     * @return True if card is Discover else False.
+     */
     public static boolean discoverCard(String card) {
         String PREFIX = "6011";
         return (card.substring(0, 4).equals(PREFIX) && (card.length() == 16));
     }
 
+    /**
+     * Check for Dinner's club International Card.
+     *
+     * @param card Card Number to be validated.
+     * @return True if card is Dinner's club International else False.
+     */
     public static boolean dinnersClubInternationalCard(String card) {
         String PREFIX = "36";
         return (card.substring(0, 2).equals(PREFIX) && (card.length() == 14));
     }
 
+    /**
+     * Check for Amex Card.
+     * @param card Card Number to be validated.
+     * @return True if card is Amex else False.
+     */
     public static boolean amexCard(String card) {
         String PREFIX = "34,37,";
         String prefix2 = card.substring(0, 2) + ",";
         return ((PREFIX.contains(prefix2)) && (card.length() == 15));
     }
 
+    /**
+     * Check for Master Card.
+     * @param card Card Number to be validated.
+     * @return True if card is Master else False.
+     */
     public static boolean masterCard(String card) {
         String PREFIX = "51,52,53,54,55,";
         String prefix2 = card.substring(0, 2) + ",";
         return ((PREFIX.contains(prefix2)) && (card.length() == 16));
     }
 
+    /**
+     * Check for Visa Card.
+     * @param card Card Number to be validated, requires atleast first digit of the card.
+     * @return True if card is Visa else False.
+     */
     public static boolean visaCardWithoutLength(String card) {
         String PREFIX = "4";
         return (card.substring(0, 1).equals(PREFIX));
     }
 
+    /**
+     * Check for Discover Card.
+     * @param card Card Number to be validated, requires atleast first four digits of the card.
+     * @return True if card is Discover else False.
+     */
     public static boolean discoverCardWithoutLength(String card) {
         String PREFIX = "6011";
         return (card.substring(0, 4).equals(PREFIX));
     }
 
+    /**
+     * Check for Dinner's club International Card.
+     * @param card Card Number to be validated, requires atleast first two digits of the card.
+     * @return True if card is Dinner's club International else False.
+     */
     public static boolean dinnersClubIntWithoutLength(String card) {
         String PREFIX = "36";
         return (card.substring(0, 2).equals(PREFIX));
     }
 
+    /**
+     * Check for Amex Card.
+     * @param card Card Number to be validated, requires atleast first two digits of the card.
+     * @return True if card is Amex else False.
+     */
     public static boolean amexCardWithoutLength(String card) {
         String PREFIX = "34,37,";
         String prefix2 = card.substring(0, 2) + ",";
         return ((PREFIX.contains(prefix2)));
     }
 
+    /**
+     * Check for Master Card.
+     * @param card Card Number to be validated, requires atleast first two digits of the card.
+     * @return True if card is Master else False.
+     */
     public static boolean masterCardWithoutLength(String card) {
         String PREFIX = "51,52,53,54,55,";
         String prefix2 = card.substring(0, 2) + ",";
         return ((PREFIX.contains(prefix2)));
     }
 
+    /**
+     * Check for Maestro Card.
+     * @param card Card Number to be validated, requires atleast first four digits of the card.
+     * @return True if card is Maestro else False.
+     */
     public static boolean maestroCard(String card) {
         String PREFIX = "5018,5044,5020,5038,5893,6304,6759,6761,6762,6763,6220,";
         String prefix2 = card.substring(0, 4) + ",";
         return ((PREFIX.contains(prefix2)));
     }
 
-
+    /**
+     * Returns the drawable of the card issuer.
+     * @param card Card number with atleast first four digits.
+     * @return Drawable int of appropriate issuer if found.
+     *          Else returns drawable of {@link com.instamojo.mojosdk.R.drawable#ic_unknown_card}.
+     */
     public static int getCardDrawable(String card) {
 
         if (visaCardWithoutLength(card)) {
@@ -223,6 +288,11 @@ public class CardValidator {
         return R.drawable.ic_unknown_card;
     }
 
+    /**
+     * Returns the String Name of the card issuer.
+     * @param card Card number with atleast first four digits.
+     * @return Drawable int of appropriate issuer if found. Else returns Unknown.
+     */
     public static String getCardType(String card) {
 
         if (visaCardWithoutLength(card)) {
@@ -246,6 +316,12 @@ public class CardValidator {
         return "Unknown";
     }
 
+    /**
+     * Method to get the supposed length of the card type.
+     * @param card Card Number to validate, requires atleast first four digits of the card
+     *             to return the valid length.
+     * @return Either actual length of the card type else default 19.
+     */
     public static int validateCardTypeWithoutLengthForLimit(String card) {
         if (card.contains(" ")) {
             card = card.replace(" ", "");
@@ -271,6 +347,12 @@ public class CardValidator {
         }
         return 19;
     }
+
+    /**
+     * Check method to see if the card expiry date is valid.
+     * @param expiry Date string in the formt - MM/yy.
+     * @return True if the Date is expired Else False.
+     */
 
     public static boolean isDateExpired(String expiry) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("MM/yy", Locale.ENGLISH);

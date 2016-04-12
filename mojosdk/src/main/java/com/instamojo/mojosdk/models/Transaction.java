@@ -5,7 +5,12 @@ import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
 /**
- * Authored by vedhavyas on 11/03/16.
+ * Transaction Class to hold the details of a Transaction.
+ *
+ *
+ * @author vedhavyas
+ * @version 1.0
+ * @since 14/03/16
  */
 
 public class Transaction implements Parcelable {
@@ -24,7 +29,6 @@ public class Transaction implements Parcelable {
     };
 
     private String id;
-    private String paymentRequestID;
     private String buyerName;
     private String buyerEmail;
     private String buyerPhone;
@@ -39,14 +43,14 @@ public class Transaction implements Parcelable {
     private NetBankingOptions netBankingOptions;
 
     /**
-     * Transaction model with all the Mandatory Parameters passed
+     * Transaction model with all the Mandatory Parameters passed.
      *
-     * @param buyerName      - Name of the buyer
-     * @param buyerEmail     - Email of the buyer
-     * @param buyerPhone     - Phone number of the buyer
-     * @param amount    - Transaction amount
-     * @param purpose   - Transaction purpose
-     * @param authToken - App access token generated using client id and secret
+     * @param buyerName Name of the buyer.
+     * @param buyerEmail Email of the buyer.
+     * @param buyerPhone Phone number of the buyer.
+     * @param amount Transaction amount.
+     * @param purpose Transaction purpose.
+     * @param authToken App access token generated using client id and secret.
      *
      */
     public Transaction(@NonNull String buyerName, @NonNull String buyerEmail, @NonNull String buyerPhone,
@@ -65,7 +69,6 @@ public class Transaction implements Parcelable {
     @SuppressWarnings("unchecked")
     protected Transaction(Parcel in) {
         id = in.readString();
-        paymentRequestID = in.readString();
         buyerName = in.readString();
         buyerEmail = in.readString();
         buyerPhone = in.readString();
@@ -83,7 +86,6 @@ public class Transaction implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(id);
-        dest.writeString(paymentRequestID);
         dest.writeString(buyerName);
         dest.writeString(buyerEmail);
         dest.writeString(buyerPhone);
@@ -98,110 +100,171 @@ public class Transaction implements Parcelable {
         dest.writeParcelable(netBankingOptions, flags);
     }
 
+    /**
+     * @return buyer name if available else null.
+     */
     public String getBuyerName() {
         return buyerName;
     }
 
+    /**
+     * @param buyerName Buyer Name for this transaction. Must not be null.
+     */
     public void setBuyerName(@NonNull String buyerName) {
         this.buyerName = buyerName;
     }
 
+    /**
+     * @return buyer email if available else null.
+     */
     public String getBuyerEmail() {
         return buyerEmail;
     }
 
+    /**
+     * @param buyerEmail Email of the buyer for this transaction. Must not be null.
+     */
     public void setBuyerEmail(@NonNull String buyerEmail) {
         this.buyerEmail = buyerEmail;
     }
 
+    /**
+     * @return buyer phone for this transaction.
+     */
     public String getBuyerPhone() {
         return buyerPhone;
     }
 
+    /**
+     * @param buyerPhone Phone number of the buyer for this transaction. Must not be null.
+     */
     public void setBuyerPhone(@NonNull String buyerPhone) {
         this.buyerPhone = buyerPhone;
     }
 
+    /**
+     * @return transaction amount if available else null.
+     */
     public String getAmount() {
         return amount;
     }
 
+    /**
+     * @param amount Transaction amount for this Transaction. Must not be null.
+     */
     public void setAmount(@NonNull String amount) {
         this.amount = amount;
     }
 
+    /**
+     * @return Purpose of the Transaction if available else null.
+     */
     public String getPurpose() {
         return purpose;
     }
 
+    /**
+     * @param purpose Purpose of this transaction. Must not be null.
+     */
     public void setPurpose(@NonNull String purpose) {
         this.purpose = purpose;
     }
 
+    /**
+     * @return type of currency. Ex: INR(Default).
+     */
     public String getCurrency() {
         return currency;
     }
 
-    public void setCurrency(@NonNull String currency) {
-        this.currency = currency;
-    }
-
+    /**
+     * @return Mode of the Transaction.
+     */
     public String getMode() {
         return mode;
     }
 
+    /**
+     * @return webhook for this transaction.
+     */
     public String getWebHook() {
         return webHook;
     }
 
+    /**
+     * @param webHook Weeb hook for this transaction. Will be redirected to this URL
+     *                after payment. Should not be called unless You know what you are doing.
+     */
     public void setWebHook(@NonNull String webHook) {
         this.webHook = webHook;
     }
 
+    /**
+     * @return authToken generated for this URL.
+     */
     public String getAuthToken() {
         return authToken;
     }
 
+    /**
+     * @param authToken Auth token generated using clients secret keys.
+     */
     public void setAuthToken(@NonNull String authToken) {
         this.authToken = authToken;
     }
 
+    /**
+     * @return Transaction ID if available else null.
+     */
     public String getId() {
         return id;
     }
 
-    public void setId(String id) {
+    /**
+     * @param id Order ID of this transaction. Must not be null.
+     */
+    public void setId(@NonNull String id) {
         this.id = id;
     }
 
-    public String getPaymentRequestID() {
-        return paymentRequestID;
-    }
-
-    public void setPaymentRequestID(String paymentRequestID) {
-        this.paymentRequestID = paymentRequestID;
-    }
-
+    /**
+     * @return resourceURI of the Seller.
+     */
     public String getResourceURI() {
         return resourceURI;
     }
 
-    public void setResourceURI(String resourceURI) {
+    /**
+     * @param resourceURI resource URI of the seller. Must not be null.
+     */
+    public void setResourceURI(@NonNull String resourceURI) {
         this.resourceURI = resourceURI;
     }
 
+    /**
+     * @return {@link DebitCardOptions} if available. Else null.
+     */
     public DebitCardOptions getDebitCardOptions() {
         return debitCardOptions;
     }
 
+    /**
+     * @param debitCardOptions Debit card options for this transaction. Can be null.
+     */
     public void setDebitCardOptions(DebitCardOptions debitCardOptions) {
         this.debitCardOptions = debitCardOptions;
     }
 
+    /**
+     * @return {@link NetBankingOptions} if available. Else null.
+     */
     public NetBankingOptions getNetBankingOptions() {
         return netBankingOptions;
     }
 
+    /**
+     * @param netBankingOptions Netbanking options for this Transaction. Can be null.
+     */
     public void setNetBankingOptions(NetBankingOptions netBankingOptions) {
         this.netBankingOptions = netBankingOptions;
     }

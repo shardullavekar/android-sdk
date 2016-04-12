@@ -7,11 +7,25 @@ import android.support.v4.app.FragmentPagerAdapter;
 import java.util.ArrayList;
 
 /**
- * Authored by vedhavyas on 14/03/16.
+ * View Pager adapter for {@link com.instamojo.mojosdk.activities.FormActivity}
+ *
+ *
+ * @author vedhavyas
+ * @version 1.0
+ * @since 14/03/16
  */
+
 public class FormAdapter extends FragmentPagerAdapter {
 
     private ArrayList<Fragment> fragments;
+
+    /**
+     * Initiate the Adapter with {@link FragmentManager} and {@link java.util.ArrayList<Fragment>}.
+     *
+     * @param fm        {@link FragmentManager} to manage the {@link Fragment}.
+     * @param fragments {@link ArrayList<Fragment>} holding {@link com.instamojo.mojosdk.fragments.DebitCardForm}
+     *                  or {@link com.instamojo.mojosdk.fragments.NetBankingForm} or both fragments.
+     */
 
     public FormAdapter(FragmentManager fm, ArrayList<Fragment> fragments) {
         super(fm);

@@ -13,7 +13,13 @@ import com.instamojo.mojosdk.R;
 import java.util.ArrayList;
 
 /**
- * Authored by vedhavyas on 05/10/15.
+ * Spinner adapter for the Banks other than the Favourite Banks
+ * in {@link com.instamojo.mojosdk.fragments.NetBankingForm}.
+ *
+ *
+ * @author vedhavyas
+ * @version 1.0
+ * @since 14/03/16
  */
 public class SpinnerAdapter extends BaseAdapter implements android.widget.SpinnerAdapter {
 
@@ -21,6 +27,12 @@ public class SpinnerAdapter extends BaseAdapter implements android.widget.Spinne
     private Context context;
     private TextView textView;
 
+    /**
+     * Initiate the Adapter with activity context and {@link ArrayList} of Bank Names.
+     *
+     * @param context - {@link Context} Of Activity.
+     * @param list    - {@link ArrayList<String>} of Bank Names.
+     */
     public SpinnerAdapter(Context context, ArrayList<String> list) {
         this.context = context;
         this.list = list;

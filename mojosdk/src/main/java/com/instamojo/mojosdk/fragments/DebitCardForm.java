@@ -22,7 +22,12 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * A simple {@link Fragment} subclass.
+ * A simple {@link Fragment} subclass. The {@link Fragment} to get Debit Card details from user.
+ *
+ *
+ * @author vedhavyas
+ * @version 1.0
+ * @since 14/03/16
  */
 public class DebitCardForm extends Fragment implements View.OnClickListener {
 
@@ -30,6 +35,9 @@ public class DebitCardForm extends Fragment implements View.OnClickListener {
     private MaterialEditText cardNumberBox, nameOnCardBox, cvvBox, dateBox;
     private List<MaterialEditText> editTexts;
 
+    /**
+     * Creates a new instance of Fragment
+     */
     public DebitCardForm() {
         // Required empty public constructor
     }
@@ -138,6 +146,12 @@ public class DebitCardForm extends Fragment implements View.OnClickListener {
         dateBox.addValidator(new Validators.DateValidator());
         cvvBox.addValidator(new Validators.EmptyFieldValidator());
     }
+
+    /**
+     * Method to change the state of the UI elements in the form.
+     *
+     * @param enable True to enable or False to disable.
+     */
 
     public void changeEditBoxesState(boolean enable) {
         cardNumberBox.setEnabled(enable);

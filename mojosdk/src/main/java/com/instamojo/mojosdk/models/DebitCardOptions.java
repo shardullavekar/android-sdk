@@ -5,7 +5,13 @@ import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
 /**
- * Authored by vedhavyas on 15/03/16.
+ * DebitCardOptions object that holds the Card transaction information received from Mojo Server
+ * for a particular order.
+ *
+ *
+ * @author vedhavyas
+ * @version 1.0
+ * @since 14/03/16
  */
 public class DebitCardOptions implements Parcelable {
     @SuppressWarnings("unused")
@@ -24,6 +30,13 @@ public class DebitCardOptions implements Parcelable {
     private String url;
     private String merchantID;
 
+    /**
+     * Constructor for DebitCardOptions.
+     *
+     * @param orderID    Order ID of the Transaction. Should not be Null.
+     * @param merchantID Merchant ID of the transaction. Should not be Null.
+     * @param url        Juspay Url to get the final 3D-secure Url.
+     */
     public DebitCardOptions(@NonNull String orderID, @NonNull String merchantID, @NonNull String url) {
         this.orderID = orderID;
         this.url = url;
@@ -36,14 +49,23 @@ public class DebitCardOptions implements Parcelable {
         merchantID = in.readString();
     }
 
+    /**
+     * @return orderId of the current transaction.
+     */
     public String getOrderID() {
         return orderID;
     }
 
+    /**
+     * @return Juspay url for the current transaction.
+     */
     public String getUrl() {
         return url;
     }
 
+    /**
+     * @return Merchant ID for the current transaction.
+     */
     public String getMerchantID() {
         return merchantID;
     }
