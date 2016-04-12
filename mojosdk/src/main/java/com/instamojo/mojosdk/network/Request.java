@@ -1,8 +1,10 @@
 package com.instamojo.mojosdk.network;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 
+import com.instamojo.mojosdk.BuildConfig;
 import com.instamojo.mojosdk.callbacks.JusPayRequestCallback;
 import com.instamojo.mojosdk.callbacks.MojoRequestCallBack;
 import com.instamojo.mojosdk.fragments.JusPaySafeBrowser;
@@ -22,6 +24,7 @@ import java.util.HashMap;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.FormBody;
+import okhttp3.Headers;
 import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
 import okhttp3.Response;
@@ -133,10 +136,14 @@ public class Request {
             builder.add("webhook", transaction.getWebHook());
         }
         RequestBody body = builder.build();
+        HashMap<String, String> headers = new HashMap<>();
+        headers.put("User-Agent", getUserAgent());
+        headers.put("Authorization", "Bearer " + transaction.getAuthToken());
 
         okhttp3.Request request = new okhttp3.Request.Builder()
                 .url(Urls.MOJO_TRANSACTION_INIT_URL)
-                .addHeader("Authorization", "Bearer " + transaction.getAuthToken())
+                .removeHeader("User-Agent")
+                .headers(Headers.of(headers))
                 .post(body)
                 .build();
 
@@ -185,6 +192,11 @@ public class Request {
             }
             transaction.setNetBankingOptions(new NetBankingOptions(nbURL, banks));
         }
+    }
+
+    private String getUserAgent() {
+        return "Android Mojo SDK;" + Build.MODEL + ";" + Build.BRAND + ";" + Build.VERSION.SDK_INT
+                + ";" + BuildConfig.APPLICATION_ID + ";" + BuildConfig.VERSION_NAME + ";" + BuildConfig.VERSION_CODE;
     }
 
 }
