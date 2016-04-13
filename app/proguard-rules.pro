@@ -56,9 +56,9 @@
 }
 
 -keepattributes JavascriptInterface
--keep public class com.instamojo.p2p.helpers.JavaScriptInterface
--keep public class * implements com.instamojo.p2p.helpers.JavaScriptInterface
--keepclassmembers class com.instamojo.p2p.helpers.JavaScriptInterface {
+-keep public class com.instamojo.mojosdk.network.JavaScriptInterface
+-keep public class * implements com.instamojo.mojosdk.network.JavaScriptInterface
+-keepclassmembers class com.instamojo.mojosdk.network.JavaScriptInterface{
     <methods>;
 }
 
@@ -67,7 +67,7 @@
 # platform version.  We know about them, and they are safe.
 -dontwarn android.support.**
 
-# Keep source file names, line numbers, and Parse class/method names for easier debugging
+# Keep source file names, line numbers for easier debugging
 -keepattributes SourceFile,LineNumberTable
 
 -keepattributes Signature

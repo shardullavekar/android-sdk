@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
                             return;
                         }
 
-                        Intent intent = new Intent(MainActivity.this, FormActivity.class);
+                        Intent intent = new Intent(getBaseContext(), FormActivity.class);
                         intent.putExtra(FormActivity.TRANSACTION, transaction);
                         startActivityForResult(intent, 9);
                     }
