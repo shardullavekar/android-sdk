@@ -187,6 +187,10 @@ public class Card implements Parcelable {
      * @return True if Valid. Else False.
      */
     public boolean isCardNumberValid() {
+        if (cardNumber == null || cardNumber.isEmpty()) {
+            return false;
+        }
+
         int result;
         if (CardValidator.masterCardWithoutLength(cardNumber)
                 || CardValidator.dinnersClubIntWithoutLength(cardNumber)

@@ -10,7 +10,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.instamojo.android.activities.FormActivity;
 import com.instamojo.android.activities.PaymentActivity;
 import com.instamojo.android.callbacks.OrderRequestCallBack;
 import com.instamojo.android.models.Errors;
@@ -67,8 +66,14 @@ public class MainActivity extends AppCompatActivity {
                             return;
                         }
 
-                        Intent intent = new Intent(getBaseContext(), FormActivity.class);
-                        intent.putExtra(FormActivity.TRANSACTION, transaction);
+//                        //Using Pre created UI
+//                        Intent intent = new Intent(getBaseContext(), FormActivity.class);
+//                        intent.putExtra(FormActivity.TRANSACTION, transaction);
+//                        startActivityForResult(intent, 9);
+
+                        //Custom UI Implementation
+                        Intent intent = new Intent(getBaseContext(), CustomChoosePaymentActivity.class);
+                        intent.putExtra(CustomChoosePaymentActivity.TRANSACTION, transaction);
                         startActivityForResult(intent, 9);
                     }
                 });
@@ -113,7 +118,6 @@ public class MainActivity extends AppCompatActivity {
                 try {
                     JSONObject responseObject = new JSONObject(responseBody);
                     accessToken = responseObject.getString("access_token");
-                    Log.d("App", accessToken);
                     Log.d("App", "Updated token");
                 } catch (JSONException e) {
                     Log.d("App", "Failed to update token");
