@@ -10,7 +10,7 @@
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:layout_gravity="center_horizontal"
-        android:background="@drawable/circle"
+        android:background="@drawable/square"
         android:contentDescription="@string/bank"
         android:src="@drawable/ic_sbi" />
 

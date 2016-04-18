@@ -150,7 +150,7 @@ public class NetBankingForm extends Fragment {
                     new LinearLayout(getContext()), false);
             ImageButton bank = (ImageButton) view.findViewById(R.id.bank_image);
             if (entry.getValue().equalsIgnoreCase(selectedBank)) {
-                bank.setBackgroundResource(R.drawable.circle_selected);
+                bank.setBackgroundResource(R.drawable.square_selected);
             }
             bank.setImageDrawable(getBankDrawable(entry.getKey()));
             bank.setOnClickListener(new View.OnClickListener() {
