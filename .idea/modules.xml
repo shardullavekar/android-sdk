@@ -2,10 +2,11 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/InstamojoSDK/InstamojoSDK.iml" filepath="$PROJECT_DIR$/InstamojoSDK/InstamojoSDK.iml" />
       <module fileurl="file://$PROJECT_DIR$/MojoSDKSampleApp.iml" filepath="$PROJECT_DIR$/MojoSDKSampleApp.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/godel-0.6.6/godel-0.6.6.iml" filepath="$PROJECT_DIR$/godel-0.6.6/godel-0.6.6.iml" />
-      <module fileurl="file://$PROJECT_DIR$/mojosdk/mojosdk.iml" filepath="$PROJECT_DIR$/mojosdk/mojosdk.iml" />
+      <module fileurl="file://$PROJECT_DIR$/InstamojoSDK/mojosdk.iml" filepath="$PROJECT_DIR$/InstamojoSDK/mojosdk.iml" />
     </modules>
   </component>
 </project>

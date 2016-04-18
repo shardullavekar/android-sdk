@@ -8,17 +8,17 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/InstamojoSDK" />
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/godel-0.6.6" />
-            <option value="$PROJECT_DIR$/mojosdk" />
           </set>
         </option>
         <option name="myModules">
           <set>
             <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/InstamojoSDK" />
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/godel-0.6.6" />
-            <option value="$PROJECT_DIR$/mojosdk" />
           </set>
         </option>
       </GradleProjectSettings>

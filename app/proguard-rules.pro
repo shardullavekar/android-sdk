@@ -56,9 +56,9 @@
 }
 
 -keepattributes JavascriptInterface
--keep public class com.instamojo.mojosdk.network.JavaScriptInterface
--keep public class * implements com.instamojo.mojosdk.network.JavaScriptInterface
--keepclassmembers class com.instamojo.mojosdk.network.JavaScriptInterface{
+-keep public class com.instamojo.android.network.JavaScriptInterface
+-keep public class * implements com.instamojo.android.network.JavaScriptInterface
+-keepclassmembers class com.instamojo.android.network.JavaScriptInterface{
     <methods>;
 }
 

@@ -10,12 +10,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.instamojo.mojosdk.activities.FormActivity;
-import com.instamojo.mojosdk.activities.PaymentActivity;
-import com.instamojo.mojosdk.callbacks.MojoRequestCallBack;
-import com.instamojo.mojosdk.models.Errors;
-import com.instamojo.mojosdk.models.Transaction;
-import com.instamojo.mojosdk.network.Request;
+import com.instamojo.android.activities.FormActivity;
+import com.instamojo.android.activities.PaymentActivity;
+import com.instamojo.android.callbacks.OrderRequestCallBack;
+import com.instamojo.android.models.Errors;
+import com.instamojo.android.models.Transaction;
+import com.instamojo.android.network.Request;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
                 String purpose = ((EditText) findViewById(R.id.purpose)).getText().toString();
                 Transaction transaction = new Transaction(name, email, phone, amount, purpose, accessToken);
                 final ProgressDialog dialog = ProgressDialog.show(MainActivity.this, "", "please wait...", true, false);
-                Request request = new Request(transaction, new MojoRequestCallBack() {
+                Request request = new Request(transaction, new OrderRequestCallBack() {
                     @Override
                     public void onFinish(Transaction transaction, Exception error) {
                         dialog.dismiss();
