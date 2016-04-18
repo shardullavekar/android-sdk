@@ -72,8 +72,8 @@ public class MainActivity extends AppCompatActivity {
 //                        startActivityForResult(intent, 9);
 
                         //Custom UI Implementation
-                        Intent intent = new Intent(getBaseContext(), CustomChoosePaymentActivity.class);
-                        intent.putExtra(CustomChoosePaymentActivity.TRANSACTION, transaction);
+                        Intent intent = new Intent(getBaseContext(), CustomPaymentMethodActivity.class);
+                        intent.putExtra(CustomPaymentMethodActivity.TRANSACTION, transaction);
                         startActivityForResult(intent, 9);
                     }
                 });

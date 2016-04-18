@@ -23,7 +23,7 @@ import com.instamojo.android.network.Request;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class CustomChoosePaymentActivity extends AppCompatActivity {
+public class CustomPaymentMethodActivity extends AppCompatActivity {
 
     public static final String TRANSACTION = "transaction";
 
