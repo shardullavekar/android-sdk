@@ -42,6 +42,7 @@ public class NetBankingForm extends Fragment {
     private FormActivity formActivity;
     private AppCompatSpinner otherBanksSpinner;
     private String selectedBank = "";
+    private boolean rogueCall = true;
 
     /**
      * Creates a new Instance of Fragment.
@@ -63,7 +64,7 @@ public class NetBankingForm extends Fragment {
             return view;
         }
         inflateXML(view);
-        getFavBanksAvailable();
+        loadFavBanks();
         invalidateFavBanks();
         invalidateOtherBanks();
         return view;
@@ -78,6 +79,10 @@ public class NetBankingForm extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (position == 0) {
+                    if (rogueCall) {
+                        rogueCall = false;
+                        return;
+                    }
                     selectedBank = "";
                     return;
                 }
@@ -109,11 +114,11 @@ public class NetBankingForm extends Fragment {
         });
     }
 
-    private void getFavBanksAvailable() {
+    private void loadFavBanks() {
         favBanksAvailable = new HashMap<>();
         otherBanks = new HashMap<>();
         for (Map.Entry<String, String> entry : banks.entrySet()) {
-            String shortCode = getBankShort(entry.getKey());
+            String shortCode = getBankShort(entry.getValue());
             if (shortCode != null) {
                 favBanksAvailable.put(shortCode, entry.getValue());
             } else {
@@ -152,12 +157,13 @@ public class NetBankingForm extends Fragment {
             if (entry.getValue().equalsIgnoreCase(selectedBank)) {
                 bank.setBackgroundResource(R.drawable.square_selected);
             }
-            bank.setImageDrawable(getBankDrawable(entry.getKey()));
+            bank.setImageDrawable(getBankDrawable(entry.getValue()));
             bank.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     selectedBank = entry.getValue();
                     invalidateFavBanks();
+                    rogueCall = true;
                     otherBanksSpinner.setSelection(0);
                 }
             });
@@ -183,17 +189,17 @@ public class NetBankingForm extends Fragment {
 
     private Drawable getBankDrawable(String bankCode) {
         switch (bankCode) {
-            case "HDFC":
-                return ContextCompat.getDrawable(getContext(), R.drawable.ic_hdfc);
-            case "ICICI":
-                return ContextCompat.getDrawable(getContext(), R.drawable.ic_icici);
-            case "Axis":
-                return ContextCompat.getDrawable(getContext(), R.drawable.ic_axis);
-            case "SBI":
+            case "1":
                 return ContextCompat.getDrawable(getContext(), R.drawable.ic_sbi);
-            case "Kotak":
+            case "2":
+                return ContextCompat.getDrawable(getContext(), R.drawable.ic_icici);
+            case "3":
+                return ContextCompat.getDrawable(getContext(), R.drawable.ic_hdfc);
+            case "4":
+                return ContextCompat.getDrawable(getContext(), R.drawable.ic_axis);
+            case "5":
                 return ContextCompat.getDrawable(getContext(), R.drawable.ic_kotak);
-            case "PNB":
+            case "6":
                 return ContextCompat.getDrawable(getContext(), R.drawable.ic_pnb);
 
             default:
@@ -201,19 +207,19 @@ public class NetBankingForm extends Fragment {
         }
     }
 
-    private String getBankShort(String bankName) {
-        switch (bankName) {
-            case "State Bank of India":
+    private String getBankShort(String bankCode) {
+        switch (bankCode) {
+            case "1":
                 return "SBI";
-            case "ICICI Bank":
+            case "2":
                 return "ICICI";
-            case "HDFC Bank":
+            case "3":
                 return "HDFC";
-            case "Axis Bank":
+            case "4":
                 return "Axis";
-            case "Kotak Mahindra Bank":
+            case "5":
                 return "Kotak";
-            case "Punjab National Bank":
+            case "6":
                 return "PNB";
 
             default:
