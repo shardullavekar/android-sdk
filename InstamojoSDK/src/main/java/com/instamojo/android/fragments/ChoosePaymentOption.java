@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 
 import com.instamojo.android.R;
 import com.instamojo.android.activities.PaymentDetailsActivity;
+import com.instamojo.android.helpers.Logger;
 import com.instamojo.android.models.Transaction;
 
 /**
@@ -46,15 +47,18 @@ public class ChoosePaymentOption extends BaseFragment implements View.OnClickLis
         View netBankingLayout = view.findViewById(R.id.net_banking_layout);
 
         if (transaction.getNetBankingOptions() == null) {
+            Logger.logDebug(getContext(), this.getClass().getSimpleName(), "Hiding Net banking Layout");
             netBankingLayout.setVisibility(View.GONE);
         }
 
         if (transaction.getDebitCardOptions() == null) {
+            Logger.logDebug(getContext(), this.getClass().getSimpleName(), "Hiding Card Layout");
             cardLayout.setVisibility(View.GONE);
         }
 
         cardLayout.setOnClickListener(this);
         netBankingLayout.setOnClickListener(this);
+        Logger.logDebug(getContext(), this.getClass().getSimpleName(), "Inflated XML");
     }
 
     @Override
@@ -62,8 +66,10 @@ public class ChoosePaymentOption extends BaseFragment implements View.OnClickLis
         int id = v.getId();
 
         if (id == R.id.card_layout) {
-            parentActivity.loadFragment(new DebitCardForm(), true);
+            Logger.logDebug(getContext(), this.getClass().getSimpleName(), "Starting CardForm");
+            parentActivity.loadFragment(new CardForm(), true);
         } else {
+            Logger.logDebug(getContext(), this.getClass().getSimpleName(), "Starting Net Banking Form");
             parentActivity.loadFragment(new NetBankingForm(), true);
         }
     }

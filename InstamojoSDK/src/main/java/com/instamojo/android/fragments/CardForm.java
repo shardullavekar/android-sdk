@@ -8,7 +8,6 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.AppCompatCheckBox;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +19,7 @@ import com.instamojo.android.R;
 import com.instamojo.android.activities.PaymentDetailsActivity;
 import com.instamojo.android.callbacks.JusPayRequestCallback;
 import com.instamojo.android.helpers.CardValidator;
+import com.instamojo.android.helpers.Logger;
 import com.instamojo.android.helpers.Validators;
 import com.instamojo.android.models.Card;
 import com.instamojo.android.network.Request;
@@ -36,7 +36,7 @@ import java.util.List;
  * @version 1.0
  * @since 14/03/16
  */
-public class DebitCardForm extends BaseFragment implements View.OnClickListener {
+public class CardForm extends BaseFragment implements View.OnClickListener {
 
     private static final String MONTH_YEAR_SEPARATOR = "/";
     private static final String FRAGMENT_NAME = "Card Form";
@@ -49,7 +49,7 @@ public class DebitCardForm extends BaseFragment implements View.OnClickListener 
     /**
      * Creates a new instance of Fragment
      */
-    public DebitCardForm() {
+    public CardForm() {
         // Required empty public constructor
     }
 
@@ -154,6 +154,7 @@ public class DebitCardForm extends BaseFragment implements View.OnClickListener 
         saveCardCheckBox = (AppCompatCheckBox) view.findViewById(R.id.save_card);
 
         editTexts = Arrays.asList(cardNumberBox, dateBox, nameOnCardBox, cvvBox);
+        Logger.logDebug(getContext(), this.getClass().getSimpleName(), "Inflated XML");
     }
 
     private void applyText(MaterialEditText editText, TextWatcher watcher, String text) {
@@ -212,8 +213,7 @@ public class DebitCardForm extends BaseFragment implements View.OnClickListener 
         }
 
         card.setSaveCard(saveCardCheckBox.isChecked());
-        Log.d("sdk", "" + card.canSaveCard());
-
+        Logger.logDebug(getContext(), this.getClass().getSimpleName(), "Checking Out");
         checkOut(card);
     }
 
@@ -234,6 +234,7 @@ public class DebitCardForm extends BaseFragment implements View.OnClickListener 
                 if (error != null) {
                     Toast.makeText(parentActivity, R.string.error_message_juspay,
                             Toast.LENGTH_SHORT).show();
+                    Logger.logError(this.getClass().getSimpleName(), "Card checkout failed due to - " + error.getMessage());
                     return;
                 }
                 parentActivity.startPaymentActivity(bundle);

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.os.Bundle;
 
 import com.instamojo.android.activities.PaymentActivity;
+import com.instamojo.android.helpers.Logger;
 
 /**
  * JavaScript interface to transfer control from Webview to Application.
@@ -28,6 +29,7 @@ public class JavaScriptInterface {
 
     @android.webkit.JavascriptInterface
     public void onTransactionComplete(String status, String orderID) {
+        Logger.logDebug(activity, this.getClass().getSimpleName(), "Received Call to Javascript Interface");
         if (!status.equalsIgnoreCase("Credit")) {
             ((PaymentActivity) activity).returnResult(Activity.RESULT_CANCELED);
             return;
@@ -35,6 +37,7 @@ public class JavaScriptInterface {
         Bundle bundle = new Bundle();
         bundle.putString(PaymentActivity.ORDER_ID, orderID);
         bundle.putString(PaymentActivity.TRANSACTION_STATUS, status);
+        Logger.logDebug(activity, this.getClass().getSimpleName(), "Returning result back to caller");
         ((PaymentActivity) activity).returnResult(bundle, Activity.RESULT_OK);
     }
 }

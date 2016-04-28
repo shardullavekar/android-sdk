@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.instamojo.android.activities.PaymentActivity;
+import com.instamojo.android.helpers.Logger;
 import com.instamojo.android.network.JavaScriptInterface;
 
 import in.juspay.godel.ui.JuspayBrowserFragment;
@@ -56,5 +57,6 @@ public class JusPaySafeBrowser extends JuspayBrowserFragment {
         });
         getWebView().addJavascriptInterface(new JavaScriptInterface(getActivity()), "AndroidScriptInterface");
         getWebView().getSettings().setJavaScriptEnabled(true);
+        Logger.logDebug(getContext(), this.getClass().getSimpleName(), "Loaded Webview");
     }
 }

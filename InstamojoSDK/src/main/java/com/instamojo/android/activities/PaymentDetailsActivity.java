@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import com.instamojo.android.R;
 import com.instamojo.android.fragments.BaseFragment;
 import com.instamojo.android.fragments.ChoosePaymentOption;
+import com.instamojo.android.helpers.Logger;
 import com.instamojo.android.models.Transaction;
 
 /**
@@ -60,6 +61,8 @@ public class PaymentDetailsActivity extends BaseActivity {
                 searchView.setOnQueryTextListener(onQueryTextListener);
             }
         }
+
+        Logger.logDebug(this, this.getClass().getSimpleName(), "Inflated Options Menu");
         return true;
     }
 
@@ -77,6 +80,7 @@ public class PaymentDetailsActivity extends BaseActivity {
      * @param bundle Bundle with either card/netbanking url
      */
     public void startPaymentActivity(Bundle bundle) {
+        Logger.logDebug(this, this.getClass().getSimpleName(), "Starting PaymentActivity with given Bundle");
         Intent intent = new Intent(this, PaymentActivity.class);
         intent.putExtras(getIntent());
         intent.putExtra(PaymentActivity.PAYMENT_BUNDLE, bundle);
@@ -96,6 +100,7 @@ public class PaymentDetailsActivity extends BaseActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 9) {
+            Logger.logDebug(this, this.getClass().getSimpleName(), "Returning back result to caller");
             returnResult(data.getExtras(), resultCode);
         }
     }
@@ -104,6 +109,7 @@ public class PaymentDetailsActivity extends BaseActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         updateActionBar();
+        Logger.logDebug(this, this.getClass().getSimpleName(), "Inflated XML");
     }
 
     /**
@@ -114,12 +120,14 @@ public class PaymentDetailsActivity extends BaseActivity {
     }
 
     private void loadFragments() {
+        Logger.logDebug(this, this.getClass().getSimpleName(), "looking for Transaction object...");
         transaction = getIntent().getParcelableExtra(TRANSACTION);
         if (transaction == null) {
+            Logger.logError(this.getClass().getSimpleName(), "Object not found. Sending back - Payment Cancelled");
             returnResult(RESULT_CANCELED);
             return;
         }
-
+        Logger.logDebug(this, this.getClass().getSimpleName(), "Found transaction Object. Starting PaymentOptionsFragment");
         loadFragment(new ChoosePaymentOption(), false);
     }
 
@@ -130,6 +138,7 @@ public class PaymentDetailsActivity extends BaseActivity {
      * @param addToBackStack Whether to add this fragment to back stack
      */
     public void loadFragment(BaseFragment fragment, boolean addToBackStack) {
+        Logger.logDebug(this, this.getClass().getSimpleName(), "Loading Fragment - " + fragment.getClass().getSimpleName());
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
         fragmentTransaction.replace(R.id.container, fragment);
@@ -137,6 +146,7 @@ public class PaymentDetailsActivity extends BaseActivity {
             fragmentTransaction.addToBackStack(fragment.getFragmentName());
         }
         fragmentTransaction.commit();
+        Logger.logDebug(this, this.getClass().getSimpleName(), "Loaded Fragment - " + fragment.getClass().getSimpleName());
     }
 
     /**
@@ -149,6 +159,7 @@ public class PaymentDetailsActivity extends BaseActivity {
         this.showSearch = showSearch;
         this.onQueryTextListener = queryTextListener;
         invalidateOptionsMenu();
+        Logger.logDebug(this, this.getClass().getSimpleName(), "Invalidating search option for Net banking");
     }
 
 

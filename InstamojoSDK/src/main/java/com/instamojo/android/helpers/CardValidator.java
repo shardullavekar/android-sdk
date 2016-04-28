@@ -361,6 +361,7 @@ public class CardValidator {
             Date expiryDate = dateFormat.parse(expiry);
             return expiryDate.before(new Date());
         } catch (ParseException e) {
+            Logger.logError(CardValidator.class.getSimpleName(), "Invalid Date - " + expiry);
             return true;
         }
     }

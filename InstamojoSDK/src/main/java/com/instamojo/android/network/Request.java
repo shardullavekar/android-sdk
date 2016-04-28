@@ -8,6 +8,7 @@ import com.instamojo.android.BuildConfig;
 import com.instamojo.android.callbacks.JusPayRequestCallback;
 import com.instamojo.android.callbacks.OrderRequestCallBack;
 import com.instamojo.android.fragments.JusPaySafeBrowser;
+import com.instamojo.android.helpers.Logger;
 import com.instamojo.android.models.Card;
 import com.instamojo.android.models.DebitCardOptions;
 import com.instamojo.android.models.Errors;
@@ -74,7 +75,7 @@ public class Request {
      */
     public void execute() {
         if (card == null) {
-            executeMojoRequest();
+            executeInstamojoRequest();
             return;
         }
 
@@ -105,6 +106,7 @@ public class Request {
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
+                Logger.logError(this.getClass().getSimpleName(), "Error while making Juspay request - " + e.getMessage());
                 jusPayRequestCallback.onFinish(null, new Errors.ConnectionException(e.getMessage()));
             }
 
@@ -117,8 +119,10 @@ public class Request {
                     Bundle bundle = parseJusPayResponse(responseBody);
                     jusPayRequestCallback.onFinish(bundle, null);
                 } catch (IOException e) {
+                    Logger.logError(this.getClass().getSimpleName(), "Error while making Juspay request - " + e.getMessage());
                     jusPayRequestCallback.onFinish(null, new Errors.ConnectionException(e.getMessage()));
                 } catch (JSONException e) {
+                    Logger.logError(this.getClass().getSimpleName(), "Error while making Juspay request - " + e.getMessage());
                     jusPayRequestCallback.onFinish(null, e);
                 }
             }
@@ -136,7 +140,7 @@ public class Request {
         return args;
     }
 
-    private void executeMojoRequest() {
+    private void executeInstamojoRequest() {
         OkHttpClient client = new OkHttpClient();
 
         FormBody.Builder builder = new FormBody.Builder()
@@ -165,6 +169,7 @@ public class Request {
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
+                Logger.logError(this.getClass().getSimpleName(), "Error while making Instamojo request - " + e.getMessage());
                 orderRequestCallBack.onFinish(transaction, new Errors.ConnectionException(e.getMessage()));
             }
 
@@ -177,8 +182,10 @@ public class Request {
                     updateTransactionDetails(responseBody);
                     orderRequestCallBack.onFinish(transaction, null);
                 } catch (IOException e) {
+                    Logger.logError(this.getClass().getSimpleName(), "Error while making Instamojo request - " + e.getMessage());
                     orderRequestCallBack.onFinish(transaction, new Errors.ConnectionException(e.getMessage()));
                 } catch (JSONException e) {
+                    Logger.logError(this.getClass().getSimpleName(), "Error while making Instamojo request - " + e.getMessage());
                     orderRequestCallBack.onFinish(transaction, new Errors.ServerException(responseBody));
                 }
             }

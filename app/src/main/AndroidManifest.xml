@@ -15,6 +15,11 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
+        <meta-data
+            android:name="instamojo_sdk_log_level"
+            android:value="error" />
+
         <activity
             android:name=".MainActivity"
             android:screenOrientation="portrait">

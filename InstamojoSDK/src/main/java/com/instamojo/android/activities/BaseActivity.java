@@ -9,6 +9,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
+import com.instamojo.android.helpers.Logger;
+
 import java.lang.reflect.Method;
 
 /**
@@ -60,6 +62,7 @@ public abstract class BaseActivity extends AppCompatActivity {
      */
 
     public void returnResult(Bundle bundle, int result) {
+        Logger.logDebug(this, this.getClass().getSimpleName(), "Returning back the result received");
         Intent intent = new Intent();
         if (bundle != null) {
             intent.putExtras(bundle);
@@ -113,7 +116,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         if (getSupportActionBar() == null) {
             return;
         }
-
+        Logger.logDebug(this, this.getClass().getSimpleName(), "Setting title for Toolbar");
         getSupportActionBar().setTitle(title);
     }
 }

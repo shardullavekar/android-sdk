@@ -6,6 +6,7 @@ import android.support.v7.widget.Toolbar;
 
 import com.instamojo.android.R;
 import com.instamojo.android.fragments.JusPaySafeBrowser;
+import com.instamojo.android.helpers.Logger;
 
 /**
  * Activity subclass extending {@link BaseActivity}. Activity for {@link JusPaySafeBrowser} fragment.
@@ -44,11 +45,13 @@ public class PaymentActivity extends BaseActivity {
     private void inflateXML() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        Logger.logDebug(this, this.getClass().getSimpleName(), "Inflated XML");
     }
 
     private void showFragment() {
         Bundle sourceArgs = getIntent().getBundleExtra(PAYMENT_BUNDLE);
         if (sourceArgs == null) {
+            Logger.logError(this.getClass().getSimpleName(), "Payment bundle is Null");
             returnResult(RESULT_CANCELED);
             return;
         }
@@ -57,11 +60,13 @@ public class PaymentActivity extends BaseActivity {
         fragment.setArguments(sourceArgs);
         getSupportFragmentManager().beginTransaction().add(R.id.container, fragment).commit();
         currentFragment = fragment;
+        Logger.logDebug(this, this.getClass().getSimpleName(), "Loaded Fragment - " + fragment.getClass().getSimpleName());
     }
 
     @Override
     public void onBackPressed() {
         if (currentFragment instanceof JusPaySafeBrowser) {
+            Logger.logDebug(this, this.getClass().getSimpleName(), "Invoking Juspay Cancel Payment Handler");
             ((JusPaySafeBrowser) currentFragment).juspayBackPressedHandler(true);
         } else {
             returnResult(RESULT_CANCELED);
