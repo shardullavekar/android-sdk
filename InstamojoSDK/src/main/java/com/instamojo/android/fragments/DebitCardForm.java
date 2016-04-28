@@ -1,21 +1,28 @@
 package com.instamojo.android.fragments;
 
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.AppCompatCheckBox;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
+import android.widget.Toast;
 
 import com.instamojo.android.R;
-import com.instamojo.android.activities.FormActivity;
+import com.instamojo.android.activities.PaymentDetailsActivity;
+import com.instamojo.android.callbacks.JusPayRequestCallback;
 import com.instamojo.android.helpers.CardValidator;
 import com.instamojo.android.helpers.Validators;
 import com.instamojo.android.models.Card;
+import com.instamojo.android.network.Request;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
 import java.util.Arrays;
@@ -29,11 +36,15 @@ import java.util.List;
  * @version 1.0
  * @since 14/03/16
  */
-public class DebitCardForm extends Fragment implements View.OnClickListener {
+public class DebitCardForm extends BaseFragment implements View.OnClickListener {
 
     private static final String MONTH_YEAR_SEPARATOR = "/";
+    private static final String FRAGMENT_NAME = "Card Form";
+
     private MaterialEditText cardNumberBox, nameOnCardBox, cvvBox, dateBox;
     private List<MaterialEditText> editTexts;
+    private PaymentDetailsActivity parentActivity;
+    private AppCompatCheckBox saveCardCheckBox;
 
     /**
      * Creates a new instance of Fragment
@@ -51,24 +62,37 @@ public class DebitCardForm extends Fragment implements View.OnClickListener {
     }
 
     @Override
+    public String getFragmentName() {
+        return FRAGMENT_NAME;
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_debit_card_form, container, false);
+        parentActivity = (PaymentDetailsActivity) getActivity();
         inflateXML(view);
         return view;
     }
 
-    private void inflateXML(View view) {
+    @Override
+    public void onResume() {
+        super.onResume();
+        parentActivity.updateActionBarTitle(R.string.title_fragment_credit_debit_card_form);
+    }
+
+    @Override
+    public void inflateXML(View view) {
         cardNumberBox = (MaterialEditText) view.findViewById(R.id.card_number_box);
-        cardNumberBox.setNextFocusDownId(R.id.card_date_box);
+        cardNumberBox.setNextFocusDownId(R.id.name_on_card_box);
         cardNumberBox.addTextChangedListener(new CardTextWatcher());
         cardNumberBox.addValidator(new Validators.EmptyFieldValidator());
         cardNumberBox.addValidator(new Validators.CardValidator());
         dateBox = (MaterialEditText) view.findViewById(R.id.card_date_box);
-        dateBox.setNextFocusDownId(R.id.name_on_card_box);
+        dateBox.setNextFocusDownId(R.id.cvv_box);
         nameOnCardBox = (MaterialEditText) view.findViewById(R.id.name_on_card_box);
-        nameOnCardBox.setNextFocusDownId(R.id.cvv_box);
+        nameOnCardBox.setNextFocusDownId(R.id.card_date_box);
         nameOnCardBox.addValidator(new Validators.EmptyFieldValidator());
         cvvBox = (MaterialEditText) view.findViewById(R.id.cvv_box);
         dateBox.addTextChangedListener(new TextWatcher() {
@@ -105,7 +129,7 @@ public class DebitCardForm extends Fragment implements View.OnClickListener {
 
                 applyText(dateBox, this, modifiedDate);
                 if (modifiedDate.length() == 5 && dateBox.validate()) {
-                    nameOnCardBox.requestFocus();
+                    cvvBox.requestFocus();
                 }
             }
         });
@@ -122,7 +146,12 @@ public class DebitCardForm extends Fragment implements View.OnClickListener {
             }
         });
 
-        view.findViewById(R.id.checkout).setOnClickListener(this);
+        Button checkOutButton = (Button) view.findViewById(R.id.checkout);
+        String checkoutText = "Pay ₹" + parentActivity.getTransaction().getAmount();
+        checkOutButton.setText(checkoutText);
+        checkOutButton.setOnClickListener(this);
+
+        saveCardCheckBox = (AppCompatCheckBox) view.findViewById(R.id.save_card);
 
         editTexts = Arrays.asList(cardNumberBox, dateBox, nameOnCardBox, cvvBox);
     }
@@ -147,20 +176,14 @@ public class DebitCardForm extends Fragment implements View.OnClickListener {
         cvvBox.addValidator(new Validators.EmptyFieldValidator());
     }
 
-    /**
-     * Method to change the state of the UI elements in the form.
-     *
-     * @param enable True to enable or False to disable.
-     */
-
-    public void changeEditBoxesState(boolean enable) {
+    private void changeEditBoxesState(boolean enable) {
         cardNumberBox.setEnabled(enable);
         nameOnCardBox.setEnabled(enable);
         dateBox.setEnabled(enable);
         cvvBox.setEnabled(enable);
     }
 
-    private void checkout() {
+    private void prepareCheckOut() {
         if (!isEditBoxesValid(editTexts)) {
             return;
         }
@@ -188,14 +211,42 @@ public class DebitCardForm extends Fragment implements View.OnClickListener {
             card.setCvv(cvv);
         }
 
-        ((FormActivity) getActivity()).checkOutWithCard(this, card);
+        card.setSaveCard(saveCardCheckBox.isChecked());
+        Log.d("sdk", "" + card.canSaveCard());
+
+        checkOut(card);
+    }
+
+    private void checkOut(Card card) {
+        parentActivity.hideKeyboard();
+        changeEditBoxesState(false);
+        final ProgressDialog dialog = ProgressDialog.show(parentActivity, "", getString(R.string.please_wait), true, false);
+        Request request = new Request(parentActivity.getTransaction(), card, new JusPayRequestCallback() {
+            @Override
+            public void onFinish(Bundle bundle, Exception error) {
+                parentActivity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        changeEditBoxesState(true);
+                    }
+                });
+                dialog.dismiss();
+                if (error != null) {
+                    Toast.makeText(parentActivity, R.string.error_message_juspay,
+                            Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                parentActivity.startPaymentActivity(bundle);
+            }
+        });
+        request.execute();
     }
 
     @Override
     public void onClick(View v) {
         int id = v.getId();
         if (id == R.id.checkout) {
-            checkout();
+            prepareCheckOut();
         }
     }
 
@@ -233,7 +284,7 @@ public class DebitCardForm extends Fragment implements View.OnClickListener {
             cardNumberBox.setCompoundDrawablesWithIntrinsicBounds(0, 0, drawable, 0);
 
             if (card.length() == limit) {
-                dateBox.requestFocus();
+                nameOnCardBox.requestFocus();
             }
             currentLength = cardNumberBox.getText().toString().trim().length();
         }

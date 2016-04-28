@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.StringRes;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -88,5 +89,31 @@ public abstract class BaseActivity extends AppCompatActivity {
             ((InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE)).
                     hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
         }
+    }
+
+    /**
+     * Update the toolbar accordingly
+     */
+    protected void updateActionBar() {
+        if (getSupportActionBar() == null) {
+            return;
+        }
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setDisplayShowCustomEnabled(true);
+    }
+
+    /**
+     * Update the actionbar of the associated activity
+     *
+     * @param title - title to be set to current activity's actionbar
+     */
+    public void updateActionBarTitle(@StringRes int title) {
+        if (getSupportActionBar() == null) {
+            return;
+        }
+
+        getSupportActionBar().setTitle(title);
     }
 }

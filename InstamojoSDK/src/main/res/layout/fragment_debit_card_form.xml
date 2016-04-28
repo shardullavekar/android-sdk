@@ -1,41 +1,56 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white"
-    tools:context="com.instamojo.android.activities.FormActivity">
+    android:background="@color/background"
+    android:orientation="vertical"
+    android:paddingLeft="@dimen/margin_16"
+    android:paddingRight="@dimen/margin_16"
+    tools:context=".activities.PaymentDetailsActivity">
+
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:id="@+id/card_number_box"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_10"
+        android:hint="@string/card_number"
+        android:inputType="number"
+        android:textSize="16sp"
+        app:met_errorColor="@android:color/holo_red_light"
+        app:met_floatingLabel="highlight"
+        app:met_primaryColor="@color/edit_text_color"
+        app:met_textColor="@android:color/black"
+        app:met_validateOnFocusLost="true" />
+
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:id="@+id/name_on_card_box"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_10"
+        android:hint="@string/name_on_card"
+        android:inputType="textPersonName"
+        android:textSize="16sp"
+        app:met_errorColor="@android:color/holo_red_light"
+        app:met_floatingLabel="highlight"
+        app:met_primaryColor="@color/edit_text_color"
+        app:met_textColor="@android:color/black"
+        app:met_validateOnFocusLost="true" />
 
     <LinearLayout
         android:id="@+id/top_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/activity_horizontal_margin"
-        android:layout_marginRight="@dimen/activity_horizontal_margin"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="@dimen/margin_10"
         android:baselineAligned="false"
         android:orientation="horizontal">
-
-        <com.rengwuxian.materialedittext.MaterialEditText
-            android:id="@+id/card_number_box"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_weight="3"
-            android:hint="@string/card_number"
-            android:inputType="number"
-            android:textSize="16sp"
-            app:met_errorColor="@android:color/holo_red_light"
-            app:met_floatingLabel="highlight"
-            app:met_primaryColor="@color/colorPrimary"
-            app:met_textColor="@android:color/black"
-            app:met_validateOnFocusLost="true" />
 
         <com.rengwuxian.materialedittext.MaterialEditText
             android:id="@+id/card_date_box"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="15dp"
+            android:layout_marginRight="15dp"
             android:layout_weight="1"
             android:hint="@string/date_hint"
             android:inputType="number"
@@ -43,36 +58,7 @@
             android:textSize="16sp"
             app:met_errorColor="@android:color/holo_red_light"
             app:met_floatingLabel="highlight"
-            app:met_primaryColor="@color/colorPrimary"
-            app:met_textColor="@android:color/black"
-            app:met_validateOnFocusLost="true" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/second_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/top_view"
-        android:layout_marginLeft="@dimen/activity_horizontal_margin"
-        android:layout_marginRight="@dimen/activity_horizontal_margin"
-        android:layout_marginTop="12dp"
-        android:baselineAligned="false"
-        android:orientation="horizontal">
-
-        <com.rengwuxian.materialedittext.MaterialEditText
-            android:id="@+id/name_on_card_box"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_weight="3"
-            android:hint="@string/name_on_card"
-            android:inputType="textPersonName"
-            android:textSize="16sp"
-            app:met_errorColor="@android:color/holo_red_light"
-            app:met_floatingLabel="highlight"
-            app:met_primaryColor="@color/colorPrimary"
+            app:met_primaryColor="@color/edit_text_color"
             app:met_textColor="@android:color/black"
             app:met_validateOnFocusLost="true" />
 
@@ -86,35 +72,35 @@
             android:textSize="16sp"
             app:met_errorColor="@android:color/holo_red_light"
             app:met_floatingLabel="highlight"
-            app:met_primaryColor="@color/colorPrimary"
+            app:met_primaryColor="@color/edit_text_color"
             app:met_textColor="@android:color/black"
             app:met_validateOnFocusLost="true" />
 
     </LinearLayout>
 
-    <FrameLayout
+    <android.support.v7.widget.AppCompatCheckBox
+        android:id="@+id/save_card"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_10"
+        android:checkMark="?android:attr/listChoiceIndicatorMultiple"
+        android:checked="true"
+        android:gravity="center"
+        android:text="@string/save_this_card_in_secure_vault_for_future"
+        android:textColor="@color/edit_text_color"
+        android:textSize="16sp"
+        android:theme="@style/checkBoxStyle" />
+
+    <Button
         android:id="@+id/checkout"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:layout_below="@+id/second_view"
-        android:layout_margin="@dimen/activity_horizontal_margin"
+        android:layout_marginTop="@dimen/margin_10"
         android:background="@drawable/button"
-        android:clickable="true">
+        android:gravity="center"
+        android:text="@string/checkout"
+        android:textAllCaps="false"
+        android:textColor="@android:color/white"
+        android:textSize="16sp" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:background="@null"
-            android:clickable="false"
-            android:drawableLeft="@drawable/ic_lock"
-            android:drawablePadding="6dp"
-            android:drawableStart="@drawable/ic_lock"
-            android:focusable="false"
-            android:gravity="center"
-            android:text="@string/checkout"
-            android:textColor="@android:color/white"
-            android:textSize="16sp" />
-    </FrameLayout>
-
-</RelativeLayout>
+</LinearLayout>

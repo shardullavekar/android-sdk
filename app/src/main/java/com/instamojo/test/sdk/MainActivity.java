@@ -10,8 +10,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.instamojo.android.activities.FormActivity;
 import com.instamojo.android.activities.PaymentActivity;
+import com.instamojo.android.activities.PaymentDetailsActivity;
 import com.instamojo.android.callbacks.OrderRequestCallBack;
 import com.instamojo.android.models.Errors;
 import com.instamojo.android.models.Transaction;
@@ -31,7 +31,7 @@ import okhttp3.Response;
 
 public class MainActivity extends AppCompatActivity {
 
-    private String accessToken = "KglNfa06U9LEZ3DpNeKuzk9lqN9MCD";
+    private String accessToken = "g6JbXbsliVVUYNP4ACyE9d7RtonYFr";
 
     @SuppressWarnings("ConstantConditions")
     @Override
@@ -68,8 +68,8 @@ public class MainActivity extends AppCompatActivity {
                         }
 
 //                        //Using Pre created UI
-                        Intent intent = new Intent(getBaseContext(), FormActivity.class);
-                        intent.putExtra(FormActivity.TRANSACTION, transaction);
+                        Intent intent = new Intent(getBaseContext(), PaymentDetailsActivity.class);
+                        intent.putExtra(PaymentDetailsActivity.TRANSACTION, transaction);
                         startActivityForResult(intent, 9);
 
                         //Custom UI Implementation
@@ -119,6 +119,7 @@ public class MainActivity extends AppCompatActivity {
                 try {
                     JSONObject responseObject = new JSONObject(responseBody);
                     accessToken = responseObject.getString("access_token");
+                    Log.d("app", accessToken);
                     Log.d("App", "Updated token");
                 } catch (JSONException e) {
                     Log.d("App", "Failed to update token");

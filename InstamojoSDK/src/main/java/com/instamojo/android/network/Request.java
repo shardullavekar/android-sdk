@@ -93,7 +93,7 @@ public class Request {
                 .add("card_exp_month", card.getMonth())
                 .add("card_exp_year", card.getYear())
                 .add("card_security_code", card.getCvv())
-                .add("save_to_locker", "true")
+                .add("save_to_locker", card.canSaveCard() ? "true" : "false")
                 .add("redirect_after_payment", "true")
                 .add("format", "json")
                 .build();

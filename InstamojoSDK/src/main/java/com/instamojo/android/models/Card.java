@@ -34,6 +34,7 @@ public class Card implements Parcelable {
     private String cardNumber;
     private String date;
     private String cvv;
+    private boolean saveCard;
 
     /**
      * Constructor for Card.
@@ -46,6 +47,7 @@ public class Card implements Parcelable {
         cardNumber = in.readString();
         date = in.readString();
         cvv = in.readString();
+        saveCard = in.readByte() != 0;
     }
 
     /**
@@ -126,6 +128,20 @@ public class Card implements Parcelable {
         return this.date.split("/")[1];
     }
 
+    /**
+     * @return True if user selects card to be saved for future use
+     */
+    public boolean canSaveCard() {
+        return saveCard;
+    }
+
+    /**
+     * @param saveCard Boolean to set the value for save card for future use
+     */
+    public void setSaveCard(boolean saveCard) {
+        this.saveCard = saveCard;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -137,6 +153,7 @@ public class Card implements Parcelable {
         dest.writeString(cardNumber);
         dest.writeString(date);
         dest.writeString(cvv);
+        dest.writeByte((byte) (saveCard ? 1 : 0));
     }
 
     /**

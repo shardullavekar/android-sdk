@@ -31,10 +31,10 @@ public class NetBankingOptions implements Parcelable {
     private HashMap<String, String> banks;
 
     /**
-     * Constructor for Netbanking options.
+     * Constructor for Net Banking options.
      *
-     * @param url   Url for Netbanking Options. Must not be null.
-     * @param banks HashMap with bankcode and Bank Name. Must not be null or empty.
+     * @param url   Url for Net Banking Options. Must not be null.
+     * @param banks HashMap with Bank Code and Bank Name. Must not be null or empty.
      */
     public NetBankingOptions(@NonNull String url, @NonNull HashMap<String, String> banks) {
         this.url = url;
