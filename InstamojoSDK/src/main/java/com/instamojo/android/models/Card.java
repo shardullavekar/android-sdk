@@ -34,7 +34,7 @@ public class Card implements Parcelable {
     private String cardNumber;
     private String date;
     private String cvv;
-    private boolean saveCard;
+    private boolean saveCard = false;
 
     /**
      * Constructor for Card.
@@ -133,13 +133,6 @@ public class Card implements Parcelable {
      */
     public boolean canSaveCard() {
         return saveCard;
-    }
-
-    /**
-     * @param saveCard Boolean to set the value for save card for future use
-     */
-    public void setSaveCard(boolean saveCard) {
-        this.saveCard = saveCard;
     }
 
     @Override

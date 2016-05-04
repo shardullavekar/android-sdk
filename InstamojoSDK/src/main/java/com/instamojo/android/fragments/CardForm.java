@@ -5,7 +5,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.AppCompatCheckBox;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -44,7 +43,6 @@ public class CardForm extends BaseFragment implements View.OnClickListener {
     private MaterialEditText cardNumberBox, nameOnCardBox, cvvBox, dateBox;
     private List<MaterialEditText> editTexts;
     private PaymentDetailsActivity parentActivity;
-    private AppCompatCheckBox saveCardCheckBox;
 
     /**
      * Creates a new instance of Fragment
@@ -70,7 +68,7 @@ public class CardForm extends BaseFragment implements View.OnClickListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_debit_card_form, container, false);
+        View view = inflater.inflate(R.layout.fragment_card_form, container, false);
         parentActivity = (PaymentDetailsActivity) getActivity();
         inflateXML(view);
         return view;
@@ -151,8 +149,6 @@ public class CardForm extends BaseFragment implements View.OnClickListener {
         checkOutButton.setText(checkoutText);
         checkOutButton.setOnClickListener(this);
 
-        saveCardCheckBox = (AppCompatCheckBox) view.findViewById(R.id.save_card);
-
         editTexts = Arrays.asList(cardNumberBox, dateBox, nameOnCardBox, cvvBox);
         Logger.logDebug(getContext(), this.getClass().getSimpleName(), "Inflated XML");
     }
@@ -212,7 +208,6 @@ public class CardForm extends BaseFragment implements View.OnClickListener {
             card.setCvv(cvv);
         }
 
-        card.setSaveCard(saveCardCheckBox.isChecked());
         Logger.logDebug(getContext(), this.getClass().getSimpleName(), "Checking Out");
         checkOut(card);
     }
@@ -278,7 +273,7 @@ public class CardForm extends BaseFragment implements View.OnClickListener {
                     addOptionalValidators();
                 }
             } else if (card.length() < 4) {
-                drawable = 0;
+                drawable = R.drawable.ic_accepted_cards;
                 clearOptionalValidators();
             }
 

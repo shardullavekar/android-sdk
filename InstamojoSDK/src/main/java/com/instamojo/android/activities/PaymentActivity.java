@@ -3,6 +3,7 @@ package com.instamojo.android.activities;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 
 import com.instamojo.android.R;
 import com.instamojo.android.fragments.JusPaySafeBrowser;
@@ -46,6 +47,14 @@ public class PaymentActivity extends BaseActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         Logger.logDebug(this, this.getClass().getSimpleName(), "Inflated XML");
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void showFragment() {

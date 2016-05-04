@@ -31,7 +31,7 @@ import okhttp3.Response;
 
 public class MainActivity extends AppCompatActivity {
 
-    private String accessToken = "g6JbXbsliVVUYNP4ACyE9d7RtonYFr";
+    private String accessToken = "wLd5A00ZwskdBhIlGNuFSx5LyhrjpC";
 
     @SuppressWarnings("ConstantConditions")
     @Override

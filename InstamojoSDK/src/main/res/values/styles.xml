@@ -1,9 +1,9 @@
 <resources>
 
-    <style name="BaseTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="BaseTheme" parent="Theme.AppCompat.NoActionBar">
         <item name="colorPrimary">@color/primary_color</item>
         <item name="colorAccent">@color/accent_color</item>
-        <item name="spinnerStyle">@style/Base.Widget.AppCompat.Spinner.Underlined</item>
+        <item name="autoCompleteTextViewStyle">@style/CustomAutoCompleteStyle</item>
     </style>
 
     <style name="SdkTheme" parent="@style/BaseTheme" />
@@ -17,7 +17,21 @@
         <item name="android:padding">@dimen/margin_16</item>
     </style>
 
-    <style name="checkBoxStyle">
-        <item name="colorAccent">@color/check_box_color</item>
+    <style name="Toolbar.TitleText" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:textColor">@android:color/white</item>
     </style>
+
+    <style name="CustomAutoCompleteStyle" parent="Widget.AppCompat.Light.AutoCompleteTextView">
+        <item name="android:textCursorDrawable">@drawable/cursor</item>
+    </style>
+
+    <style name="SelectableItemTheme">
+        <item name="colorControlHighlight">@color/separator_color</item>
+    </style>
+
+    <style name="SelectableItemBackground">
+        <item name="android:theme">@style/SelectableItemTheme</item>
+        <item name="android:background">?attr/selectableItemBackground</item>
+    </style>
+
 </resources>

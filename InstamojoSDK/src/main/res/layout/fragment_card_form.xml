@@ -14,6 +14,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_10"
+        android:drawableEnd="@drawable/ic_accepted_cards"
+        android:drawableRight="@drawable/ic_accepted_cards"
         android:hint="@string/card_number"
         android:inputType="number"
         android:textSize="16sp"
@@ -69,27 +71,16 @@
             android:layout_weight="1"
             android:hint="@string/cvv_hint"
             android:inputType="numberPassword"
+            android:maxLength="@integer/card_max_cvv_length"
             android:textSize="16sp"
             app:met_errorColor="@android:color/holo_red_light"
             app:met_floatingLabel="highlight"
+            app:met_maxCharacters="@integer/card_max_cvv_length"
             app:met_primaryColor="@color/edit_text_color"
             app:met_textColor="@android:color/black"
             app:met_validateOnFocusLost="true" />
 
     </LinearLayout>
-
-    <android.support.v7.widget.AppCompatCheckBox
-        android:id="@+id/save_card"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_10"
-        android:checkMark="?android:attr/listChoiceIndicatorMultiple"
-        android:checked="true"
-        android:gravity="center"
-        android:text="@string/save_this_card_in_secure_vault_for_future"
-        android:textColor="@color/edit_text_color"
-        android:textSize="16sp"
-        android:theme="@style/checkBoxStyle" />
 
     <Button
         android:id="@+id/checkout"
@@ -102,5 +93,14 @@
         android:textAllCaps="false"
         android:textColor="@android:color/white"
         android:textSize="16sp" />
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="24dp"
+        android:layout_marginLeft="@dimen/margin_16"
+        android:layout_marginRight="@dimen/margin_16"
+        android:contentDescription="@string/brand_trust_logos"
+        android:src="@drawable/ic_trust" />
 
 </LinearLayout>

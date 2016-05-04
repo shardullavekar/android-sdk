@@ -15,4 +15,5 @@
     <string name="title_fragment_credit_debit_card_form">Credit or Debit Card</string>
     <string name="choose_your_bank">Choose your Bank</string>
     <string name="search_your_bank">Search your Bank</string>
+    <string name="brand_trust_logos">Brand trust logos</string>
 </resources>
