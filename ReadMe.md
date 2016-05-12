@@ -2,7 +2,7 @@
 
 ## Installation
 ### Include SDK
-The SDK currently supports Android >= 14. Just add the following to your application’s `build.gradle` file, inside the dependencies section.
+The SDK currently supports Android Version >= ICS 4.0.3(14). Just add the following to your application’s `build.gradle` file, inside the dependencies section.
 ```
 Maven repository here
 ```
