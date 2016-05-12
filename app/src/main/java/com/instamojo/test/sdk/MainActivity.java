@@ -48,39 +48,50 @@ public class MainActivity extends AppCompatActivity {
                 String amount = ((EditText) findViewById(R.id.amount)).getText().toString();
                 String purpose = ((EditText) findViewById(R.id.purpose)).getText().toString();
                 Transaction transaction = new Transaction(name, email, phone, amount, purpose, accessToken);
-                final ProgressDialog dialog = ProgressDialog.show(MainActivity.this, "", "please wait...", true, false);
+                final ProgressDialog dialog = ProgressDialog.show(getBaseContext(), "", "please wait...", true, false);
                 Request request = new Request(transaction, new OrderRequestCallBack() {
                     @Override
                     public void onFinish(Transaction transaction, Exception error) {
                         dialog.dismiss();
                         if (error != null) {
                             if (error instanceof Errors.ConnectionException) {
-                                //handle no internet connection
-                                Log.d("App", "No internet connection");
+                                Log.e("App", "No internet connection");
                             } else if (error instanceof Errors.ServerException) {
-                                //handle form level errors
-                                Log.d("App", "Sever error - " + error.getMessage());
+                                try {
+                                    JSONObject errorObject = new JSONObject(error.getMessage());
+
+                                    if (errorObject.has("success")) {
+                                        Log.e("App", "Invalid access token");
+                                        return;
+                                    }
+
+                                    if (errorObject.has("buyer_phone")) {
+                                        Log.e("App", "Buyer's Phone Number is invalid");
+                                        return;
+                                    }
+
+                                    if (errorObject.has("buyer_email")) {
+                                        Log.e("App", "Buyer's Email is invalid");
+                                        return;
+                                    }
+
+                                    if (errorObject.has("buyer_name")) {
+                                        Log.e("App", "Buyer's Name is required");
+                                        return;
+                                    }
+                                } catch (JSONException e) {
+                                }
                             } else {
-                                //handle other errors
-                                Log.d("App", error.getMessage());
+                                Log.e("App", error.getMessage());
                             }
                             return;
                         }
 
-//                        //Using Pre created UI
-                        Intent intent = new Intent(getBaseContext(), PaymentDetailsActivity.class);
-                        intent.putExtra(PaymentDetailsActivity.TRANSACTION, transaction);
-                        startActivityForResult(intent, 9);
-
-                        //Custom UI Implementation
-//                        Intent intent = new Intent(getBaseContext(), CustomPaymentMethodActivity.class);
-//                        intent.putExtra(CustomPaymentMethodActivity.TRANSACTION, transaction);
-//                        startActivityForResult(intent, 9);
+                        startPreCreatedUI(transaction);
                     }
                 });
 
                 request.execute();
-
             }
         });
 
@@ -92,6 +103,21 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+    private void startPreCreatedUI(Transaction transaction) {
+        //Using Pre created UI
+        Intent intent = new Intent(getBaseContext(), PaymentDetailsActivity.class);
+        intent.putExtra(PaymentDetailsActivity.TRANSACTION, transaction);
+        startActivityForResult(intent, 9);
+    }
+
+    private void startCustomUI(Transaction transaction) {
+        //Custom UI Implementation
+        Intent intent = new Intent(getBaseContext(), CustomPaymentMethodActivity.class);
+        intent.putExtra(CustomPaymentMethodActivity.TRANSACTION, transaction);
+        startActivityForResult(intent, 9);
+    }
+
 
     private void updateToken() {
         final ProgressDialog dialog = ProgressDialog.show(this, "", "Please wait...", true, false);
@@ -135,12 +161,12 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 9) {
             if (resultCode == RESULT_OK) {
-                //handle successful transaction here
+                //handle successful payment here
                 String status = data.getStringExtra(PaymentActivity.TRANSACTION_STATUS);
                 String id = data.getStringExtra(PaymentActivity.ORDER_ID);
                 Toast.makeText(this, status + " - " + id, Toast.LENGTH_LONG).show();
             } else {
-                //handle failed transaction here
+                //handle failed payment here
                 Toast.makeText(this, "Cancelled", Toast.LENGTH_LONG).show();
             }
         }
