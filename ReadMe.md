@@ -67,12 +67,13 @@ If you are using Proguard for code obfuscation, add following rules in the progu
 
 ## Initiating Payment
 To initiate a Payment, the following mandatory fields are required by the SDK.
-1. Name of the buyer
-2. Email of the buyer
-3. Purpose of the transaction
-4. Phone number of the buyer
-5. Transaction amount
-6. Access Token
+
+1. Name of the buyer &nbsp;
+2. Email of the buyer &nbsp;
+3. Purpose of the transaction &nbsp;
+4. Phone number of the buyer &nbsp;
+5. Transaction amount &nbsp;
+6. Access Token &nbsp;
 
 ### Generating Access Token
 A valid access token should be generated on your server using your `Client ID` and `Client Secret` and the token is then passed on to the application.
@@ -135,10 +136,12 @@ Request request = new Request(transaction, new OrderRequestCallBack() {
 ## Payment
 ### Collecting Payment Information
 SDK currently supports to forms of Payment methods.
+
 1. Debit/Credit Card
 2. Netbanking
 
 These details can be collected in two ways.
+
 1. Pre-Created UI that comes with the SDK.
 2. Creating Custom Debit/Credit card and Netbanking UI.
 
