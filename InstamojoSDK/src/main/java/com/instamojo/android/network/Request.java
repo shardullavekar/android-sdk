@@ -8,6 +8,7 @@ import com.instamojo.android.BuildConfig;
 import com.instamojo.android.callbacks.JusPayRequestCallback;
 import com.instamojo.android.callbacks.OrderRequestCallBack;
 import com.instamojo.android.fragments.JusPaySafeBrowser;
+import com.instamojo.android.helpers.CardValidator;
 import com.instamojo.android.helpers.Logger;
 import com.instamojo.android.models.Card;
 import com.instamojo.android.models.DebitCardOptions;
@@ -84,6 +85,17 @@ public class Request {
 
     private void executeJusPayRequest() {
         OkHttpClient client = new OkHttpClient();
+
+        //For maestro, add the default values if empty
+        if (CardValidator.maestroCard(card.getCardNumber())) {
+            if (card.getDate() == null || card.getDate().isEmpty()) {
+                card.setDate("12/49");
+            }
+
+            if (card.getCvv() == null || card.getCvv().isEmpty()) {
+                card.setDate("111");
+            }
+        }
 
         RequestBody body = new FormBody.Builder()
                 .add("order_id", transaction.getDebitCardOptions().getOrderID())

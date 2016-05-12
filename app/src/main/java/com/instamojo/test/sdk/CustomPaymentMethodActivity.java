@@ -15,7 +15,6 @@ import android.widget.Toast;
 import com.instamojo.android.activities.PaymentActivity;
 import com.instamojo.android.callbacks.JusPayRequestCallback;
 import com.instamojo.android.fragments.JusPaySafeBrowser;
-import com.instamojo.android.helpers.CardValidator;
 import com.instamojo.android.models.Card;
 import com.instamojo.android.models.Transaction;
 import com.instamojo.android.network.Request;
@@ -85,17 +84,6 @@ public class CustomPaymentMethodActivity extends AppCompatActivity {
                     //Validate the card here
                     if (!cardValid(card)) {
                         return;
-                    }
-
-                    //For maestro, add the default values if empty
-                    if (CardValidator.maestroCard(card.getCardNumber())) {
-                        if (card.getDate() == null || card.getDate().isEmpty()) {
-                            card.setDate("12/49");
-                        }
-
-                        if (card.getCvv() == null || card.getCvv().isEmpty()) {
-                            card.setDate("111");
-                        }
                     }
 
                     //Get order details form Juspay
