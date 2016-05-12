@@ -48,7 +48,8 @@ If you are using Proguard for code obfuscation, add following rules in the progu
 -dontwarn com.squareup.**
 -dontwarn okio.**
 
-# OkHttp-keep class com.squareup.okhttp.** { *; }
+# OkHttp
+-keep class com.squareup.okhttp.** { *; }
 -keep interface com.squareup.okhttp.** { *; }
 -dontwarn com.squareup.okhttp.**
 
