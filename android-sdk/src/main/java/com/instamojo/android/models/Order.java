@@ -66,7 +66,7 @@ public class Order implements Parcelable {
         this.mode = "Android_SDK";
         this.authToken = authToken;
         this.transactionID = transactionID;
-        this.redirectionUrl = "https://www.instamojo.com/android/redirect/";
+        this.redirectionUrl = "https://www.instamojo.com/integrations/android/redirect/";
     }
 
     @SuppressWarnings("unchecked")
