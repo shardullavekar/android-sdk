@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import com.instamojo.android.R;
 import com.instamojo.android.activities.PaymentDetailsActivity;
 import com.instamojo.android.helpers.Logger;
-import com.instamojo.android.models.Transaction;
+import com.instamojo.android.models.Order;
 
 /**
  * Fragment holds the available Payment options for the User
@@ -42,16 +42,16 @@ public class ChoosePaymentOption extends BaseFragment implements View.OnClickLis
 
     @Override
     public void inflateXML(View view) {
-        Transaction transaction = parentActivity.getTransaction();
+        Order order = parentActivity.getOrder();
         View cardLayout = view.findViewById(R.id.card_layout);
         View netBankingLayout = view.findViewById(R.id.net_banking_layout);
 
-        if (transaction.getNetBankingOptions() == null) {
+        if (order.getNetBankingOptions() == null) {
             Logger.logDebug(getContext(), this.getClass().getSimpleName(), "Hiding Net banking Layout");
             netBankingLayout.setVisibility(View.GONE);
         }
 
-        if (transaction.getDebitCardOptions() == null) {
+        if (order.getDebitCardOptions() == null) {
             Logger.logDebug(getContext(), this.getClass().getSimpleName(), "Hiding Card Layout");
             cardLayout.setVisibility(View.GONE);
         }

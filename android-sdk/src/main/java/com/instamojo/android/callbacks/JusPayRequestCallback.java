@@ -3,12 +3,12 @@ package com.instamojo.android.callbacks;
 import android.os.Bundle;
 
 import com.instamojo.android.models.Card;
-import com.instamojo.android.models.Transaction;
+import com.instamojo.android.models.Order;
 
 /**
- * Callback listener that is passed along with {@link com.instamojo.android.models.Transaction}
+ * Callback listener that is passed along with {@link Order}
  * and {@link com.instamojo.android.models.Card} to
- * {@link com.instamojo.android.network.Request#Request(Transaction, Card, JusPayRequestCallback)}.
+ * {@link com.instamojo.android.network.Request#Request(Order, Card, JusPayRequestCallback)}.
  *
  *
  * @author vedhavyas

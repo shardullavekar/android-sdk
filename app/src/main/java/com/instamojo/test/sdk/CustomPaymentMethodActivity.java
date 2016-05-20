@@ -16,7 +16,7 @@ import com.instamojo.android.activities.PaymentActivity;
 import com.instamojo.android.callbacks.JusPayRequestCallback;
 import com.instamojo.android.fragments.JusPaySafeBrowser;
 import com.instamojo.android.models.Card;
-import com.instamojo.android.models.Transaction;
+import com.instamojo.android.models.Order;
 import com.instamojo.android.network.Request;
 
 import java.util.ArrayList;
@@ -45,10 +45,10 @@ public class CustomPaymentMethodActivity extends AppCompatActivity {
     }
 
     private void validateUI() {
-        final Transaction transaction = getIntent().getParcelableExtra(TRANSACTION);
-        //finish the activity if the transaction is null or both the debit and netbanking is disabled
-        if (transaction == null || (transaction.getDebitCardOptions() == null
-                && transaction.getNetBankingOptions() == null)) {
+        final Order order = getIntent().getParcelableExtra(TRANSACTION);
+        //finish the activity if the order is null or both the debit and netbanking is disabled
+        if (order == null || (order.getDebitCardOptions() == null
+                && order.getNetBankingOptions() == null)) {
             setResult(RESULT_CANCELED);
             finish();
             return;
@@ -65,7 +65,7 @@ public class CustomPaymentMethodActivity extends AppCompatActivity {
         View separator = findViewById(R.id.net_banking_separator);
         AppCompatSpinner netBankingSpinner = (AppCompatSpinner) findViewById(R.id.net_banking_spinner);
 
-        if (transaction.getDebitCardOptions() == null) {
+        if (order.getDebitCardOptions() == null) {
             //seems like card payment is not enabled
             findViewById(R.id.card_layout_1).setVisibility(View.GONE);
             findViewById(R.id.card_layout_2).setVisibility(View.GONE);
@@ -87,18 +87,18 @@ public class CustomPaymentMethodActivity extends AppCompatActivity {
                     }
 
                     //Get order details form Juspay
-                    proceedWithCard(transaction, card);
+                    proceedWithCard(order, card);
                 }
             });
         }
 
-        if (transaction.getNetBankingOptions() == null) {
+        if (order.getNetBankingOptions() == null) {
             //seems like netbanking is not enabled
             separator.setVisibility(View.GONE);
             netBankingSpinner.setVisibility(View.GONE);
         } else {
             final ArrayList<String> banks = new ArrayList<>();
-            banks.addAll(transaction.getNetBankingOptions().getBanks().keySet());
+            banks.addAll(order.getNetBankingOptions().getBanks().keySet());
             Collections.sort(banks);
             banks.add(0, "Select a Bank");
             ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, banks);
@@ -112,11 +112,11 @@ public class CustomPaymentMethodActivity extends AppCompatActivity {
                     }
 
                     //User selected a Bank. Hence proceed to Juspay
-                    String bankCode = transaction.getNetBankingOptions().getBanks().get(banks.get(position));
+                    String bankCode = order.getNetBankingOptions().getBanks().get(banks.get(position));
                     Bundle bundle = new Bundle();
-                    bundle.putString(JusPaySafeBrowser.URL, transaction.getNetBankingOptions().getUrl());
-                    bundle.putString(JusPaySafeBrowser.POST_DATA, transaction.
-                            getNetBankingOptions().getPostData(transaction.getAuthToken(), bankCode));
+                    bundle.putString(JusPaySafeBrowser.URL, order.getNetBankingOptions().getUrl());
+                    bundle.putString(JusPaySafeBrowser.POST_DATA, order.
+                            getNetBankingOptions().getPostData(order.getAuthToken(), bankCode));
                     startPaymentActivity(bundle);
                 }
 
@@ -130,10 +130,10 @@ public class CustomPaymentMethodActivity extends AppCompatActivity {
         }
     }
 
-    private void proceedWithCard(Transaction transaction, Card card) {
+    private void proceedWithCard(Order order, Card card) {
         final ProgressDialog dialog = ProgressDialog.show(this, "",
                 getString(com.instamojo.android.R.string.please_wait), true, false);
-        Request request = new Request(transaction, card, new JusPayRequestCallback() {
+        Request request = new Request(order, card, new JusPayRequestCallback() {
             @Override
             public void onFinish(final Bundle bundle, final Exception error) {
                 runOnUiThread(new Runnable() {

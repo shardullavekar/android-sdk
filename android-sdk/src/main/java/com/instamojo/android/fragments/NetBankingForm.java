@@ -13,7 +13,7 @@ import android.widget.TextView;
 import com.instamojo.android.R;
 import com.instamojo.android.activities.PaymentDetailsActivity;
 import com.instamojo.android.helpers.Logger;
-import com.instamojo.android.models.Transaction;
+import com.instamojo.android.models.Order;
 
 import java.util.Locale;
 import java.util.Map;
@@ -71,7 +71,7 @@ public class NetBankingForm extends BaseFragment implements SearchView.OnQueryTe
 
     private void loadBanks(String queryText) {
         banksContainer.removeAllViews();
-        for (final Map.Entry<String, String> bank : parentActivity.getTransaction().getNetBankingOptions().getBanks().entrySet()) {
+        for (final Map.Entry<String, String> bank : parentActivity.getOrder().getNetBankingOptions().getBanks().entrySet()) {
             if (!bank.getKey().toLowerCase(Locale.US).contains(queryText.toLowerCase(Locale.US))) {
                 continue;
             }
@@ -81,10 +81,10 @@ public class NetBankingForm extends BaseFragment implements SearchView.OnQueryTe
                 @Override
                 public void onClick(View v) {
                     Bundle bundle = new Bundle();
-                    Transaction transaction = parentActivity.getTransaction();
-                    bundle.putString(JusPaySafeBrowser.URL, transaction.getNetBankingOptions().getUrl());
-                    bundle.putString(JusPaySafeBrowser.POST_DATA, transaction.getNetBankingOptions().
-                            getPostData(transaction.getAuthToken(), bank.getValue()));
+                    Order order = parentActivity.getOrder();
+                    bundle.putString(JusPaySafeBrowser.URL, order.getNetBankingOptions().getUrl());
+                    bundle.putString(JusPaySafeBrowser.POST_DATA, order.getNetBankingOptions().
+                            getPostData(order.getAuthToken(), bank.getValue()));
                     parentActivity.startPaymentActivity(bundle);
                 }
             });

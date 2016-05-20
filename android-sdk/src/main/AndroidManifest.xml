@@ -23,7 +23,7 @@
             android:label="Payment"
             android:screenOrientation="portrait"
             android:theme="@style/SdkTheme"
-            android:windowSoftInputMode="adjustResize" />
+            android:windowSoftInputMode="adjustResize|adjustPan" />
     </application>
 
 </manifest>

@@ -14,13 +14,14 @@ import com.instamojo.android.activities.PaymentActivity;
 import com.instamojo.android.activities.PaymentDetailsActivity;
 import com.instamojo.android.callbacks.OrderRequestCallBack;
 import com.instamojo.android.models.Errors;
-import com.instamojo.android.models.Transaction;
+import com.instamojo.android.models.Order;
 import com.instamojo.android.network.Request;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.Random;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -32,6 +33,7 @@ import okhttp3.Response;
 public class MainActivity extends AppCompatActivity {
 
     private String accessToken = "wLd5A00ZwskdBhIlGNuFSx5LyhrjpC";
+    private Random random = new Random(System.currentTimeMillis());
 
     @SuppressWarnings("ConstantConditions")
     @Override
@@ -39,6 +41,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Button button = (Button) findViewById(R.id.pay);
+        final ProgressDialog dialog = new ProgressDialog(this);
+        dialog.setIndeterminate(true);
+        dialog.setMessage("please wait...");
+        dialog.setCancelable(false);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -46,12 +52,12 @@ public class MainActivity extends AppCompatActivity {
                 String email = ((EditText) findViewById(R.id.email)).getText().toString();
                 String phone = ((EditText) findViewById(R.id.phone)).getText().toString();
                 String amount = ((EditText) findViewById(R.id.amount)).getText().toString();
-                String purpose = ((EditText) findViewById(R.id.purpose)).getText().toString();
-                Transaction transaction = new Transaction(name, email, phone, amount, purpose, accessToken);
-                final ProgressDialog dialog = ProgressDialog.show(getBaseContext(), "", "please wait...", true, false);
-                Request request = new Request(transaction, new OrderRequestCallBack() {
+                String purpose = ((EditText) findViewById(R.id.description)).getText().toString();
+                Order order = new Order(accessToken, String.valueOf(random.nextInt()), name, email, phone, amount, purpose);
+                dialog.show();
+                Request request = new Request(order, new OrderRequestCallBack() {
                     @Override
-                    public void onFinish(Transaction transaction, Exception error) {
+                    public void onFinish(Order order, Exception error) {
                         dialog.dismiss();
                         if (error != null) {
                             if (error instanceof Errors.ConnectionException) {
@@ -65,21 +71,37 @@ public class MainActivity extends AppCompatActivity {
                                         return;
                                     }
 
-                                    if (errorObject.has("buyer_phone")) {
-                                        Log.e("App", "Buyer's Phone Number is invalid");
+                                    if (errorObject.has("transaction_id")) {
+                                        Log.e("App", "Transaction ID is not Unique");
                                         return;
                                     }
 
-                                    if (errorObject.has("buyer_email")) {
-                                        Log.e("App", "Buyer's Email is invalid");
+                                    if (errorObject.has("redirect_url")) {
+                                        Log.e("App", "Redirect url is invalid");
                                         return;
                                     }
 
-                                    if (errorObject.has("buyer_name")) {
+                                    if (errorObject.has("phone")) {
+                                        Log.e("App", "Buyer's Phone Number is invalid/empty");
+                                        return;
+                                    }
+
+                                    if (errorObject.has("email")) {
+                                        Log.e("App", "Buyer's Email is invalid/empty");
+                                        return;
+                                    }
+
+                                    if (errorObject.has("amount")) {
+                                        Log.e("App", "Amount is either less that Rs.9 or has more than two decimal places");
+                                        return;
+                                    }
+
+                                    if (errorObject.has("name")) {
                                         Log.e("App", "Buyer's Name is required");
                                         return;
                                     }
                                 } catch (JSONException e) {
+                                    //unlikely to happen
                                 }
                             } else {
                                 Log.e("App", error.getMessage());
@@ -87,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
                             return;
                         }
 
-                        startPreCreatedUI(transaction);
+                        startPreCreatedUI(order);
                     }
                 });
 
@@ -104,17 +126,17 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void startPreCreatedUI(Transaction transaction) {
+    private void startPreCreatedUI(Order order) {
         //Using Pre created UI
         Intent intent = new Intent(getBaseContext(), PaymentDetailsActivity.class);
-        intent.putExtra(PaymentDetailsActivity.TRANSACTION, transaction);
+        intent.putExtra(PaymentDetailsActivity.ORDER, order);
         startActivityForResult(intent, 9);
     }
 
-    private void startCustomUI(Transaction transaction) {
+    private void startCustomUI(Order order) {
         //Custom UI Implementation
         Intent intent = new Intent(getBaseContext(), CustomPaymentMethodActivity.class);
-        intent.putExtra(CustomPaymentMethodActivity.TRANSACTION, transaction);
+        intent.putExtra(CustomPaymentMethodActivity.TRANSACTION, order);
         startActivityForResult(intent, 9);
     }
 

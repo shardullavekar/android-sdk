@@ -145,7 +145,7 @@ public class CardForm extends BaseFragment implements View.OnClickListener {
         });
 
         Button checkOutButton = (Button) view.findViewById(R.id.checkout);
-        String checkoutText = "Pay ₹" + parentActivity.getTransaction().getAmount();
+        String checkoutText = "Pay ₹" + parentActivity.getOrder().getAmount();
         checkOutButton.setText(checkoutText);
         checkOutButton.setOnClickListener(this);
 
@@ -216,7 +216,7 @@ public class CardForm extends BaseFragment implements View.OnClickListener {
         parentActivity.hideKeyboard();
         changeEditBoxesState(false);
         final ProgressDialog dialog = ProgressDialog.show(parentActivity, "", getString(R.string.please_wait), true, false);
-        Request request = new Request(parentActivity.getTransaction(), card, new JusPayRequestCallback() {
+        Request request = new Request(parentActivity.getOrder(), card, new JusPayRequestCallback() {
             @Override
             public void onFinish(Bundle bundle, Exception error) {
                 parentActivity.runOnUiThread(new Runnable() {

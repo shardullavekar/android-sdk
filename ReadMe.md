@@ -4,17 +4,30 @@
 ### Include SDK
 The SDK currently supports Android Version >= ICS 4.0.3(14). Just add the following to your application’s `build.gradle` file, inside the dependencies section.
 ```
-Maven repository here
+repositories {
+    mavenCentral()
+    maven {
+        url "https://s3-ap-southeast-1.amazonaws.com/godel-release/godel/"
+    }
+}
+
+dependencies {
+    `maven repo here`
+}
+
 ```
 
 ### SDK Permissions
 The following are the minimum set of permissions required by the SDK. Add the following set of permissions in the application’s Manifest file above the `<application>` tag.
 ```
+//General permissions 
 <uses-permission android:name="android.permission.INTERNET" />
-<uses-permission android:name="android.permission.READ_SMS" />
-<uses-permission android:name="android.permission.RECEIVE_SMS" />
 <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+
+//required for Juspay to read the OTP
+<uses-permission android:name="android.permission.READ_SMS" />
+<uses-permission android:name="android.permission.RECEIVE_SMS" />
 ```
 
 ### Proguard rules
@@ -76,62 +89,82 @@ To initiate a Payment, the following mandatory fields are required by the SDK.
 5. Transaction amount &nbsp;
 6. Access Token &nbsp;
 
-### Generating Access Token
+### Generating Access Token and transaction_id
 A valid access token should be generated on your server using your `Client ID` and `Client Secret` and the token is then passed on to the application.
 Access token will be valid for a max of 30 minutes after generation.
 
+An Unique transaction_id must be generated on your for every order initiated with Instamojo APIs 
+
 ### Creating Transaction Object
-With all the mandatory fields mentioned above, a `Transaction` object can created like this.
+With all the mandatory fields mentioned above, a `Order` object can created like this.
 ``` Java
-Transaction transaction = new Transaction(name, email, phone, amount, purpose, accessToken);
+Order order = new Order(accessToken, transactionID, name, email, phone, amount, purpose);
 ```
 
 Add the following code snippet to validate the `Transaction` object.
 ``` Java
-//Show progressDialog while the SDK validates the Transaction.
-final ProgressDialog dialog = ProgressDialog.show(getBaseContext(), "", "please wait...", true, false);
-Request request = new Request(transaction, new OrderRequestCallBack() {
-            @Override
-            public void onFinish(Transaction transaction, Exception error) {
-                dialog.dismiss();
-                if (error != null) {
-                    if (error instanceof Errors.ConnectionException) {
-                           Log.e("App", "No internet connection");
-                    } else if (error instanceof Errors.ServerException) {
-                           try {
-                                JSONObject errorObject = new JSONObject(error.getMessage());
-                
-                                if (errorObject.has("success")){
-                                      Log.e("App", "Invalid access token");
-                                      return;
+// Good time to show progress dialog to user
+Request request = new Request(order, new OrderRequestCallBack() {
+                    @Override
+                    public void onFinish(Order order, Exception error) {
+                        //good time to dismiss the dialog
+                        if (error != null) {
+                            if (error instanceof Errors.ConnectionException) {
+                                Log.e("App", "No internet connection");
+                            } else if (error instanceof Errors.ServerException) {
+                                try {
+                                    JSONObject errorObject = new JSONObject(error.getMessage());
+
+                                    if (errorObject.has("success")) {
+                                        Log.e("App", "Invalid access token");
+                                        return;
+                                    }
+
+                                    if (errorObject.has("transaction_id")){
+                                        Log.e("App", "Transaction ID is not Unique");
+                                        return;
+                                    }
+
+                                    if (errorObject.has("redirect_url")){
+                                        Log.e("App", "Redirect url is invalid");
+                                        return;
+                                    }
+
+                                    if (errorObject.has("phone")) {
+                                        Log.e("App", "Buyer's Phone Number is invalid/empty");
+                                        return;
+                                    }
+
+                                    if (errorObject.has("email")) {
+                                        Log.e("App", "Buyer's Email is invalid/empty");
+                                        return;
+                                    }
+
+                                    if (errorObject.has("amount")){
+                                        Log.e("App", "Amount is either less that Rs.9 or has more than two decimal places");
+                                        return;
+                                    }
+
+                                    if (errorObject.has("name")) {
+                                        Log.e("App", "Buyer's Name is required");
+                                        return;
+                                    }
+                                } catch (JSONException e) {
+                                    //unlikely to happen
                                 }
-                
-                                if (errorObject.has("buyer_phone")){
-                                      Log.e("App", "Buyer's Phone Number is invalid");
-                                      return;
-                                }
-                
-                                if (errorObject.has("buyer_email")){
-                                      Log.e("App", "Buyer's Email is invalid");
-                                      return;
-                                }
-                
-                                if (errorObject.has("buyer_name")){
-                                      Log.e("App", "Buyer's Name is required");
-                                      return;
-                                }
-                           } catch (JSONException e) {}
-                    } else {
-                            Log.e("App", error.getMessage());
+                            } else {
+                                Log.e("App", error.getMessage());
+                            }
+                            return;
+                        }
+
+                        startPreCreatedUI(order);
                     }
-                    return;
-                }
-                
-                startPreCreatedUI(transaction);
+                });
+
+                request.execute();
             }
- });
- 
- request.execute();
+        });
 ```
 
 ## Payment

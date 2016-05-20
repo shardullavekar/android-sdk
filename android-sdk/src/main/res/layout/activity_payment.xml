@@ -7,12 +7,14 @@
 
     <include layout="@layout/toolbar" />
 
-    <RelativeLayout
-        android:id="@+id/container"
+    <fragment
+        android:id="@+id/juspay_browser_fragment_activity"
+        android:name="com.instamojo.android.fragments.JusPaySafeBrowser"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/toolbar"
         tools:ignore="UnknownIdInLayout" />
+
 
     <FrameLayout
         android:layout_width="match_parent"

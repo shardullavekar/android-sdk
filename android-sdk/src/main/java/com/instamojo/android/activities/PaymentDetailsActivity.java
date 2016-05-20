@@ -15,7 +15,7 @@ import com.instamojo.android.R;
 import com.instamojo.android.fragments.BaseFragment;
 import com.instamojo.android.fragments.ChoosePaymentOption;
 import com.instamojo.android.helpers.Logger;
-import com.instamojo.android.models.Transaction;
+import com.instamojo.android.models.Order;
 
 /**
  * Payment Details Activity extends the {@link BaseActivity}. Activity lets user to choose a Payment method
@@ -27,11 +27,11 @@ import com.instamojo.android.models.Transaction;
 public class PaymentDetailsActivity extends BaseActivity {
 
     /**
-     * Extra key for the {@link Transaction} object that is sent through Bundle.
+     * Extra key for the {@link Order} object that is sent through Bundle.
      */
-    public static final String TRANSACTION = "transaction";
+    public static final String ORDER = "order";
 
-    private Transaction transaction;
+    private Order order;
     private boolean showSearch;
     private SearchView.OnQueryTextListener onQueryTextListener;
 
@@ -113,21 +113,21 @@ public class PaymentDetailsActivity extends BaseActivity {
     }
 
     /**
-     * @return The current Transaction
+     * @return The current Order
      */
-    public Transaction getTransaction() {
-        return transaction;
+    public Order getOrder() {
+        return order;
     }
 
     private void loadFragments() {
-        Logger.logDebug(this, this.getClass().getSimpleName(), "looking for Transaction object...");
-        transaction = getIntent().getParcelableExtra(TRANSACTION);
-        if (transaction == null) {
+        Logger.logDebug(this, this.getClass().getSimpleName(), "looking for Order object...");
+        order = getIntent().getParcelableExtra(ORDER);
+        if (order == null) {
             Logger.logError(this.getClass().getSimpleName(), "Object not found. Sending back - Payment Cancelled");
             returnResult(RESULT_CANCELED);
             return;
         }
-        Logger.logDebug(this, this.getClass().getSimpleName(), "Found transaction Object. Starting PaymentOptionsFragment");
+        Logger.logDebug(this, this.getClass().getSimpleName(), "Found order Object. Starting PaymentOptionsFragment");
         loadFragment(new ChoosePaymentOption(), false);
     }
 

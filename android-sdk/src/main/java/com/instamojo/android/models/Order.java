@@ -5,7 +5,7 @@ import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
 /**
- * Transaction Class to hold the details of a Transaction.
+ * Order Class to hold the details of a Order.
  *
  *
  * @author vedhavyas
@@ -13,29 +13,30 @@ import android.support.annotation.NonNull;
  * @since 14/03/16
  */
 
-public class Transaction implements Parcelable {
+public class Order implements Parcelable {
 
     @SuppressWarnings("unused")
-    public static final Parcelable.Creator<Transaction> CREATOR = new Parcelable.Creator<Transaction>() {
+    public static final Parcelable.Creator<Order> CREATOR = new Parcelable.Creator<Order>() {
         @Override
-        public Transaction createFromParcel(Parcel in) {
-            return new Transaction(in);
+        public Order createFromParcel(Parcel in) {
+            return new Order(in);
         }
 
         @Override
-        public Transaction[] newArray(int size) {
-            return new Transaction[size];
+        public Order[] newArray(int size) {
+            return new Order[size];
         }
     };
 
     private String id;
+    private String transactionID;
     private String buyerName;
     private String buyerEmail;
     private String buyerPhone;
     private String amount;
-    private String purpose;
+    private String description;
     private String currency;
-    private String webHook;
+    private String redirectionUrl;
     private String mode;
     private String authToken;
     private String resourceURI;
@@ -43,40 +44,43 @@ public class Transaction implements Parcelable {
     private NetBankingOptions netBankingOptions;
 
     /**
-     * Transaction model with all the Mandatory Parameters passed.
+     * Order model with all the Mandatory Parameters passed.
      *
      * @param buyerName Name of the buyer.
      * @param buyerEmail Email of the buyer.
      * @param buyerPhone Phone number of the buyer.
-     * @param amount Transaction amount.
-     * @param purpose Transaction purpose.
+     * @param amount Order amount.
+     * @param description Order description.
      * @param authToken App access token generated using client id and secret.
+     * @param transactionID A unique Transaction ID generated on the developers side
      *
      */
-    public Transaction(@NonNull String buyerName, @NonNull String buyerEmail, @NonNull String buyerPhone,
-                       @NonNull String amount, @NonNull String purpose,
-                       @NonNull String authToken) {
+    public Order(@NonNull String authToken, @NonNull String transactionID, @NonNull String buyerName, @NonNull String buyerEmail, @NonNull String buyerPhone,
+                 @NonNull String amount, @NonNull String description) {
         this.buyerName = buyerName;
         this.buyerEmail = buyerEmail;
         this.buyerPhone = buyerPhone;
         this.amount = amount;
-        this.purpose = purpose;
+        this.description = description;
         this.currency = "INR";
         this.mode = "Android_SDK";
         this.authToken = authToken;
+        this.transactionID = transactionID;
+        this.redirectionUrl = "https://www.instamojo.com/android/redirect/";
     }
 
     @SuppressWarnings("unchecked")
-    protected Transaction(Parcel in) {
+    protected Order(Parcel in) {
         id = in.readString();
+        transactionID = in.readString();
         buyerName = in.readString();
         buyerEmail = in.readString();
         buyerPhone = in.readString();
         amount = in.readString();
-        purpose = in.readString();
+        description = in.readString();
         currency = in.readString();
         mode = in.readString();
-        webHook = in.readString();
+        redirectionUrl = in.readString();
         authToken = in.readString();
         resourceURI = in.readString();
         debitCardOptions = in.readParcelable(DebitCardOptions.class.getClassLoader());
@@ -86,14 +90,15 @@ public class Transaction implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(id);
+        dest.writeString(transactionID);
         dest.writeString(buyerName);
         dest.writeString(buyerEmail);
         dest.writeString(buyerPhone);
         dest.writeString(amount);
-        dest.writeString(purpose);
+        dest.writeString(description);
         dest.writeString(currency);
         dest.writeString(mode);
-        dest.writeString(webHook);
+        dest.writeString(redirectionUrl);
         dest.writeString(authToken);
         dest.writeString(resourceURI);
         dest.writeParcelable(debitCardOptions, flags);
@@ -150,24 +155,24 @@ public class Transaction implements Parcelable {
     }
 
     /**
-     * @param amount Transaction amount for this Transaction. Must not be null.
+     * @param amount Order amount for this Order. Must not be null.
      */
     public void setAmount(@NonNull String amount) {
         this.amount = amount;
     }
 
     /**
-     * @return Purpose of the Transaction if available else null.
+     * @return Purpose of the Order if available else null.
      */
-    public String getPurpose() {
-        return purpose;
+    public String getDescription() {
+        return description;
     }
 
     /**
-     * @param purpose Purpose of this transaction. Must not be null.
+     * @param description Purpose of this transaction. Must not be null.
      */
-    public void setPurpose(@NonNull String purpose) {
-        this.purpose = purpose;
+    public void setDescription(@NonNull String description) {
+        this.description = description;
     }
 
     /**
@@ -178,25 +183,25 @@ public class Transaction implements Parcelable {
     }
 
     /**
-     * @return Mode of the Transaction.
+     * @return Mode of the Order.
      */
     public String getMode() {
         return mode;
     }
 
     /**
-     * @return webhook for this transaction.
+     * @return web hook for this transaction.
      */
-    public String getWebHook() {
-        return webHook;
+    public String getRedirectionUrl() {
+        return redirectionUrl;
     }
 
     /**
-     * @param webHook Weeb hook for this transaction. Will be redirected to this URL
-     *                after payment. Should not be called unless You know what you are doing.
+     * @param redirectionUrl Web hook for this order. Will be redirected to this URL
+     *                after payment. Should not be called unless you know what you are doing.
      */
-    public void setWebHook(@NonNull String webHook) {
-        this.webHook = webHook;
+    public void setRedirectionUrl(@NonNull String redirectionUrl) {
+        this.redirectionUrl = redirectionUrl;
     }
 
     /**
@@ -214,7 +219,7 @@ public class Transaction implements Parcelable {
     }
 
     /**
-     * @return Transaction ID if available else null.
+     * @return Order ID if available else null.
      */
     public String getId() {
         return id;
@@ -263,10 +268,24 @@ public class Transaction implements Parcelable {
     }
 
     /**
-     * @param netBankingOptions Netbanking options for this Transaction. Can be null.
+     * @param netBankingOptions Netbanking options for this Order. Can be null.
      */
     public void setNetBankingOptions(NetBankingOptions netBankingOptions) {
         this.netBankingOptions = netBankingOptions;
+    }
+
+    /**
+     * @return Unique TransactionID generated for this order
+     */
+    public String getTransactionID() {
+        return transactionID;
+    }
+
+    /**
+     * @param transactionID Unique TransactionID generated for this order
+     */
+    public void setTransactionID(String transactionID) {
+        this.transactionID = transactionID;
     }
 
     @Override

@@ -33,7 +33,7 @@ public class DebitCardOptions implements Parcelable {
     /**
      * Constructor for DebitCardOptions.
      *
-     * @param orderID    Order ID of the Transaction. Should not be Null.
+     * @param orderID    Order ID of the Order. Should not be Null.
      * @param merchantID Merchant ID of the transaction. Should not be Null.
      * @param url        Juspay Url to get the final 3D-secure Url.
      */

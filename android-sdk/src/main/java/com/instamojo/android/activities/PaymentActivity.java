@@ -1,13 +1,14 @@
 package com.instamojo.android.activities;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import com.instamojo.android.R;
 import com.instamojo.android.fragments.JusPaySafeBrowser;
 import com.instamojo.android.helpers.Logger;
+
+import in.juspay.godel.ui.JuspayBrowserFragment;
 
 /**
  * Activity subclass extending {@link BaseActivity}. Activity for {@link JusPaySafeBrowser} fragment.
@@ -29,11 +30,11 @@ public class PaymentActivity extends BaseActivity {
     public static final String ORDER_ID = "order_id";
 
     /**
-     * Extra Bundle key for Transaction Status which is passed back from SDK.
+     * Extra Bundle key for Order Status which is passed back from SDK.
      */
     public static final String TRANSACTION_STATUS = "transaction_status";
 
-    private Fragment currentFragment;
+    private JuspayBrowserFragment currentFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,25 +59,22 @@ public class PaymentActivity extends BaseActivity {
     }
 
     private void showFragment() {
-        Bundle sourceArgs = getIntent().getBundleExtra(PAYMENT_BUNDLE);
+        final Bundle sourceArgs = getIntent().getBundleExtra(PAYMENT_BUNDLE);
         if (sourceArgs == null) {
             Logger.logError(this.getClass().getSimpleName(), "Payment bundle is Null");
             returnResult(RESULT_CANCELED);
             return;
         }
-
-        JusPaySafeBrowser fragment = new JusPaySafeBrowser();
-        fragment.setArguments(sourceArgs);
-        getSupportFragmentManager().beginTransaction().add(R.id.container, fragment).commit();
-        currentFragment = fragment;
-        Logger.logDebug(this, this.getClass().getSimpleName(), "Loaded Fragment - " + fragment.getClass().getSimpleName());
+        currentFragment = (JuspayBrowserFragment) getSupportFragmentManager().findFragmentById(R.id.juspay_browser_fragment_activity);
+        currentFragment.startPaymentWithArguments(sourceArgs);
+        Logger.logDebug(this, this.getClass().getSimpleName(), "Loaded Fragment - " + currentFragment.getClass().getSimpleName());
     }
 
     @Override
     public void onBackPressed() {
-        if (currentFragment instanceof JusPaySafeBrowser) {
+        if (currentFragment != null) {
             Logger.logDebug(this, this.getClass().getSimpleName(), "Invoking Juspay Cancel Payment Handler");
-            ((JusPaySafeBrowser) currentFragment).juspayBackPressedHandler(true);
+            currentFragment.juspayBackPressedHandler(true);
         } else {
             returnResult(RESULT_CANCELED);
         }

@@ -18,7 +18,7 @@
 
         <meta-data
             android:name="instamojo_sdk_log_level"
-            android:value="error" />
+            android:value="debug" />
 
         <activity
             android:name=".MainActivity"

@@ -14,7 +14,7 @@ import com.instamojo.android.models.Card;
 import com.instamojo.android.models.DebitCardOptions;
 import com.instamojo.android.models.Errors;
 import com.instamojo.android.models.NetBankingOptions;
-import com.instamojo.android.models.Transaction;
+import com.instamojo.android.models.Order;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -42,7 +42,7 @@ import okhttp3.Response;
 
 public class Request {
 
-    private Transaction transaction;
+    private Order order;
     private OrderRequestCallBack orderRequestCallBack;
     private JusPayRequestCallback jusPayRequestCallback;
     private Card card;
@@ -50,24 +50,24 @@ public class Request {
     /**
      * Network Request to create an order ID from Instamojo server.
      *
-     * @param transaction Transaction model with all the mandatory fields set.
+     * @param order Order model with all the mandatory fields set.
      * @param orderRequestCallBack Callback interface for the Asynchronous Network Call.
      */
-    public Request(@NonNull Transaction transaction, @NonNull OrderRequestCallBack orderRequestCallBack) {
-        this.transaction = transaction;
+    public Request(@NonNull Order order, @NonNull OrderRequestCallBack orderRequestCallBack) {
+        this.order = order;
         this.orderRequestCallBack = orderRequestCallBack;
     }
 
     /**
      * Network Request to get order details from Juspay for JuspaySafeBrowser.
      *
-     * @param transaction           Transaction model with all the mandatory fields set.
+     * @param order           Order model with all the mandatory fields set.
      * @param card                  Card with all the proper validations done.
      * @param jusPayRequestCallback Callback for Asynchronous network call.
      */
-    public Request(@NonNull Transaction transaction, @NonNull Card card, @NonNull JusPayRequestCallback jusPayRequestCallback) {
+    public Request(@NonNull Order order, @NonNull Card card, @NonNull JusPayRequestCallback jusPayRequestCallback) {
         this.card = card;
-        this.transaction = transaction;
+        this.order = order;
         this.jusPayRequestCallback = jusPayRequestCallback;
     }
 
@@ -98,8 +98,8 @@ public class Request {
         }
 
         RequestBody body = new FormBody.Builder()
-                .add("order_id", transaction.getDebitCardOptions().getOrderID())
-                .add("merchant_id", transaction.getDebitCardOptions().getMerchantID())
+                .add("order_id", order.getDebitCardOptions().getOrderID())
+                .add("merchant_id", order.getDebitCardOptions().getMerchantID())
                 .add("payment_method_type", "CARD")
                 .add("card_number", card.getCardNumber())
                 .add("name_on_card", card.getCardHolderName())
@@ -112,7 +112,7 @@ public class Request {
                 .build();
 
         final okhttp3.Request request = new okhttp3.Request.Builder()
-                .url(transaction.getDebitCardOptions().getUrl())
+                .url(order.getDebitCardOptions().getUrl())
                 .post(body)
                 .build();
         client.newCall(request).enqueue(new Callback() {
@@ -147,8 +147,8 @@ public class Request {
         String url = responseObject.getJSONObject("payment").getJSONObject("authentication").getString("url");
         final Bundle args = new Bundle();
         args.putString(JusPaySafeBrowser.URL, url);
-        args.putString(JusPaySafeBrowser.MERCHANT_ID, transaction.getDebitCardOptions().getMerchantID());
-        args.putString(JusPaySafeBrowser.ORDER_ID, transaction.getDebitCardOptions().getOrderID());
+        args.putString(JusPaySafeBrowser.MERCHANT_ID, order.getDebitCardOptions().getMerchantID());
+        args.putString(JusPaySafeBrowser.ORDER_ID, order.getDebitCardOptions().getOrderID());
         return args;
     }
 
@@ -156,20 +156,20 @@ public class Request {
         OkHttpClient client = new OkHttpClient();
 
         FormBody.Builder builder = new FormBody.Builder()
-                .add("buyer_name", transaction.getBuyerName())
-                .add("buyer_email", transaction.getBuyerEmail())
-                .add("purpose", transaction.getPurpose())
-                .add("buyer_phone", transaction.getBuyerPhone())
-                .add("amount", transaction.getAmount())
-                .add("currency", transaction.getCurrency())
-                .add("mode", transaction.getMode());
-        if (transaction.getWebHook() != null) {
-            builder.add("webhook", transaction.getWebHook());
-        }
+                .add("name", order.getBuyerName())
+                .add("email", order.getBuyerEmail())
+                .add("amount", order.getAmount())
+                .add("description", order.getDescription())
+                .add("phone", order.getBuyerPhone())
+                .add("currency", order.getCurrency())
+                .add("transaction_id", order.getTransactionID())
+                .add("redirect_url", order.getRedirectionUrl())
+                .add("advanced_payment_options", "true")
+                .add("mode", order.getMode());
         RequestBody body = builder.build();
         HashMap<String, String> headers = new HashMap<>();
         headers.put("User-Agent", getUserAgent());
-        headers.put("Authorization", "Bearer " + transaction.getAuthToken());
+        headers.put("Authorization", "Bearer " + order.getAuthToken());
 
         okhttp3.Request request = new okhttp3.Request.Builder()
                 .url(Urls.MOJO_TRANSACTION_INIT_URL)
@@ -182,7 +182,7 @@ public class Request {
             @Override
             public void onFailure(Call call, IOException e) {
                 Logger.logError(this.getClass().getSimpleName(), "Error while making Instamojo request - " + e.getMessage());
-                orderRequestCallBack.onFinish(transaction, new Errors.ConnectionException(e.getMessage()));
+                orderRequestCallBack.onFinish(order, new Errors.ConnectionException(e.getMessage()));
             }
 
             @Override
@@ -192,13 +192,13 @@ public class Request {
                     responseBody = r.body().string();
                     r.body().close();
                     updateTransactionDetails(responseBody);
-                    orderRequestCallBack.onFinish(transaction, null);
+                    orderRequestCallBack.onFinish(order, null);
                 } catch (IOException e) {
                     Logger.logError(this.getClass().getSimpleName(), "Error while making Instamojo request - " + e.getMessage());
-                    orderRequestCallBack.onFinish(transaction, new Errors.ConnectionException(e.getMessage()));
+                    orderRequestCallBack.onFinish(order, new Errors.ConnectionException(e.getMessage()));
                 } catch (JSONException e) {
                     Logger.logError(this.getClass().getSimpleName(), "Error while making Instamojo request - " + e.getMessage());
-                    orderRequestCallBack.onFinish(transaction, new Errors.ServerException(responseBody));
+                    orderRequestCallBack.onFinish(order, new Errors.ServerException(responseBody));
                 }
             }
         });
@@ -206,27 +206,32 @@ public class Request {
 
     private void updateTransactionDetails(String responseBody) throws JSONException {
         JSONObject responseObject = new JSONObject(responseBody);
-        transaction.setId(responseObject.getString("id"));
-        transaction.setResourceURI(responseObject.getString("resource_uri"));
-        if (responseObject.has("resource_cards")) {
-            JSONObject resourceCards = responseObject.getJSONObject("resource_cards");
-            String merchantID = resourceCards.getString("juspay_merchant_id");
-            String orderID = resourceCards.getString("juspay_order_id");
-            String paymentURL = resourceCards.getString("juspay_payment_uri");
-            transaction.setDebitCardOptions(new DebitCardOptions(orderID, merchantID, paymentURL));
+        JSONObject orderObject = responseObject.getJSONObject("order");
+        order.setId(orderObject.getString("id"));
+        order.setTransactionID(orderObject.getString("transaction_id"));
+        order.setResourceURI(orderObject.getString("resource_uri"));
+
+        JSONObject paymentOptionsObject = responseObject.getJSONObject("payment_options");
+        if (paymentOptionsObject.has("card_options")) {
+            JSONObject cardOptions = paymentOptionsObject.getJSONObject("card_options");
+            JSONObject submissionData = cardOptions.getJSONObject("submission_data");
+            String merchantID = submissionData.getString("merchant_id");
+            String orderID = submissionData.getString("order_id");
+            String paymentURL = cardOptions.getString("submission_url");
+            order.setDebitCardOptions(new DebitCardOptions(orderID, merchantID, paymentURL));
         }
 
-        if (responseObject.has("resource_netbanking")) {
-            JSONObject resourceNB = responseObject.getJSONObject("resource_netbanking");
-            String nbURL = resourceNB.getString("submission_uri");
-            JSONArray banksArray = resourceNB.getJSONArray("banks");
+        if (paymentOptionsObject.has("netbanking_options")) {
+            JSONObject netbankingOptions = paymentOptionsObject.getJSONObject("netbanking_options");
+            String nbURL = netbankingOptions.getString("submission_url");
+            JSONArray banksArray = netbankingOptions.getJSONArray("choices");
             HashMap<String, String> banks = new HashMap<>();
             JSONObject bank;
             for (int i = 0; i < banksArray.length(); i++) {
                 bank = banksArray.getJSONObject(i);
                 banks.put(bank.getString("name"), bank.getString("id"));
             }
-            transaction.setNetBankingOptions(new NetBankingOptions(nbURL, banks));
+            order.setNetBankingOptions(new NetBankingOptions(nbURL, banks));
         }
     }
 

@@ -14,5 +14,5 @@ class Urls {
     /**
      * Order Initiate URL.
      */
-    public static final String MOJO_TRANSACTION_INIT_URL = SERVER + "/integrations/payments/";
+    public static final String MOJO_TRANSACTION_INIT_URL = SERVER + "/gateway/orders/";
 }

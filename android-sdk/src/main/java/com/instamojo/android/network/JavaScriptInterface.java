@@ -30,7 +30,7 @@ public class JavaScriptInterface {
     @android.webkit.JavascriptInterface
     public void onTransactionComplete(String status, String orderID) {
         Logger.logDebug(activity, this.getClass().getSimpleName(), "Received Call to Javascript Interface");
-        if (!status.equalsIgnoreCase("Credit")) {
+        if (!status.equalsIgnoreCase("true")) {
             ((PaymentActivity) activity).returnResult(Activity.RESULT_CANCELED);
             return;
         }
