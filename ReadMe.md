@@ -12,7 +12,7 @@ repositories {
 }
 
 dependencies {
-    `maven repo here`
+    compile 'com.instamojo:android-sdk:+'
 }
 
 ```
