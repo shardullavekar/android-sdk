@@ -6,6 +6,7 @@ import android.view.MenuItem;
 
 import com.instamojo.android.R;
 import com.instamojo.android.fragments.JusPaySafeBrowser;
+import com.instamojo.android.helpers.Constants;
 import com.instamojo.android.helpers.Logger;
 
 import in.juspay.godel.ui.JuspayBrowserFragment;
@@ -18,21 +19,6 @@ import in.juspay.godel.ui.JuspayBrowserFragment;
  * @since 14/03/16
  */
 public class PaymentActivity extends BaseActivity {
-
-    /**
-     * Extra Bundle key passed to JuspaySafe browser.
-     */
-    public static final String PAYMENT_BUNDLE = "payment_bundle";
-
-    /**
-     * Extra Bundle key for Order ID which is passed back from SDK.
-     */
-    public static final String ORDER_ID = "order_id";
-
-    /**
-     * Extra Bundle key for Order Status which is passed back from SDK.
-     */
-    public static final String TRANSACTION_STATUS = "transaction_status";
 
     private JuspayBrowserFragment currentFragment;
 
@@ -59,7 +45,7 @@ public class PaymentActivity extends BaseActivity {
     }
 
     private void showFragment() {
-        final Bundle sourceArgs = getIntent().getBundleExtra(PAYMENT_BUNDLE);
+        final Bundle sourceArgs = getIntent().getBundleExtra(Constants.PAYMENT_BUNDLE);
         if (sourceArgs == null) {
             Logger.logError(this.getClass().getSimpleName(), "Payment bundle is Null");
             returnResult(RESULT_CANCELED);

@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import com.instamojo.android.R;
 import com.instamojo.android.fragments.BaseFragment;
 import com.instamojo.android.fragments.ChoosePaymentOption;
+import com.instamojo.android.helpers.Constants;
 import com.instamojo.android.helpers.Logger;
 import com.instamojo.android.models.Order;
 
@@ -25,11 +26,6 @@ import com.instamojo.android.models.Order;
  * @since 14/03/16
  */
 public class PaymentDetailsActivity extends BaseActivity {
-
-    /**
-     * Extra key for the {@link Order} object that is sent through Bundle.
-     */
-    public static final String ORDER = "order";
 
     private Order order;
     private boolean showSearch;
@@ -83,8 +79,8 @@ public class PaymentDetailsActivity extends BaseActivity {
         Logger.logDebug(this, this.getClass().getSimpleName(), "Starting PaymentActivity with given Bundle");
         Intent intent = new Intent(this, PaymentActivity.class);
         intent.putExtras(getIntent());
-        intent.putExtra(PaymentActivity.PAYMENT_BUNDLE, bundle);
-        startActivityForResult(intent, 9);
+        intent.putExtra(Constants.PAYMENT_BUNDLE, bundle);
+        startActivityForResult(intent, Constants.REQUEST_CODE);
     }
 
     @Override
@@ -99,7 +95,7 @@ public class PaymentDetailsActivity extends BaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 9) {
+        if (requestCode == Constants.REQUEST_CODE) {
             Logger.logDebug(this, this.getClass().getSimpleName(), "Returning back result to caller");
             returnResult(data.getExtras(), resultCode);
         }
@@ -121,7 +117,7 @@ public class PaymentDetailsActivity extends BaseActivity {
 
     private void loadFragments() {
         Logger.logDebug(this, this.getClass().getSimpleName(), "looking for Order object...");
-        order = getIntent().getParcelableExtra(ORDER);
+        order = getIntent().getParcelableExtra(Constants.ORDER);
         if (order == null) {
             Logger.logError(this.getClass().getSimpleName(), "Object not found. Sending back - Payment Cancelled");
             returnResult(RESULT_CANCELED);

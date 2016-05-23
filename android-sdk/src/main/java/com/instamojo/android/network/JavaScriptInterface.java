@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.os.Bundle;
 
 import com.instamojo.android.activities.PaymentActivity;
+import com.instamojo.android.helpers.Constants;
 import com.instamojo.android.helpers.Logger;
 
 /**
@@ -35,8 +36,8 @@ public class JavaScriptInterface {
             return;
         }
         Bundle bundle = new Bundle();
-        bundle.putString(PaymentActivity.ORDER_ID, orderID);
-        bundle.putString(PaymentActivity.TRANSACTION_STATUS, status);
+        bundle.putString(Constants.ORDER_ID, orderID);
+        bundle.putString(Constants.TRANSACTION_STATUS, status);
         Logger.logDebug(activity, this.getClass().getSimpleName(), "Returning result back to caller");
         ((PaymentActivity) activity).returnResult(bundle, Activity.RESULT_OK);
     }

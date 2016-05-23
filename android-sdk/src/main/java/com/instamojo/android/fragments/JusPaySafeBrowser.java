@@ -23,11 +23,6 @@ import in.juspay.godel.ui.JuspayBrowserFragment;
 
 public class JusPaySafeBrowser extends JuspayBrowserFragment {
 
-    public static final String URL = "url";
-    public static final String MERCHANT_ID = "merchantId";
-    public static final String ORDER_ID = "orderId";
-    public static final String POST_DATA = "postData";
-
     /**
      * Creates new instance of Fragment.
      */

@@ -5,7 +5,7 @@ import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
 /**
- * DebitCardOptions object that holds the Card transaction information received from Mojo Server
+ * CardOptions object that holds the Card transaction information received from Mojo Server
  * for a particular order.
  *
  *
@@ -13,17 +13,17 @@ import android.support.annotation.NonNull;
  * @version 1.0
  * @since 14/03/16
  */
-public class DebitCardOptions implements Parcelable {
+public class CardOptions implements Parcelable {
     @SuppressWarnings("unused")
-    public static final Parcelable.Creator<DebitCardOptions> CREATOR = new Parcelable.Creator<DebitCardOptions>() {
+    public static final Parcelable.Creator<CardOptions> CREATOR = new Parcelable.Creator<CardOptions>() {
         @Override
-        public DebitCardOptions createFromParcel(Parcel in) {
-            return new DebitCardOptions(in);
+        public CardOptions createFromParcel(Parcel in) {
+            return new CardOptions(in);
         }
 
         @Override
-        public DebitCardOptions[] newArray(int size) {
-            return new DebitCardOptions[size];
+        public CardOptions[] newArray(int size) {
+            return new CardOptions[size];
         }
     };
     private String orderID;
@@ -31,19 +31,19 @@ public class DebitCardOptions implements Parcelable {
     private String merchantID;
 
     /**
-     * Constructor for DebitCardOptions.
+     * Constructor for CardOptions.
      *
      * @param orderID    Order ID of the Order. Should not be Null.
      * @param merchantID Merchant ID of the transaction. Should not be Null.
      * @param url        Juspay Url to get the final 3D-secure Url.
      */
-    public DebitCardOptions(@NonNull String orderID, @NonNull String merchantID, @NonNull String url) {
+    public CardOptions(@NonNull String orderID, @NonNull String merchantID, @NonNull String url) {
         this.orderID = orderID;
         this.url = url;
         this.merchantID = merchantID;
     }
 
-    protected DebitCardOptions(Parcel in) {
+    protected CardOptions(Parcel in) {
         orderID = in.readString();
         url = in.readString();
         merchantID = in.readString();

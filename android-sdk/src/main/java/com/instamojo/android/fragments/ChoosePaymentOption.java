@@ -51,7 +51,7 @@ public class ChoosePaymentOption extends BaseFragment implements View.OnClickLis
             netBankingLayout.setVisibility(View.GONE);
         }
 
-        if (order.getDebitCardOptions() == null) {
+        if (order.getCardOptions() == null) {
             Logger.logDebug(getContext(), this.getClass().getSimpleName(), "Hiding Card Layout");
             cardLayout.setVisibility(View.GONE);
         }

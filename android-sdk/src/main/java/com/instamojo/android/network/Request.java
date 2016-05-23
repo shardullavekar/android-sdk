@@ -7,11 +7,11 @@ import android.support.annotation.NonNull;
 import com.instamojo.android.BuildConfig;
 import com.instamojo.android.callbacks.JusPayRequestCallback;
 import com.instamojo.android.callbacks.OrderRequestCallBack;
-import com.instamojo.android.fragments.JusPaySafeBrowser;
 import com.instamojo.android.helpers.CardValidator;
+import com.instamojo.android.helpers.Constants;
 import com.instamojo.android.helpers.Logger;
 import com.instamojo.android.models.Card;
-import com.instamojo.android.models.DebitCardOptions;
+import com.instamojo.android.models.CardOptions;
 import com.instamojo.android.models.Errors;
 import com.instamojo.android.models.NetBankingOptions;
 import com.instamojo.android.models.Order;
@@ -98,8 +98,8 @@ public class Request {
         }
 
         RequestBody body = new FormBody.Builder()
-                .add("order_id", order.getDebitCardOptions().getOrderID())
-                .add("merchant_id", order.getDebitCardOptions().getMerchantID())
+                .add("order_id", order.getCardOptions().getOrderID())
+                .add("merchant_id", order.getCardOptions().getMerchantID())
                 .add("payment_method_type", "CARD")
                 .add("card_number", card.getCardNumber())
                 .add("name_on_card", card.getCardHolderName())
@@ -112,7 +112,7 @@ public class Request {
                 .build();
 
         final okhttp3.Request request = new okhttp3.Request.Builder()
-                .url(order.getDebitCardOptions().getUrl())
+                .url(order.getCardOptions().getUrl())
                 .post(body)
                 .build();
         client.newCall(request).enqueue(new Callback() {
@@ -146,9 +146,9 @@ public class Request {
         JSONObject responseObject = new JSONObject(responseBody);
         String url = responseObject.getJSONObject("payment").getJSONObject("authentication").getString("url");
         final Bundle args = new Bundle();
-        args.putString(JusPaySafeBrowser.URL, url);
-        args.putString(JusPaySafeBrowser.MERCHANT_ID, order.getDebitCardOptions().getMerchantID());
-        args.putString(JusPaySafeBrowser.ORDER_ID, order.getDebitCardOptions().getOrderID());
+        args.putString(Constants.URL, url);
+        args.putString(Constants.MERCHANT_ID, order.getCardOptions().getMerchantID());
+        args.putString(Constants.ORDER_ID, order.getCardOptions().getOrderID());
         return args;
     }
 
@@ -218,7 +218,7 @@ public class Request {
             String merchantID = submissionData.getString("merchant_id");
             String orderID = submissionData.getString("order_id");
             String paymentURL = cardOptions.getString("submission_url");
-            order.setDebitCardOptions(new DebitCardOptions(orderID, merchantID, paymentURL));
+            order.setCardOptions(new CardOptions(orderID, merchantID, paymentURL));
         }
 
         if (paymentOptionsObject.has("netbanking_options")) {

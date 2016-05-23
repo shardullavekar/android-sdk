@@ -14,7 +14,7 @@ import android.widget.Toast;
 
 import com.instamojo.android.activities.PaymentActivity;
 import com.instamojo.android.callbacks.JusPayRequestCallback;
-import com.instamojo.android.fragments.JusPaySafeBrowser;
+import com.instamojo.android.helpers.Constants;
 import com.instamojo.android.models.Card;
 import com.instamojo.android.models.Order;
 import com.instamojo.android.network.Request;
@@ -22,32 +22,30 @@ import com.instamojo.android.network.Request;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class CustomPaymentMethodActivity extends AppCompatActivity {
-
-    public static final String TRANSACTION = "transaction";
+public class CustomUIActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_custom_form);
-        validateUI();
+        makeUI();
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         //send back the result to Main activity
-        if (requestCode == 9) {
+        if (requestCode == Constants.REQUEST_CODE) {
             setResult(resultCode);
             setIntent(data);
             finish();
         }
     }
 
-    private void validateUI() {
-        final Order order = getIntent().getParcelableExtra(TRANSACTION);
+    private void makeUI() {
+        final Order order = getIntent().getParcelableExtra(Constants.ORDER);
         //finish the activity if the order is null or both the debit and netbanking is disabled
-        if (order == null || (order.getDebitCardOptions() == null
+        if (order == null || (order.getCardOptions() == null
                 && order.getNetBankingOptions() == null)) {
             setResult(RESULT_CANCELED);
             finish();
@@ -65,7 +63,7 @@ public class CustomPaymentMethodActivity extends AppCompatActivity {
         View separator = findViewById(R.id.net_banking_separator);
         AppCompatSpinner netBankingSpinner = (AppCompatSpinner) findViewById(R.id.net_banking_spinner);
 
-        if (order.getDebitCardOptions() == null) {
+        if (order.getCardOptions() == null) {
             //seems like card payment is not enabled
             findViewById(R.id.card_layout_1).setVisibility(View.GONE);
             findViewById(R.id.card_layout_2).setVisibility(View.GONE);
@@ -114,8 +112,8 @@ public class CustomPaymentMethodActivity extends AppCompatActivity {
                     //User selected a Bank. Hence proceed to Juspay
                     String bankCode = order.getNetBankingOptions().getBanks().get(banks.get(position));
                     Bundle bundle = new Bundle();
-                    bundle.putString(JusPaySafeBrowser.URL, order.getNetBankingOptions().getUrl());
-                    bundle.putString(JusPaySafeBrowser.POST_DATA, order.
+                    bundle.putString(Constants.URL, order.getNetBankingOptions().getUrl());
+                    bundle.putString(Constants.POST_DATA, order.
                             getNetBankingOptions().getPostData(order.getAuthToken(), bankCode));
                     startPaymentActivity(bundle);
                 }
@@ -183,8 +181,8 @@ public class CustomPaymentMethodActivity extends AppCompatActivity {
         //Do not change this unless you know what you are doing
         Intent intent = new Intent(this, PaymentActivity.class);
         intent.putExtras(getIntent());
-        intent.putExtra(PaymentActivity.PAYMENT_BUNDLE, bundle);
-        startActivityForResult(intent, 9);
+        intent.putExtra(Constants.PAYMENT_BUNDLE, bundle);
+        startActivityForResult(intent, Constants.REQUEST_CODE);
     }
 
     private void showErrorToast(String message) {

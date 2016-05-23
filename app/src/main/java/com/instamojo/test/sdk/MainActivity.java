@@ -10,9 +10,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.instamojo.android.activities.PaymentActivity;
 import com.instamojo.android.activities.PaymentDetailsActivity;
 import com.instamojo.android.callbacks.OrderRequestCallBack;
+import com.instamojo.android.helpers.Constants;
 import com.instamojo.android.models.Errors;
 import com.instamojo.android.models.Order;
 import com.instamojo.android.network.Request;
@@ -109,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
                             return;
                         }
 
-                        startPreCreatedUI(order);
+                        startCustomUI(order);
                     }
                 });
 
@@ -129,18 +129,22 @@ public class MainActivity extends AppCompatActivity {
     private void startPreCreatedUI(Order order) {
         //Using Pre created UI
         Intent intent = new Intent(getBaseContext(), PaymentDetailsActivity.class);
-        intent.putExtra(PaymentDetailsActivity.ORDER, order);
-        startActivityForResult(intent, 9);
+        intent.putExtra(Constants.ORDER, order);
+        startActivityForResult(intent, Constants.REQUEST_CODE);
     }
 
     private void startCustomUI(Order order) {
         //Custom UI Implementation
-        Intent intent = new Intent(getBaseContext(), CustomPaymentMethodActivity.class);
-        intent.putExtra(CustomPaymentMethodActivity.TRANSACTION, order);
-        startActivityForResult(intent, 9);
+        Intent intent = new Intent(getBaseContext(), CustomUIActivity.class);
+        intent.putExtra(Constants.ORDER, order);
+        startActivityForResult(intent, Constants.REQUEST_CODE);
     }
 
 
+    /**
+     * Token should not be generated on the app like this. The token must be generated on your server
+     * and should be fetched to your app.
+     */
     private void updateToken() {
         final ProgressDialog dialog = ProgressDialog.show(this, "", "Please wait...", true, false);
         OkHttpClient client = new OkHttpClient();
@@ -181,11 +185,11 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 9) {
+        if (requestCode == Constants.REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
                 //handle successful payment here
-                String status = data.getStringExtra(PaymentActivity.TRANSACTION_STATUS);
-                String id = data.getStringExtra(PaymentActivity.ORDER_ID);
+                String status = data.getStringExtra(Constants.TRANSACTION_STATUS);
+                String id = data.getStringExtra(Constants.ORDER_ID);
                 Toast.makeText(this, status + " - " + id, Toast.LENGTH_LONG).show();
             } else {
                 //handle failed payment here

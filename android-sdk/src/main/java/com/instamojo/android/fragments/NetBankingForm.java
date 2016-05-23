@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.instamojo.android.R;
 import com.instamojo.android.activities.PaymentDetailsActivity;
+import com.instamojo.android.helpers.Constants;
 import com.instamojo.android.helpers.Logger;
 import com.instamojo.android.models.Order;
 
@@ -82,8 +83,8 @@ public class NetBankingForm extends BaseFragment implements SearchView.OnQueryTe
                 public void onClick(View v) {
                     Bundle bundle = new Bundle();
                     Order order = parentActivity.getOrder();
-                    bundle.putString(JusPaySafeBrowser.URL, order.getNetBankingOptions().getUrl());
-                    bundle.putString(JusPaySafeBrowser.POST_DATA, order.getNetBankingOptions().
+                    bundle.putString(Constants.URL, order.getNetBankingOptions().getUrl());
+                    bundle.putString(Constants.POST_DATA, order.getNetBankingOptions().
                             getPostData(order.getAuthToken(), bank.getValue()));
                     parentActivity.startPaymentActivity(bundle);
                 }

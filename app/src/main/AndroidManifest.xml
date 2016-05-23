@@ -30,7 +30,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".CustomPaymentMethodActivity"
+            android:name=".CustomUIActivity"
             android:label="Choose Payment method"
             android:screenOrientation="portrait" />
 

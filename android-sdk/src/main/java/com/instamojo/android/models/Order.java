@@ -40,7 +40,7 @@ public class Order implements Parcelable {
     private String mode;
     private String authToken;
     private String resourceURI;
-    private DebitCardOptions debitCardOptions;
+    private CardOptions cardOptions;
     private NetBankingOptions netBankingOptions;
 
     /**
@@ -83,7 +83,7 @@ public class Order implements Parcelable {
         redirectionUrl = in.readString();
         authToken = in.readString();
         resourceURI = in.readString();
-        debitCardOptions = in.readParcelable(DebitCardOptions.class.getClassLoader());
+        cardOptions = in.readParcelable(CardOptions.class.getClassLoader());
         netBankingOptions = in.readParcelable(NetBankingOptions.class.getClassLoader());
     }
 
@@ -101,7 +101,7 @@ public class Order implements Parcelable {
         dest.writeString(redirectionUrl);
         dest.writeString(authToken);
         dest.writeString(resourceURI);
-        dest.writeParcelable(debitCardOptions, flags);
+        dest.writeParcelable(cardOptions, flags);
         dest.writeParcelable(netBankingOptions, flags);
     }
 
@@ -247,17 +247,17 @@ public class Order implements Parcelable {
     }
 
     /**
-     * @return {@link DebitCardOptions} if available. Else null.
+     * @return {@link CardOptions} if available. Else null.
      */
-    public DebitCardOptions getDebitCardOptions() {
-        return debitCardOptions;
+    public CardOptions getCardOptions() {
+        return cardOptions;
     }
 
     /**
-     * @param debitCardOptions Debit card options for this transaction. Can be null.
+     * @param cardOptions Debit card options for this transaction. Can be null.
      */
-    public void setDebitCardOptions(DebitCardOptions debitCardOptions) {
-        this.debitCardOptions = debitCardOptions;
+    public void setCardOptions(CardOptions cardOptions) {
+        this.cardOptions = cardOptions;
     }
 
     /**

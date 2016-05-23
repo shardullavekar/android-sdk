@@ -25,7 +25,7 @@ The following are the minimum set of permissions required by the SDK. Add the fo
 <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
-//required for Juspay to read the OTP
+//required for Juspay to read the OTP from the SMS sent to the device
 <uses-permission android:name="android.permission.READ_SMS" />
 <uses-permission android:name="android.permission.RECEIVE_SMS" />
 ```
@@ -88,20 +88,21 @@ To initiate a Payment, the following mandatory fields are required by the SDK.
 4. Phone number of the buyer &nbsp;
 5. Transaction amount &nbsp;
 6. Access Token &nbsp;
+7. Transaction ID &nbsp;
 
 ### Generating Access Token and transaction_id
 A valid access token should be generated on your server using your `Client ID` and `Client Secret` and the token is then passed on to the application.
 Access token will be valid for a max of 30 minutes after generation.
 
-An Unique transaction_id must be generated on your for every order initiated with Instamojo APIs 
+An Unique transaction_id must be generated on your server for every order initiated with Instamojo APIs.
 
-### Creating Transaction Object
-With all the mandatory fields mentioned above, a `Order` object can created like this.
+### Creating Order Object
+With all the mandatory fields mentioned above, a `Order` object can created.
 ``` Java
 Order order = new Order(accessToken, transactionID, name, email, phone, amount, purpose);
 ```
 
-Add the following code snippet to validate the `Transaction` object.
+Add the following code snippet to validate the `Order` object.
 ``` Java
 // Good time to show progress dialog to user
 Request request = new Request(order, new OrderRequestCallBack() {
@@ -177,40 +178,183 @@ SDK currently supports to forms of Payment methods.
 These details can be collected in two ways.
 
 1. Pre-Created UI that comes with the SDK.
-2. Creating Custom Debit/Credit card and Netbanking UI.
+2. Creating Custom UI to collect Debit/Credit card and Netbanking details.
 
 #### Using Pre-Created UI
 Add the following code snippet to your application's activity/fragment to use Pre-created UI.
 ``` Java
-private void startPreCreatedUI(Transaction transaction){
+private void startPreCreatedUI(Order order){
         //Using Pre created UI
         Intent intent = new Intent(getBaseContext(), PaymentDetailsActivity.class);
-        intent.putExtra(PaymentDetailsActivity.TRANSACTION, transaction);
-        startActivityForResult(intent, 9);
+        intent.putExtra(Constants.ORDER, order);
+        startActivityForResult(intent, Constants.REQUEST_CODE);
 }
 ```
 
 #### Using Custom Created UI
 We know that every application is unique. If you choose to create your own UI to collect Payment information, SDK has necessary APIs to achieve this.
-Use `CustomPaymentMethodActivity` activity, which uses SDK APIs to collect Payment Information, to extend and modify as per your needs.
+Use `CustomUIActivity` activity, which uses SDK APIs to collect Payment Information, to extend and modify as per your needs.
+You can change the name of the activity to anything you like. Best way to do in Android Studio is by refactoring the name of the activity.
 
-### Receiving Payment result
-Add the following code snippet in the same activity.
+##### Changing the Caller method
+Replace `startPreCreatedUI` method wih the following one.
+```Java
+private void startCustomUI(Order order) {
+        //Custom UI Implementation
+        Intent intent = new Intent(getBaseContext(), CustomUIActivity.class);
+        intent.putExtra(Constants.ORDER, order);
+        startActivityForResult(intent, Constants.REQUEST_CODE);
+}
+```
+
+##### Fetching `order` object in the `CustomUIActivity`
+To fetch the passed `order` object in the `CustomUIActivity`. Use the following snippet.
+```Java
+final Order order = getIntent().getParcelableExtra(Constants.ORDER);
+```
+
+##### Collecting Card Details
+###### Validating Card Option
+Always validate whether the current order has card payment enabled. You can check for `null` for the card options.
+```Java
+if (order.getCardOptions() == null) {
+   //seems like card payment is not enabled. Make the necessary UI Changes.
+} else{
+   // Card payment is enabled.
+}
+```
+
+###### Creating and validating `Card` deatils
+Once the user has typed in all the card details and ready to proceed, you can create the `Card` object.
+```Java
+Card card = new Card();
+card.setCardNumber(cardNumber.getText().toString());
+card.setDate(cardExpiryDate.getText().toString());
+card.setCardHolderName(cardHoldersName.getText().toString());
+card.setCvv(cvv.getText().toString());
+
+//Validate the card now
+if (!card.isCardValid()) {
+
+   if (!card.isCardNameValid()) {
+        Log.e("App", "Card Holders Name is invalid");
+   }
+
+   if (!card.isCardNumberValid()) {
+        Log.e("App", "Card Number is invalid");
+   }
+
+   if (!card.isDateValid()) {
+        Log.e("App", "Expiry date is invalid");
+   }
+
+   if (!card.isCVVValid()) {
+        Log.e("App", "CVV is invalid");
+   }
+
+   //return so that user can make necessary changes
+   return;
+}
+```
+
+###### Generating Juspay Bundle using Card 
+Once the card details are validated, You need to generate JusPay Bundle with the card details given
+```Java
+//Good time to show progress dialog while the bundle is generated
+Request request = new Request(order, card, new JusPayRequestCallback() {
+            @Override
+            public void onFinish(final Bundle bundle, final Exception error) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        //Dismiss the dialog here
+                        if (error != null) {
+                            //oops some thing went wrong.
+                            return;
+                        }
+                        
+                        // Everything is fine. Pass the bundle to start payment Activity
+                        startPaymentActivity(bundle);
+                    }
+                });
+            }
+        });
+request.execute();
+
+```
+
+##### Collecting Netbanking Details
+###### Validating Netbanking Option
+Similar to Card Options, Netbanking options can be disabled. Check Netbanking Options for `null`
+```Java
+if (order.getNetBankingOptions() == null) {
+   //seems like Netbanking option is not enabled. Make the necessary UI Changes.
+} else{
+   // Netbanking is enabled.
+}
+```
+
+###### Displaying available Banks
+The Bank and Its code set can be fetched from `order` itself.
+```Java
+order.getNetBankingOptions().getBanks();
+```
+The above code snippet will return a `HashMap<String, String>` with key as bank name and value as bank code.
+Use an android Spinner or List view to display the available banks and collect the bank code of the bank user selects.
+
+###### Generating Juspay Bundle using Bank code
+Once the bank code is collected, You can generate the Juspay Bundle using the following snippet.
+```Java
+//User selected a Bank. Hence proceed to Juspay
+Bundle bundle = new Bundle();
+bundle.putString(Constants.URL, order.getNetBankingOptions().getUrl());
+bundle.putString(Constants.POST_DATA, order.getNetBankingOptions().getPostData(order.getAuthToken(), bankCode));
+
+//Pass the bundle to start payment Activity
+startPaymentActivity(bundle)
+```
+
+##### Starting the payment Activity using the bundle
+Add the following method to the activity which will start the Payment Activity with the Juspay Bundle.
+```Java
+Intent intent = new Intent(this, PaymentActivity.class);
+intent.putExtras(getIntent());
+intent.putExtra(Constants.PAYMENT_BUNDLE, bundle);
+startActivityForResult(intent, Constants.REQUEST_CODE);
+```
+
+##### Passing the result back to main Activity
+Paste the following snippet to pass the result to main activity.
+```java
+@Override
+protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        //send back the result to Main activity
+        if (requestCode == Constants.REQUEST_CODE) {
+            setResult(resultCode);
+            setIntent(data);
+            finish();
+        }
+}
+```
+
+### Receiving Payment result in the main activity
+Add the following code snippet in the main activity.
 If `resultCode == RESULT_OK`, then payment is successful. Else Payment Failed. 
 ``` Java
 @Override
 protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 9) {
+        if (requestCode == Constants.REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
                 //handle successful payment here
-                String status = data.getStringExtra(PaymentActivity.TRANSACTION_STATUS);
-                String id = data.getStringExtra(PaymentActivity.ORDER_ID);
+                String status = data.getStringExtra(Constants.TRANSACTION_STATUS);
+                String id = data.getStringExtra(Constants.ORDER_ID);
                 Toast.makeText(this, status + " - " + id, Toast.LENGTH_LONG).show();
-            } else {
+             } else {
                 //handle failed payment here
                 Toast.makeText(this, "Cancelled", Toast.LENGTH_LONG).show();
-            }
+             }
         }
 }
 ```
