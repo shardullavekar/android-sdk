@@ -90,11 +90,11 @@ To initiate a Payment, the following mandatory fields are required by the SDK.
 6. Access Token &nbsp;
 7. Transaction ID &nbsp;
 
-### Generating Access Token and transaction_id
+### Generating Access Token and Transaction ID
 A valid access token should be generated on your server using your `Client ID` and `Client Secret` and the token is then passed on to the application.
 Access token will be valid for a max of 30 minutes after generation.
 
-An Unique transaction_id must be generated on your server for every order initiated with Instamojo APIs.
+An Unique transaction_id must be generated on your server to create an Order.
 
 ### Creating Order Object
 With all the mandatory fields mentioned above, a `Order` object can created.
@@ -252,7 +252,7 @@ if (!card.isCardValid()) {
         Log.e("App", "CVV is invalid");
    }
 
-   //return so that user can make necessary changes
+   //return so that user can correct card details
    return;
 }
 ```
@@ -317,10 +317,14 @@ startPaymentActivity(bundle)
 ##### Starting the payment Activity using the bundle
 Add the following method to the activity which will start the Payment Activity with the Juspay Bundle.
 ```Java
-Intent intent = new Intent(this, PaymentActivity.class);
-intent.putExtras(getIntent());
-intent.putExtra(Constants.PAYMENT_BUNDLE, bundle);
-startActivityForResult(intent, Constants.REQUEST_CODE);
+private void startPaymentActivity(Bundle bundle) {
+        // Start the payment activity
+        //Do not change this unless you know what you are doing
+        Intent intent = new Intent(this, PaymentActivity.class);
+        intent.putExtras(getIntent());
+        intent.putExtra(Constants.PAYMENT_BUNDLE, bundle);
+        startActivityForResult(intent, Constants.REQUEST_CODE);
+ }
 ```
 
 ##### Passing the result back to main Activity
