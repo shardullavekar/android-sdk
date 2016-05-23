@@ -1,6 +1,6 @@
 # Instamojo SDK Integration Documentation
 
-## Installation
+## Installation   [ ![Download](https://api.bintray.com/packages/dev-accounts/maven/sdks/images/download.svg) ](https://bintray.com/dev-accounts/maven/sdks/_latestVersion)
 ### Include SDK
 The SDK currently supports Android Version >= ICS 4.0.3(14). Just add the following to your application’s `build.gradle` file, inside the dependencies section.
 ```
