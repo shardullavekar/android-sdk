@@ -119,7 +119,7 @@ public class Request {
             @Override
             public void onFailure(Call call, IOException e) {
                 Logger.logError(this.getClass().getSimpleName(), "Error while making Juspay request - " + e.getMessage());
-                jusPayRequestCallback.onFinish(null, new Errors.ConnectionException(e.getMessage()));
+                jusPayRequestCallback.onFinish(null, new Errors.ConnectionError(e.getMessage()));
             }
 
             @Override
@@ -132,7 +132,7 @@ public class Request {
                     jusPayRequestCallback.onFinish(bundle, null);
                 } catch (IOException e) {
                     Logger.logError(this.getClass().getSimpleName(), "Error while making Juspay request - " + e.getMessage());
-                    jusPayRequestCallback.onFinish(null, new Errors.ConnectionException(e.getMessage()));
+                    jusPayRequestCallback.onFinish(null, new Errors.ServerError(e.getMessage()));
                 } catch (JSONException e) {
                     Logger.logError(this.getClass().getSimpleName(), "Error while making Juspay request - " + e.getMessage());
                     jusPayRequestCallback.onFinish(null, e);
@@ -182,7 +182,7 @@ public class Request {
             @Override
             public void onFailure(Call call, IOException e) {
                 Logger.logError(this.getClass().getSimpleName(), "Error while making Instamojo request - " + e.getMessage());
-                orderRequestCallBack.onFinish(order, new Errors.ConnectionException(e.getMessage()));
+                orderRequestCallBack.onFinish(order, new Errors.ConnectionError(e.getMessage()));
             }
 
             @Override
@@ -195,10 +195,10 @@ public class Request {
                     orderRequestCallBack.onFinish(order, null);
                 } catch (IOException e) {
                     Logger.logError(this.getClass().getSimpleName(), "Error while making Instamojo request - " + e.getMessage());
-                    orderRequestCallBack.onFinish(order, new Errors.ConnectionException(e.getMessage()));
+                    orderRequestCallBack.onFinish(order, new Errors.ServerError(e.getMessage()));
                 } catch (JSONException e) {
                     Logger.logError(this.getClass().getSimpleName(), "Error while making Instamojo request - " + e.getMessage());
-                    orderRequestCallBack.onFinish(order, new Errors.ServerException(responseBody));
+                    orderRequestCallBack.onFinish(order, Errors.getAppropriateError(responseBody));
                 }
             }
         });

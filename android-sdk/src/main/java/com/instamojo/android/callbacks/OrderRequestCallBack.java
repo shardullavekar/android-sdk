@@ -1,5 +1,6 @@
 package com.instamojo.android.callbacks;
 
+import com.instamojo.android.models.Errors;
 import com.instamojo.android.models.Order;
 
 /**
@@ -17,11 +18,11 @@ public interface OrderRequestCallBack {
      * Called on finishing the order creation with MojoServer.
      * {@link Order} will be unchanged if the error is not null.
      * @param order - original order if the error is not null else
-     *                      {@link Order#debitCardOptions} and {@link Order#netBankingOptions}
+     *                      {@link Order#cardOptions} and {@link Order#netBankingOptions}
      *                      will be updated from the response.
      * @param error   - Appropriate {@link Exception} extended exception.
-     *              {@link com.instamojo.android.models.Errors.ConnectionException} related to all network exceptions
-     *              and {@link com.instamojo.android.models.Errors.ServerException} related to all
+     *              {@link Errors.ConnectionError} related to all network exceptions
+     *              and {@link Errors.ServerError} related to all
      *              form level validation errors from MojoServer.
      */
     void onFinish(Order order, Exception error);

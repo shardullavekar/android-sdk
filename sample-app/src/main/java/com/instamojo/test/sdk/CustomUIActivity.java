@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.AppCompatSpinner;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -16,6 +17,7 @@ import com.instamojo.android.activities.PaymentActivity;
 import com.instamojo.android.callbacks.JusPayRequestCallback;
 import com.instamojo.android.helpers.Constants;
 import com.instamojo.android.models.Card;
+import com.instamojo.android.models.Errors;
 import com.instamojo.android.models.Order;
 import com.instamojo.android.network.Request;
 
@@ -139,8 +141,13 @@ public class CustomUIActivity extends AppCompatActivity {
                     public void run() {
                         dialog.dismiss();
                         if (error != null) {
-                            Toast.makeText(getBaseContext(), error.getMessage(),
-                                    Toast.LENGTH_SHORT).show();
+                            if (error instanceof Errors.ConnectionError) {
+                                Log.e("App", "No internet");
+                            } else if (error instanceof Errors.ServerError) {
+                                Log.e("App", "Server Error. trya again");
+                            } else {
+                                Log.e("App", error.getMessage());
+                            }
                             return;
                         }
                         startPaymentActivity(bundle);

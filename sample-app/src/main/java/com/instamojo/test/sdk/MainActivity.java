@@ -60,48 +60,44 @@ public class MainActivity extends AppCompatActivity {
                     public void onFinish(Order order, Exception error) {
                         dialog.dismiss();
                         if (error != null) {
-                            if (error instanceof Errors.ConnectionException) {
+                            if (error instanceof Errors.ConnectionError) {
                                 Log.e("App", "No internet connection");
-                            } else if (error instanceof Errors.ServerException) {
-                                try {
-                                    JSONObject errorObject = new JSONObject(error.getMessage());
+                            } else if (error instanceof Errors.ServerError) {
+                                Log.e("App", "Server Error. Try again");
+                            } else if (error instanceof Errors.AuthenticationError) {
+                                Log.e("App", "Access token is invalid or expired");
+                            } else if (error instanceof Errors.ValidationError) {
+                                // Cast object to validation to pinpoint the issue
+                                Errors.ValidationError validationError = (Errors.ValidationError) error;
 
-                                    if (errorObject.has("success")) {
-                                        Log.e("App", "Invalid access token");
-                                        return;
-                                    }
+                                if (!validationError.isValidTransactionID()) {
+                                    Log.e("App", "Transaction ID is not Unique");
+                                    return;
+                                }
 
-                                    if (errorObject.has("transaction_id")) {
-                                        Log.e("App", "Transaction ID is not Unique");
-                                        return;
-                                    }
+                                if (!validationError.isValidRedirectURL()) {
+                                    Log.e("App", "Redirect url is invalid");
+                                    return;
+                                }
 
-                                    if (errorObject.has("redirect_url")) {
-                                        Log.e("App", "Redirect url is invalid");
-                                        return;
-                                    }
+                                if (!validationError.isValidPhone()) {
+                                    Log.e("App", "Buyer's Phone Number is invalid/empty");
+                                    return;
+                                }
 
-                                    if (errorObject.has("phone")) {
-                                        Log.e("App", "Buyer's Phone Number is invalid/empty");
-                                        return;
-                                    }
+                                if (!validationError.isValidEmail()) {
+                                    Log.e("App", "Buyer's Email is invalid/empty");
+                                    return;
+                                }
 
-                                    if (errorObject.has("email")) {
-                                        Log.e("App", "Buyer's Email is invalid/empty");
-                                        return;
-                                    }
+                                if (!validationError.isValidAmount()) {
+                                    Log.e("App", "Amount is either less than Rs.9 or has more than two decimal places");
+                                    return;
+                                }
 
-                                    if (errorObject.has("amount")) {
-                                        Log.e("App", "Amount is either less that Rs.9 or has more than two decimal places");
-                                        return;
-                                    }
-
-                                    if (errorObject.has("name")) {
-                                        Log.e("App", "Buyer's Name is required");
-                                        return;
-                                    }
-                                } catch (JSONException e) {
-                                    //unlikely to happen
+                                if (!validationError.isValidName()) {
+                                    Log.e("App", "Buyer's Name is required");
+                                    return;
                                 }
                             } else {
                                 Log.e("App", error.getMessage());
