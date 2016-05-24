@@ -293,4 +293,87 @@ public class Order implements Parcelable {
         return 0;
     }
 
+    /**
+     * @return false if one of the mandatory fields is invalid. Else true.
+     */
+    public boolean isValid() {
+        return isValidName() && isValidEmail() && isValidPhone() && isValidAmount()
+                && isValidDescription() && isValidTransactionID() && isValidRedirectURL();
+    }
+
+    /**
+     * @return false if the buyer name is empty or has greater than 100 characters. Else true.
+     */
+    public boolean isValidName() {
+        return !buyerName.trim().isEmpty() && buyerName.length() <= 100;
+
+    }
+
+    /**
+     * @return false if the buyer email is empty or has greater than 75 characters. Else true.
+     */
+    public boolean isValidEmail() {
+        return !buyerEmail.trim().isEmpty() && buyerEmail.length() <= 75;
+    }
+
+    /**
+     * @return false if the phone number is empty. Else true.
+     */
+    public boolean isValidPhone() {
+        return !buyerPhone.trim().isEmpty();
+    }
+
+    /**
+     * @return false if the amount is empty or less than Rs. 9 or has more than 2 decimal places.
+     */
+    public boolean isValidAmount() {
+        if (amount.trim().isEmpty()) {
+            return false;
+        }
+
+        if (amount.contains(".")) {
+            String[] parts = amount.split("\\.");
+            if (parts.length != 2) {
+                return false;
+            }
+
+            if (parts[1].length() > 2) {
+                return false;
+            }
+        }
+
+        try {
+            float value = Float.parseFloat(amount);
+            if (value < 9) {
+                return false;
+            }
+
+        } catch (NumberFormatException e) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * @return false if the description is empty or has greater than 255 characters. Else true.
+     */
+    public boolean isValidDescription() {
+        return !description.trim().isEmpty() && description.length() <= 255;
+    }
+
+    /**
+     * @return false if the transaction ID is empty or has greater than 64 characters.
+     */
+    public boolean isValidTransactionID() {
+        return !transactionID.trim().isEmpty() && transactionID.length() <= 64;
+    }
+
+    /**
+     * @return false if the redirection URL is empty or contains any query parameters.
+     */
+    public boolean isValidRedirectURL() {
+        return !redirectionUrl.trim().isEmpty() && !redirectionUrl.contains("?");
+    }
+
 }

@@ -102,7 +102,48 @@ With all the mandatory fields mentioned above, a `Order` object can created.
 Order order = new Order(accessToken, transactionID, name, email, phone, amount, purpose);
 ```
 
+`Order` object must be validated locally before creating Order with Instamojo.
 Add the following code snippet to validate the `Order` object.
+```Java
+//Validate the Order
+        if (!order.isValid()){
+            //oops order validation failed. Pinpoint the issue(s).
+
+            if (!order.isValidName()){
+                Log.e("App", "Buyer name is invalid");
+            }
+
+            if (!order.isValidEmail()){
+                Log.e("App", "Buyer email is invalid");
+            }
+
+            if (!order.isValidPhone()){
+                Log.e("App", "Buyer phone is invalid");
+            }
+
+            if (!order.isValidAmount()){
+                Log.e("App", "Amount is invalid");
+            }
+
+            if (!order.isValidDescription()){
+                Log.e("App", "description is invalid");
+            }
+
+            if (!order.isValidTransactionID()){
+                Log.e("App", "Transaction ID is invalid");
+            }
+
+            if (!order.isValidRedirectURL()){
+                Log.e("App", "Redirection URL is invalid");
+            }
+
+            return;
+        }
+
+        //Validation is successful. Proceed
+```
+
+Once `Order` is validated. Add the following snippet to create an order with Instamojo.
 ``` Java
 // Good time to show progress dialog to user
 Request request = new Request(order, new OrderRequestCallBack() {
