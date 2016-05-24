@@ -58,11 +58,7 @@ public class PaymentActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        if (currentFragment != null) {
-            Logger.logDebug(this, this.getClass().getSimpleName(), "Invoking Juspay Cancel Payment Handler");
-            currentFragment.juspayBackPressedHandler(true);
-        } else {
-            returnResult(RESULT_CANCELED);
-        }
+        Logger.logDebug(this, this.getClass().getSimpleName(), "Invoking Juspay Cancel Payment Handler");
+        currentFragment.juspayBackPressedHandler(true);
     }
 }

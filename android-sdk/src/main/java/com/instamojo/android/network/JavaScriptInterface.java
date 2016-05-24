@@ -29,15 +29,12 @@ public class JavaScriptInterface {
     }
 
     @android.webkit.JavascriptInterface
-    public void onTransactionComplete(String status, String orderID) {
+    public void onTransactionComplete(String orderID, String transactionID, String paymentID) {
         Logger.logDebug(activity, this.getClass().getSimpleName(), "Received Call to Javascript Interface");
-        if (!status.equalsIgnoreCase("true")) {
-            ((PaymentActivity) activity).returnResult(Activity.RESULT_CANCELED);
-            return;
-        }
         Bundle bundle = new Bundle();
         bundle.putString(Constants.ORDER_ID, orderID);
-        bundle.putString(Constants.TRANSACTION_STATUS, status);
+        bundle.putString(Constants.TRANSACTION_ID, transactionID);
+        bundle.putString(Constants.PAYMENT_ID, paymentID);
         Logger.logDebug(activity, this.getClass().getSimpleName(), "Returning result back to caller");
         ((PaymentActivity) activity).returnResult(bundle, Activity.RESULT_OK);
     }

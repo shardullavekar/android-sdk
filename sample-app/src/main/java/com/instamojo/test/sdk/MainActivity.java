@@ -8,7 +8,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.instamojo.android.activities.PaymentDetailsActivity;
 import com.instamojo.android.callbacks.OrderRequestCallBack;
@@ -158,7 +157,7 @@ public class MainActivity extends AppCompatActivity {
                     return;
                 }
 
-                startCustomUI(order);
+                startPreCreatedUI(order);
             }
         });
 
@@ -210,7 +209,7 @@ public class MainActivity extends AppCompatActivity {
                 try {
                     JSONObject responseObject = new JSONObject(responseBody);
                     accessToken = responseObject.getString("access_token");
-                    Log.d("app", accessToken);
+                    Log.d("App", accessToken);
                     Log.d("App", "Updated token");
                 } catch (JSONException e) {
                     Log.d("App", "Failed to update token");
@@ -224,15 +223,20 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == Constants.REQUEST_CODE) {
-            if (resultCode == RESULT_OK) {
-                //handle successful payment here
-                String status = data.getStringExtra(Constants.TRANSACTION_STATUS);
-                String id = data.getStringExtra(Constants.ORDER_ID);
-                Toast.makeText(this, status + " - " + id, Toast.LENGTH_LONG).show();
-            } else {
-                //handle failed payment here
-                Toast.makeText(this, "Cancelled", Toast.LENGTH_LONG).show();
+        if (requestCode == Constants.REQUEST_CODE && data != null) {
+            String orderID = data.getStringExtra(Constants.ORDER_ID);
+            String transactionID = data.getStringExtra(Constants.TRANSACTION_ID);
+            String paymentID = data.getStringExtra(Constants.PAYMENT_ID);
+
+            // Check transactionID, orderID, and orderID for null before using them to check the transaction status.
+            if (orderID != null) {
+                Log.d("App", "Order ID - " + orderID);
+            }
+            if (transactionID != null) {
+                Log.d("App", "Transaction ID - " + transactionID);
+            }
+            if (paymentID != null) {
+                Log.d("App", "Payment ID - " + paymentID);
             }
         }
     }

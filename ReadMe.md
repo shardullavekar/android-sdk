@@ -386,16 +386,21 @@ If `resultCode == RESULT_OK`, then payment is successful. Else Payment Failed.
 @Override
 protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == Constants.REQUEST_CODE) {
-            if (resultCode == RESULT_OK) {
-                //handle successful payment here
-                String status = data.getStringExtra(Constants.TRANSACTION_STATUS);
-                String id = data.getStringExtra(Constants.ORDER_ID);
-                Toast.makeText(this, status + " - " + id, Toast.LENGTH_LONG).show();
-             } else {
-                //handle failed payment here
-                Toast.makeText(this, "Cancelled", Toast.LENGTH_LONG).show();
-             }
+        if (requestCode == Constants.REQUEST_CODE && data != null) {
+                    String orderID = data.getStringExtra(Constants.ORDER_ID);
+                    String transactionID = data.getStringExtra(Constants.TRANSACTION_ID);
+                    String paymentID = data.getStringExtra(Constants.PAYMENT_ID);
+        
+                    // Check transactionID, orderID, and orderID for null before using them to check the transaction status.
+                    if (orderID != null) {
+                        Log.d("App", "Order ID - "+orderID);
+                    }
+                    if (transactionID != null){
+                        Log.d("App", "Transaction ID - "+transactionID);
+                    }
+                    if (paymentID != null) {
+                        Log.d("App", "Payment ID - " +paymentID);
+                    }
         }
 }
 ```

@@ -18,11 +18,6 @@ public class Constants {
     public static final String ORDER_ID = "orderId";
 
     /**
-     * Extra Bundle key for Order Status which is passed back from SDK.
-     */
-    public static final String TRANSACTION_STATUS = "transaction_status";
-
-    /**
      * Extra key for the {@link Order} object that is sent through Bundle.
      */
     public static final String ORDER = "order";
@@ -46,4 +41,14 @@ public class Constants {
      * Key for Netbanking Data passed to Juspay
      */
     public static final String POST_DATA = "postData";
+
+    /**
+     * Key for transactionID in the return bundle
+     */
+    public static final String TRANSACTION_ID = "transactionID";
+
+    /**
+     * Key for paymentID in the return bundle
+     */
+    public static final String PAYMENT_ID = "paymentID";
 }
