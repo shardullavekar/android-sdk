@@ -62,7 +62,7 @@ public abstract class BaseActivity extends AppCompatActivity {
      */
 
     public void returnResult(Bundle bundle, int result) {
-        Logger.logDebug(this, this.getClass().getSimpleName(), "Returning back the result received");
+        Logger.logDebug(this.getClass().getSimpleName(), "Returning back the result received");
         Intent intent = new Intent();
         if (bundle != null) {
             intent.putExtras(bundle);
@@ -116,7 +116,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         if (getSupportActionBar() == null) {
             return;
         }
-        Logger.logDebug(this, this.getClass().getSimpleName(), "Setting title for Toolbar");
+        Logger.logDebug(this.getClass().getSimpleName(), "Setting title for Toolbar");
         getSupportActionBar().setTitle(title);
     }
 }

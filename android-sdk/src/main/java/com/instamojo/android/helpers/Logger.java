@@ -12,10 +12,17 @@ import android.util.Log;
 public class Logger {
 
     private static final String DEBUG = "debug";
-    private static final String ERROR = "error";
 
-    public static void logDebug(Context context, String tag, String data) {
-        if (isDebuggable(context)) {
+    private static boolean isDebuggable = true;
+    private static Context appContext;
+
+    public static void initialize(Context appContext) {
+        Logger.appContext = appContext;
+        isDebuggable = getLogLevel(appContext);
+    }
+
+    public static void logDebug(String tag, String data) {
+        if (isDebuggable) {
             Log.d(tag, data);
         }
     }
@@ -24,7 +31,7 @@ public class Logger {
         Log.e(tag, errorMessage);
     }
 
-    private static boolean isDebuggable(Context context) {
+    private static boolean getLogLevel(Context context) {
         try {
             ApplicationInfo ai = context.getPackageManager().getApplicationInfo(
                     context.getPackageName(), PackageManager.GET_META_DATA);

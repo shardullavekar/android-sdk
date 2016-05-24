@@ -67,7 +67,7 @@ public class NetBankingForm extends BaseFragment implements SearchView.OnQueryTe
     @Override
     public void inflateXML(View view) {
         banksContainer = (LinearLayout) view.findViewById(R.id.banks_container);
-        Logger.logDebug(getContext(), this.getClass().getSimpleName(), "Inflated XML");
+        Logger.logDebug(this.getClass().getSimpleName(), "Inflated XML");
     }
 
     private void loadBanks(String queryText) {
@@ -92,7 +92,7 @@ public class NetBankingForm extends BaseFragment implements SearchView.OnQueryTe
 
             banksContainer.addView(bankView);
         }
-        Logger.logDebug(getContext(), this.getClass().getSimpleName(), "Loaded Banks matching Query text - " + queryText);
+        Logger.logDebug(this.getClass().getSimpleName(), "Loaded Banks matching Query text - " + queryText);
     }
 
     @Override

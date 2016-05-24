@@ -52,6 +52,6 @@ public class JusPaySafeBrowser extends JuspayBrowserFragment {
         });
         getWebView().addJavascriptInterface(new JavaScriptInterface(getActivity()), "AndroidScriptInterface");
         getWebView().getSettings().setJavaScriptEnabled(true);
-        Logger.logDebug(getContext(), this.getClass().getSimpleName(), "Loaded Webview");
+        Logger.logDebug(this.getClass().getSimpleName(), "Loaded Webview");
     }
 }

@@ -172,7 +172,7 @@ public class Request {
         headers.put("Authorization", "Bearer " + order.getAuthToken());
 
         okhttp3.Request request = new okhttp3.Request.Builder()
-                .url(Urls.MOJO_TRANSACTION_INIT_URL)
+                .url(Urls.getOrderCreateUrl())
                 .removeHeader("User-Agent")
                 .headers(Headers.of(headers))
                 .post(body)

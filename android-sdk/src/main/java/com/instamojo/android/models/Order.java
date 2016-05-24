@@ -4,6 +4,8 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
+import com.instamojo.android.network.Urls;
+
 /**
  * Order Class to hold the details of a Order.
  *
@@ -66,7 +68,7 @@ public class Order implements Parcelable {
         this.mode = "Android_SDK";
         this.authToken = authToken;
         this.transactionID = transactionID;
-        this.redirectionUrl = "https://www.instamojo.com/integrations/android/redirect/";
+        this.redirectionUrl = Urls.getDefaultRedirectUrl();
     }
 
     @SuppressWarnings("unchecked")

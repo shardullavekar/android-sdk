@@ -150,7 +150,7 @@ public class CardForm extends BaseFragment implements View.OnClickListener {
         checkOutButton.setOnClickListener(this);
 
         editTexts = Arrays.asList(cardNumberBox, dateBox, nameOnCardBox, cvvBox);
-        Logger.logDebug(getContext(), this.getClass().getSimpleName(), "Inflated XML");
+        Logger.logDebug(this.getClass().getSimpleName(), "Inflated XML");
     }
 
     private void applyText(MaterialEditText editText, TextWatcher watcher, String text) {
@@ -208,7 +208,7 @@ public class CardForm extends BaseFragment implements View.OnClickListener {
             card.setCvv(cvv);
         }
 
-        Logger.logDebug(getContext(), this.getClass().getSimpleName(), "Checking Out");
+        Logger.logDebug(this.getClass().getSimpleName(), "Checking Out");
         checkOut(card);
     }
 

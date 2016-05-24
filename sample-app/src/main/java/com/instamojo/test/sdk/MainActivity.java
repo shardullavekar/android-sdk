@@ -15,6 +15,7 @@ import com.instamojo.android.helpers.Constants;
 import com.instamojo.android.models.Errors;
 import com.instamojo.android.models.Order;
 import com.instamojo.android.network.Request;
+import com.instamojo.android.network.Urls;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -193,7 +194,7 @@ public class MainActivity extends AppCompatActivity {
                 .build();
 
         okhttp3.Request request = new okhttp3.Request.Builder()
-                .url("https://www.instamojo.com/oauth2/token/")
+                .url(Urls.getBaseUrl() + "oauth2/token/")
                 .post(body)
                 .build();
         client.newCall(request).enqueue(new Callback() {

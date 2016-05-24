@@ -79,6 +79,39 @@ If you are using Proguard for code obfuscation, add following rules in the progu
 -keep class android.support.v7.** { *; }
 ```
 
+## Manifest Changes
+### Adding Base URL
+Add the following `meta-data` to your application manifest file inside `<application> ... </application>` tag.
+```XML
+<meta-data
+            android:name="instamojo_sdk_base_url"
+            android:value="https://www.instamojo.com/"/>
+```
+
+Change the `android:value` to `https://www.test.instamojo.com/` during the development of the application to test the payment flow.
+Once the Integration is complete, change `android:value` to `https://www.instamojo.com/`.
+Do not forget to add the trailing `/`. 
+
+### Initializing SDK
+Add the following `android:name="com.instamojo.android.InstamojoApplication"` key to `<application>` tag in manifest tag
+```XML
+
+    <application
+            android:name="com.instamojo.android.InstamojoApplication"
+            ..... >
+    </application>        
+```
+
+If your application already has a custom application class defined. Add the following line to `onCreate()` method of that custom application class.
+```Java
+    @Override
+        public void onCreate() {
+            super.onCreate();
+            InstamojoSDK.initialize(this);
+            ...
+        }
+```
+
 ## Initiating Payment
 To initiate a Payment, the following mandatory fields are required by the SDK.
 
@@ -381,7 +414,7 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
 ### Receiving Payment result in the main activity
 Add the following code snippet in the main activity.
-If `resultCode == RESULT_OK`, then payment is successful. Else Payment Failed. 
+Note that TransactionID, OrderID, and paymentID maybe null. Please do a null check before proceeding.
 ``` Java
 @Override
 protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -391,7 +424,7 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
                     String transactionID = data.getStringExtra(Constants.TRANSACTION_ID);
                     String paymentID = data.getStringExtra(Constants.PAYMENT_ID);
         
-                    // Check transactionID, orderID, and orderID for null before using them to check the transaction status.
+                    // Check transactionID, orderID, and orderID for null before using them to check the payment status.
                     if (orderID != null) {
                         Log.d("App", "Order ID - "+orderID);
                     }
@@ -401,13 +434,15 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
                     if (paymentID != null) {
                         Log.d("App", "Payment ID - " +paymentID);
                     }
+                    
+                    //Check for Payment status.
         }
 }
 ```
 
 ## Debugging
 Debugging can very useful during SDK Integration.
-Add following `meta-data` in your application's `Manifest` file under `<application>` tag.
+Add following `meta-data` in your application's `Manifest` file inside `<application> ... </application>` tag.
 ``` XML
 <meta-data
             android:name="instamojo_sdk_log_level"

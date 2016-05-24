@@ -47,18 +47,18 @@ public class ChoosePaymentOption extends BaseFragment implements View.OnClickLis
         View netBankingLayout = view.findViewById(R.id.net_banking_layout);
 
         if (order.getNetBankingOptions() == null) {
-            Logger.logDebug(getContext(), this.getClass().getSimpleName(), "Hiding Net banking Layout");
+            Logger.logDebug(this.getClass().getSimpleName(), "Hiding Net banking Layout");
             netBankingLayout.setVisibility(View.GONE);
         }
 
         if (order.getCardOptions() == null) {
-            Logger.logDebug(getContext(), this.getClass().getSimpleName(), "Hiding Card Layout");
+            Logger.logDebug(this.getClass().getSimpleName(), "Hiding Card Layout");
             cardLayout.setVisibility(View.GONE);
         }
 
         cardLayout.setOnClickListener(this);
         netBankingLayout.setOnClickListener(this);
-        Logger.logDebug(getContext(), this.getClass().getSimpleName(), "Inflated XML");
+        Logger.logDebug(this.getClass().getSimpleName(), "Inflated XML");
     }
 
     @Override
@@ -66,10 +66,10 @@ public class ChoosePaymentOption extends BaseFragment implements View.OnClickLis
         int id = v.getId();
 
         if (id == R.id.card_layout) {
-            Logger.logDebug(getContext(), this.getClass().getSimpleName(), "Starting CardForm");
+            Logger.logDebug(this.getClass().getSimpleName(), "Starting CardForm");
             parentActivity.loadFragment(new CardForm(), true);
         } else {
-            Logger.logDebug(getContext(), this.getClass().getSimpleName(), "Starting Net Banking Form");
+            Logger.logDebug(this.getClass().getSimpleName(), "Starting Net Banking Form");
             parentActivity.loadFragment(new NetBankingForm(), true);
         }
     }

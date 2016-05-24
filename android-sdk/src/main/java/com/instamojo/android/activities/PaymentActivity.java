@@ -33,7 +33,7 @@ public class PaymentActivity extends BaseActivity {
     private void inflateXML() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        Logger.logDebug(this, this.getClass().getSimpleName(), "Inflated XML");
+        Logger.logDebug(this.getClass().getSimpleName(), "Inflated XML");
     }
 
     @Override
@@ -53,12 +53,12 @@ public class PaymentActivity extends BaseActivity {
         }
         currentFragment = (JuspayBrowserFragment) getSupportFragmentManager().findFragmentById(R.id.juspay_browser_fragment_activity);
         currentFragment.startPaymentWithArguments(sourceArgs);
-        Logger.logDebug(this, this.getClass().getSimpleName(), "Loaded Fragment - " + currentFragment.getClass().getSimpleName());
+        Logger.logDebug(this.getClass().getSimpleName(), "Loaded Fragment - " + currentFragment.getClass().getSimpleName());
     }
 
     @Override
     public void onBackPressed() {
-        Logger.logDebug(this, this.getClass().getSimpleName(), "Invoking Juspay Cancel Payment Handler");
+        Logger.logDebug(this.getClass().getSimpleName(), "Invoking Juspay Cancel Payment Handler");
         currentFragment.juspayBackPressedHandler(true);
     }
 }
