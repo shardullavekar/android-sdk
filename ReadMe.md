@@ -260,9 +260,9 @@ Request request = new Request(order, card, new JusPayRequestCallback() {
                         //Dismiss the dialog here
                         if (error != null) {
                              if (error instanceof Errors.ConnectionError){
-                                    Log.e("App", "No internet");
+                                    Log.e("App", "No internet connection");
                              } else if (error instanceof Errors.ServerError){
-                                    Log.e("App", "Server Error. trya again");
+                                    Log.e("App", "Server Error. Try again");
                              } else {
                                     Log.e("App", error.getMessage());
                              }
