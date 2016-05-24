@@ -1,1 +1,1 @@
-include ':app', 'android-sdk'
+include ':sample-app', 'android-sdk'
