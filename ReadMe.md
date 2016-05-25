@@ -28,7 +28,7 @@ Table of Contents
          * [Starting the payment Activity using the bundle](#starting-the-payment-activity-using-the-bundle)
          * [Passing the result back to main Activity](#passing-the-result-back-to-main-activity)
      * [Receiving Payment result in the main activity](#receiving-payment-result-in-the-main-activity)
-   * [Testing Integration](#testing-integration)
+   * [Integration Check](#integration-check)
    * [Debugging](#debugging)
 
 ## Installation   [ ![Download](https://api.bintray.com/packages/dev-accounts/maven/sdks/images/download.svg) ](https://bintray.com/dev-accounts/maven/sdks/_latestVersion)
