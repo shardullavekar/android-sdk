@@ -460,7 +460,7 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
 
 ## Integration Check
-To do the integration in a test environment, add the following code snippet at any point in the flow.
+To do the integration in a test environment, add the following code snippet at any point in the code.
 ```Java
 Instamojo.setBaseUrl("https://www.test.instamojo.com/");
 ```
