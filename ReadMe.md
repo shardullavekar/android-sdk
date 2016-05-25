@@ -460,20 +460,16 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
 
 ## Integration Check
-Add the following `meta-data` to your application manifest file inside `<application> ... </application>` tag to use the testing environment for integration check.
-```XML
-<meta-data
-            android:name="instamojo_sdk_base_url"
-            android:value="https://www.test.instamojo.com/"/>
+To do the integration in a test environment, add the following code snippet at any point in the flow.
+```Java
+Instamojo.setBaseUrl("https://www.test.instamojo.com/");
 ```
-Once the Integration is complete, you can either remove the meta-data from manifest file or change `android:value` to `https://www.api.instamojo.com/`.
+Once the Integration check is complete, you can simply delete the line of code.
 
 ## Debugging
 Debugging can very useful during SDK Integration.
-Add following `meta-data` in your application's `Manifest` file inside `<application> ... </application>` tag.
-``` XML
-<meta-data
-            android:name="instamojo_sdk_log_level"
-            android:value="debug" />
+Add following code snippet at any point in the code.
+``` Java
+Instamojo.setLogLevel(Log.DEBUG);
 ```
-Once the application is ready to be pushed to the Play Store, change `android:value="error"` to log only errors.
+Once the application is ready to be pushed to the Play Store, simply remove the line of code.

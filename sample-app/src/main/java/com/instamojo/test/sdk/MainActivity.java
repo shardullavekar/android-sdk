@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.instamojo.android.Instamojo;
 import com.instamojo.android.activities.PaymentDetailsActivity;
 import com.instamojo.android.callbacks.OrderRequestCallBack;
 import com.instamojo.android.helpers.Constants;
@@ -36,7 +37,6 @@ public class MainActivity extends AppCompatActivity {
     private Random random = new Random(System.currentTimeMillis());
     private ProgressDialog dialog;
 
-    @SuppressWarnings("ConstantConditions")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,6 +60,9 @@ public class MainActivity extends AppCompatActivity {
                 updateToken();
             }
         });
+
+        //let's set the log level to debug
+        Instamojo.setLogLevel(Log.DEBUG);
     }
 
     private void onClickPay() {

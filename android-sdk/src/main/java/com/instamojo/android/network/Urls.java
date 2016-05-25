@@ -1,9 +1,5 @@
 package com.instamojo.android.network;
 
-import android.content.Context;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageManager;
-import android.os.Bundle;
 import android.util.Log;
 
 import com.instamojo.android.helpers.Constants;
@@ -19,28 +15,7 @@ import com.instamojo.android.helpers.Logger;
 
 public class Urls {
 
-    private static Context appContext;
     private static String baseUrl = Constants.DEFAULT_BASE_URL;
-
-    public static void initialize(Context appContext) {
-        Urls.appContext = appContext;
-        try {
-            ApplicationInfo ai = appContext.getPackageManager().getApplicationInfo(
-                    appContext.getPackageName(), PackageManager.GET_META_DATA);
-            Bundle bundle = ai.metaData;
-            baseUrl = bundle.getString("instamojo_sdk_base_url");
-        } catch (Exception e) {
-            baseUrl = Constants.DEFAULT_BASE_URL;
-        }
-
-        baseUrl = sanitizeURL(baseUrl);
-
-        if (baseUrl.contains("test")) {
-            Log.d("Urls", "Using a test base url. Use https://www.api.instamojo.com/ for production");
-        }
-
-        Logger.logDebug("Urls", "Base URL - " + baseUrl);
-    }
 
     /**
      * @return Order Create URL.
@@ -61,6 +36,22 @@ public class Urls {
      */
     public static String getBaseUrl() {
         return baseUrl;
+    }
+
+    /**
+     * Set the base url
+     *
+     * @param baseUrl Base url for all network calls
+     */
+    public static void setBaseUrl(String baseUrl) {
+        baseUrl = sanitizeURL(baseUrl);
+
+        if (baseUrl.contains("test")) {
+            Log.d("Urls", "Using a test base url. Use https://www.api.instamojo.com/ for production");
+        }
+
+        Urls.baseUrl = baseUrl;
+        Logger.logDebug("Urls", "Base URL - " + Urls.baseUrl);
     }
 
     private static String sanitizeURL(String baseUrl) {
