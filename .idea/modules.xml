@@ -4,7 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/MojoSDKSampleApp.iml" filepath="$PROJECT_DIR$/MojoSDKSampleApp.iml" />
       <module fileurl="file://$PROJECT_DIR$/android-sdk/android-sdk.iml" filepath="$PROJECT_DIR$/android-sdk/android-sdk.iml" />
-      <module fileurl="file://$PROJECT_DIR$/sample-app/app.iml" filepath="$PROJECT_DIR$/sample-app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/sample-app/sample-app.iml" filepath="$PROJECT_DIR$/sample-app/sample-app.iml" />
     </modules>
   </component>
 </project>

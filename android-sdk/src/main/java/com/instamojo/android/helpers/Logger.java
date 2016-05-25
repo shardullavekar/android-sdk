@@ -32,18 +32,21 @@ public class Logger {
     }
 
     private static boolean getLogLevel(Context context) {
+        boolean debug = false;
         try {
             ApplicationInfo ai = context.getPackageManager().getApplicationInfo(
                     context.getPackageName(), PackageManager.GET_META_DATA);
             Bundle bundle = ai.metaData;
             String logLevel = bundle.getString("instamojo_sdk_log_level");
-            return logLevel.equalsIgnoreCase(DEBUG);
-        } catch (PackageManager.NameNotFoundException e) {
-            Log.e("Instamojo SDK", "Failed to load meta-data, NameNotFound: " + e.getMessage());
-        } catch (NullPointerException e) {
-            Log.e("Instamojo SDK", "Failed to load meta-data, NullPointer: " + e.getMessage());
+            debug = logLevel.equalsIgnoreCase(DEBUG);
+        } catch (Exception e) {
+            //ignore - meta data is missing
         }
 
-        return true;
+        if (debug) {
+            Log.d("Instamojo SDK", "Log level is set to Debug. Change it error when pushing to Play store");
+        }
+
+        return debug;
     }
 }
