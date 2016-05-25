@@ -4,7 +4,9 @@ import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.util.Log;
 
+import com.instamojo.android.helpers.Constants;
 import com.instamojo.android.helpers.Logger;
 
 /**
@@ -27,10 +29,17 @@ public class Urls {
                     appContext.getPackageName(), PackageManager.GET_META_DATA);
             Bundle bundle = ai.metaData;
             baseUrl = bundle.getString("instamojo_sdk_base_url");
-            Logger.logDebug("Urls", "Base URL - " + baseUrl);
         } catch (Exception e) {
-            throw new RuntimeException("Add <meta-data android:name=\"instamojo_sdk_base_url\" android:value=\"https://www.instamojo.com/\"/> in the manifest file");
+            baseUrl = Constants.DEFAULT_BASE_URL;
         }
+
+        baseUrl = sanitizeURL(baseUrl);
+
+        if (baseUrl.contains("test")) {
+            Log.d("Urls", "Using a test base url. Use https://www.api.instamojo.com/ for production");
+        }
+
+        Logger.logDebug("Urls", "Base URL - " + baseUrl);
     }
 
     /**
@@ -50,8 +59,20 @@ public class Urls {
     /**
      * @return base url
      */
-
     public static String getBaseUrl() {
+        return baseUrl;
+    }
+
+    private static String sanitizeURL(String baseUrl) {
+
+        if (baseUrl == null || baseUrl.trim().isEmpty()) {
+            baseUrl = Constants.DEFAULT_BASE_URL;
+        }
+
+        if (!baseUrl.endsWith("/")) {
+            baseUrl += "/";
+        }
+
         return baseUrl;
     }
 }

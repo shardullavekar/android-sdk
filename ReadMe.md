@@ -79,20 +79,7 @@ If you are using Proguard for code obfuscation, add following rules in the progu
 -keep class android.support.v7.** { *; }
 ```
 
-## Manifest Changes
-### Adding Base URL
-Add the following `meta-data` to your application manifest file inside `<application> ... </application>` tag.
-```XML
-<meta-data
-            android:name="instamojo_sdk_base_url"
-            android:value="https://www.instamojo.com/"/>
-```
-
-Change the `android:value` to `https://www.test.instamojo.com/` during the development of the application to test the payment flow.
-Once the Integration is complete, change `android:value` to `https://www.instamojo.com/`.
-Do not forget to add the trailing `/`. 
-
-### Initializing SDK
+## Initializing SDK
 Add the following `android:name="com.instamojo.android.InstamojoApplication"` key to `<application>` tag in manifest tag
 ```XML
 
@@ -440,6 +427,16 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 }
 ```
 
+
+## Testing Integration
+Add the following `meta-data` to your application manifest file inside `<application> ... </application>` tag to use the testing environment for integration check.
+```XML
+<meta-data
+            android:name="instamojo_sdk_base_url"
+            android:value="https://www.test.instamojo.com/"/>
+```
+Once the Integration is complete, you can either remove the meta-data from manifest file or change `android:value` to `https://www.api.instamojo.com/`.
+
 ## Debugging
 Debugging can very useful during SDK Integration.
 Add following `meta-data` in your application's `Manifest` file inside `<application> ... </application>` tag.
@@ -448,5 +445,4 @@ Add following `meta-data` in your application's `Manifest` file inside `<applica
             android:name="instamojo_sdk_log_level"
             android:value="debug" />
 ```
-
 Once the application is ready to be pushed to the Play Store, change `android:value="error"` to log only errors.

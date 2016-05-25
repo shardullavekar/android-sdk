@@ -23,7 +23,7 @@
 
         <meta-data
             android:name="instamojo_sdk_base_url"
-            android:value="https://www.instamojo.com/" />
+            android:value="https://www.api.instamojo.com/" />
 
         <activity
             android:name=".MainActivity"
