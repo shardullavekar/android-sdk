@@ -102,13 +102,13 @@ What if there is a custom `Application` class already. Then, add the following l
 ## Initiating Payment
 To initiate a Payment, the following mandatory fields are required by the SDK.
 
-1. Name of the buyer &nbsp;
-2. Email of the buyer &nbsp;
-3. Purpose of the transaction &nbsp;
+1. Name of the buyer (Max 100 characters)&nbsp;
+2. Email of the buyer (Max 75 characters)&nbsp;
+3. Purpose of the transaction (Max 255 characters)&nbsp;
 4. Phone number of the buyer &nbsp;
-5. Transaction amount &nbsp;
+5. Transaction amount (Min of Rs. 9 and limited to 2 decimal points)&nbsp;
 6. Access Token &nbsp;
-7. Transaction ID &nbsp;
+7. Transaction ID (Max 64 characters)&nbsp;
 
 ### Generating Access Token and Transaction ID
 A valid access token should be generated on your server using your `Client ID` and `Client Secret` and the token is then passed on to the application.
