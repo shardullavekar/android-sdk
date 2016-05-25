@@ -120,12 +120,13 @@ Add the following `android:name="com.instamojo.android.InstamojoApplication"` ke
     </application>        
 ```
 
-What if there is a custom `Application` class already. Then, add the following line to `onCreate()` method of that custom application class.
+What if there is a custom `Application` class already?
+Then, add the following line to `onCreate()` method of that custom application class.
 ```Java
     @Override
         public void onCreate() {
             super.onCreate();
-            InstamojoSDK.initialize(this);
+            Instamojo.initialize(this);
             ...
         }
 ```
