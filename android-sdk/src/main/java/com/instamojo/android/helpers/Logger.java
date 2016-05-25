@@ -25,6 +25,20 @@ public class Logger {
         if (isDebuggable) {
             Log.d(tag, data);
         }
+
+        checkForInitialization();
+    }
+
+    private static void checkForInitialization() {
+        if (appContext != null) {
+            return;
+        }
+
+        Log.e("Instamojo SDK", "Please initialize SDK in onCreate() method of your application class" +
+                "like this InstamojoSDK.initialize(this).\n" +
+                "If there is not custom application class, " +
+                "Add android:name=\"com.instamojo.android.InstamojoApplication\" to the <application/> " +
+                "tag in the manifest file");
     }
 
     public static void logError(String tag, String errorMessage) {

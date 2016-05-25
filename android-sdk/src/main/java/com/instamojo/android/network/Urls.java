@@ -20,7 +20,7 @@ import com.instamojo.android.helpers.Logger;
 public class Urls {
 
     private static Context appContext;
-    private static String baseUrl;
+    private static String baseUrl = Constants.DEFAULT_BASE_URL;
 
     public static void initialize(Context appContext) {
         Urls.appContext = appContext;
