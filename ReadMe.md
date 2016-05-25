@@ -459,7 +459,7 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 ```
 
 
-## Testing Integration
+## Integration Check
 Add the following `meta-data` to your application manifest file inside `<application> ... </application>` tag to use the testing environment for integration check.
 ```XML
 <meta-data
