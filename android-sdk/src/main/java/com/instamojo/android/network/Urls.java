@@ -47,7 +47,7 @@ public class Urls {
         baseUrl = sanitizeURL(baseUrl);
 
         if (baseUrl.contains("test")) {
-            Log.d("Urls", "Using a test base url. Use https://www.api.instamojo.com/ for production");
+            Log.d("Urls", "Using a test base url. Use https://api.instamojo.com/ for production");
         }
 
         Urls.baseUrl = baseUrl;

@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.instamojo.android.R;
+import com.instamojo.android.activities.BaseActivity;
 import com.instamojo.android.activities.PaymentDetailsActivity;
 import com.instamojo.android.callbacks.JusPayRequestCallback;
 import com.instamojo.android.helpers.CardValidator;
@@ -151,6 +152,14 @@ public class CardForm extends BaseFragment implements View.OnClickListener {
 
         editTexts = Arrays.asList(cardNumberBox, dateBox, nameOnCardBox, cvvBox);
         Logger.logDebug(this.getClass().getSimpleName(), "Inflated XML");
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (getActivity() != null) {
+            ((BaseActivity) getActivity()).hideKeyboard();
+        }
     }
 
     private void applyText(MaterialEditText editText, TextWatcher watcher, String text) {

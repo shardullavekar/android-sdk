@@ -236,7 +236,7 @@ public class Request {
     }
 
     private String getUserAgent() {
-        return "Android Mojo SDK;" + Build.MODEL + ";" + Build.BRAND + ";" + Build.VERSION.SDK_INT
+        return "Instamojo Android SDK;" + Build.MODEL + ";" + Build.BRAND + ";" + Build.VERSION.SDK_INT
                 + ";" + BuildConfig.APPLICATION_ID + ";" + BuildConfig.VERSION_NAME + ";" + BuildConfig.VERSION_CODE;
     }
 

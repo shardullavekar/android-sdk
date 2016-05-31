@@ -17,7 +17,7 @@
             style="@style/PaymentOptionButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/credit_or_debit_card" />
+            android:text="@string/title_fragment_credit_debit_card_form" />
 
         <View
             android:layout_width="match_parent"

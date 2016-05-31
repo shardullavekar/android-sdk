@@ -40,7 +40,6 @@
         app:met_validateOnFocusLost="true" />
 
     <LinearLayout
-        android:id="@+id/top_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_10"

@@ -47,7 +47,7 @@ public class Constants {
      */
     public static final String TRANSACTION_ID = "transactionID";
 
-    /**
+    /*
      * Key for paymentID in the return bundle
      */
     public static final String PAYMENT_ID = "paymentID";
@@ -55,5 +55,5 @@ public class Constants {
     /**
      * Default base url
      */
-    public static final String DEFAULT_BASE_URL = "https://www.api.instamojo.com/";
+    public static final String DEFAULT_BASE_URL = "https://api.instamojo.com/";
 }
