@@ -201,7 +201,10 @@ Once `Order` is validated. Add the following snippet to create an order with Ins
 Request request = new Request(order, new OrderRequestCallBack() {
                     @Override
                     public void onFinish(Order order, Exception error) {
-                        //good time to dismiss the dialog
+                        //dismiss the dialog if showed
+                        
+                        // Make sure the follwoing code is called on UI thread to show Toasts or to 
+                        //update UI elements 
                         if (error != null) {
                             if (error instanceof Errors.ConnectionError) {
                                   Log.e("App", "No internet connection");
@@ -350,7 +353,10 @@ Request request = new Request(order, card, new JusPayRequestCallback() {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        //Dismiss the dialog here
+                        //Dismiss the dialog here if showed.
+                        
+                        // Make sure the follwoing code is called on UI thread to show Toasts or to 
+                        //update UI elements
                         if (error != null) {
                              if (error instanceof Errors.ConnectionError){
                                     Log.e("App", "No internet connection");
@@ -443,18 +449,12 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
                     String transactionID = data.getStringExtra(Constants.TRANSACTION_ID);
                     String paymentID = data.getStringExtra(Constants.PAYMENT_ID);
         
-                    // Check transactionID, orderID, and orderID for null before using them to check the payment status.
-                    if (orderID != null) {
-                        Log.d("App", "Order ID - "+orderID);
+                    // Check transactionID, orderID, and orderID for null before using them to check the Payment status.
+                    if (orderID != null && transactionID != null && paymentID != null) {
+                         //Check for Payment status with Order ID or Transaction ID
+                    } else {
+                         //Oops!! Payment was cancelled
                     }
-                    if (transactionID != null){
-                        Log.d("App", "Transaction ID - "+transactionID);
-                    }
-                    if (paymentID != null) {
-                        Log.d("App", "Payment ID - " +paymentID);
-                    }
-                    
-                    //Check for Payment status.
         }
 }
 ```

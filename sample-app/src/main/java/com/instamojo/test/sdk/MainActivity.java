@@ -4,10 +4,11 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.AppCompatEditText;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
+import android.widget.Toast;
 
 import com.instamojo.android.Instamojo;
 import com.instamojo.android.activities.PaymentDetailsActivity;
@@ -37,11 +38,18 @@ public class MainActivity extends AppCompatActivity {
     private Random random = new Random(System.currentTimeMillis());
     private ProgressDialog dialog;
 
+    private AppCompatEditText nameBox, emailBox, phoneBox, amountBox, descriptionBox;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Button button = (Button) findViewById(R.id.pay);
+        nameBox = (AppCompatEditText) findViewById(R.id.name);
+        emailBox = (AppCompatEditText) findViewById(R.id.email);
+        phoneBox = (AppCompatEditText) findViewById(R.id.phone);
+        amountBox = (AppCompatEditText) findViewById(R.id.amount);
+        descriptionBox = (AppCompatEditText) findViewById(R.id.description);
         dialog = new ProgressDialog(this);
         dialog.setIndeterminate(true);
         dialog.setMessage("please wait...");
@@ -66,44 +74,48 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void onClickPay() {
-        String name = ((EditText) findViewById(R.id.name)).getText().toString();
-        String email = ((EditText) findViewById(R.id.email)).getText().toString();
-        String phone = ((EditText) findViewById(R.id.phone)).getText().toString();
-        String amount = ((EditText) findViewById(R.id.amount)).getText().toString();
-        String description = ((EditText) findViewById(R.id.description)).getText().toString();
+        String name = nameBox.getText().toString();
+        final String email = emailBox.getText().toString();
+        String phone = phoneBox.getText().toString();
+        String amount = amountBox.getText().toString();
+        String description = descriptionBox.getText().toString();
+
+        //this s only for testing. Actual transaciton_id must be fetched from the server
+        String transactionID = String.valueOf(random.nextInt());
+
         //Create the Order
-        Order order = new Order(accessToken, String.valueOf(random.nextInt()), name, email, phone, amount, description);
+        Order order = new Order(accessToken, transactionID, name, email, phone, amount, description);
 
         //Validate the Order
         if (!order.isValid()) {
             //oops order validation failed. Pinpoint the issue(s).
 
             if (!order.isValidName()) {
-                Log.e("App", "Buyer name is invalid");
+                nameBox.setError("Buyer name is invalid");
             }
 
             if (!order.isValidEmail()) {
-                Log.e("App", "Buyer email is invalid");
+                emailBox.setError("Buyer email is invalid");
             }
 
             if (!order.isValidPhone()) {
-                Log.e("App", "Buyer phone is invalid");
+                phoneBox.setError("Buyer phone is invalid");
             }
 
             if (!order.isValidAmount()) {
-                Log.e("App", "Amount is invalid");
+                amountBox.setError("Amount is invalid");
             }
 
             if (!order.isValidDescription()) {
-                Log.e("App", "description is invalid");
+                descriptionBox.setError("Description is invalid");
             }
 
             if (!order.isValidTransactionID()) {
-                Log.e("App", "Transaction ID is invalid");
+                showToast("Transaction is Invalid");
             }
 
             if (!order.isValidRedirectURL()) {
-                Log.e("App", "Redirection URL is invalid");
+                showToast("Redirection URL is invalid");
             }
 
             return;
@@ -113,55 +125,60 @@ public class MainActivity extends AppCompatActivity {
         dialog.show();
         Request request = new Request(order, new OrderRequestCallBack() {
             @Override
-            public void onFinish(Order order, Exception error) {
-                dialog.dismiss();
-                if (error != null) {
-                    if (error instanceof Errors.ConnectionError) {
-                        Log.e("App", "No internet connection");
-                    } else if (error instanceof Errors.ServerError) {
-                        Log.e("App", "Server Error. Try again");
-                    } else if (error instanceof Errors.AuthenticationError) {
-                        Log.e("App", "Access token is invalid or expired");
-                    } else if (error instanceof Errors.ValidationError) {
-                        // Cast object to validation to pinpoint the issue
-                        Errors.ValidationError validationError = (Errors.ValidationError) error;
+            public void onFinish(final Order order, final Exception error) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        dialog.dismiss();
+                        if (error != null) {
+                            if (error instanceof Errors.ConnectionError) {
+                                showToast("No internet connection");
+                            } else if (error instanceof Errors.ServerError) {
+                                showToast("Server Error. Try again");
+                            } else if (error instanceof Errors.AuthenticationError) {
+                                showToast("Access token is invalid or expired. Please Update the token!!");
+                            } else if (error instanceof Errors.ValidationError) {
+                                // Cast object to validation to pinpoint the issue
+                                Errors.ValidationError validationError = (Errors.ValidationError) error;
 
-                        if (!validationError.isValidTransactionID()) {
-                            Log.e("App", "Transaction ID is not Unique");
+                                if (!validationError.isValidTransactionID()) {
+                                    showToast("Transaction ID is not Unique");
+                                    return;
+                                }
+
+                                if (!validationError.isValidRedirectURL()) {
+                                    showToast("Redirect url is invalid");
+                                    return;
+                                }
+
+                                if (!validationError.isValidPhone()) {
+                                    phoneBox.setError("Buyer's Phone Number is invalid/empty");
+                                    return;
+                                }
+
+                                if (!validationError.isValidEmail()) {
+                                    emailBox.setError("Buyer's Email is invalid/empty");
+                                    return;
+                                }
+
+                                if (!validationError.isValidAmount()) {
+                                    amountBox.setError("Amount is either less than Rs.9 or has more than two decimal places");
+                                    return;
+                                }
+
+                                if (!validationError.isValidName()) {
+                                    nameBox.setError("Buyer's Name is required");
+                                    return;
+                                }
+                            } else {
+                                showToast(error.getMessage());
+                            }
                             return;
                         }
 
-                        if (!validationError.isValidRedirectURL()) {
-                            Log.e("App", "Redirect url is invalid");
-                            return;
-                        }
-
-                        if (!validationError.isValidPhone()) {
-                            Log.e("App", "Buyer's Phone Number is invalid/empty");
-                            return;
-                        }
-
-                        if (!validationError.isValidEmail()) {
-                            Log.e("App", "Buyer's Email is invalid/empty");
-                            return;
-                        }
-
-                        if (!validationError.isValidAmount()) {
-                            Log.e("App", "Amount is either less than Rs.9 or has more than two decimal places");
-                            return;
-                        }
-
-                        if (!validationError.isValidName()) {
-                            Log.e("App", "Buyer's Name is required");
-                            return;
-                        }
-                    } else {
-                        Log.e("App", error.getMessage());
+                        startPreCreatedUI(order);
                     }
-                    return;
-                }
-
-                startPreCreatedUI(order);
+                });
             }
         });
 
@@ -182,13 +199,24 @@ public class MainActivity extends AppCompatActivity {
         startActivityForResult(intent, Constants.REQUEST_CODE);
     }
 
+    private void showToast(final String message) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(getBaseContext(), message, Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
 
     /**
      * Token should not be generated on the app like this. The token must be generated on your server
      * and should be fetched to your app.
      */
     private void updateToken() {
-        final ProgressDialog dialog = ProgressDialog.show(this, "", "Please wait...", true, false);
+        if (!dialog.isShowing()) {
+            dialog.show();
+        }
         OkHttpClient client = new OkHttpClient();
         RequestBody body = new FormBody.Builder()
                 .add("grant_type", "client_credentials")
@@ -203,7 +231,9 @@ public class MainActivity extends AppCompatActivity {
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                dialog.dismiss();
+                if (dialog != null && dialog.isShowing()) {
+                    dialog.dismiss();
+                }
             }
 
             @Override
@@ -213,13 +243,13 @@ public class MainActivity extends AppCompatActivity {
                 try {
                     JSONObject responseObject = new JSONObject(responseBody);
                     accessToken = responseObject.getString("access_token");
-                    Log.d("App", accessToken);
-                    Log.d("App", "Updated token");
+                    showToast("Updated token");
                 } catch (JSONException e) {
-                    Log.d("App", "Failed to update token");
+                    showToast("Failed to update token");
                 }
-
-                dialog.dismiss();
+                if (dialog != null && dialog.isShowing()) {
+                    dialog.dismiss();
+                }
             }
         });
     }
@@ -232,15 +262,11 @@ public class MainActivity extends AppCompatActivity {
             String transactionID = data.getStringExtra(Constants.TRANSACTION_ID);
             String paymentID = data.getStringExtra(Constants.PAYMENT_ID);
 
-            // Check transactionID, orderID, and orderID for null before using them to check the transaction status.
-            if (orderID != null) {
-                Log.d("App", "Order ID - " + orderID);
-            }
-            if (transactionID != null) {
-                Log.d("App", "Transaction ID - " + transactionID);
-            }
-            if (paymentID != null) {
-                Log.d("App", "Payment ID - " + paymentID);
+            // Check transactionID, orderID, and orderID for null before using them to check the Payment status.
+            if (orderID != null && transactionID != null && paymentID != null) {
+                showToast("Check for Payment with Order ID - " + orderID);
+            } else {
+                showToast("Oops!! Payment was cancelled");
             }
         }
     }
