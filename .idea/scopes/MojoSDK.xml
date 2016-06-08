@@ -1,3 +1,0 @@
-<component name="DependencyValidationManager">
-  <scope name="MojoSDK" pattern="src[mojosdk]:com.instamojo.mojosdk.activities..*||src[mojosdk]:com.instamojo.mojosdk.adapters..*||src[mojosdk]:com.instamojo.mojosdk.callbacks..*||src[mojosdk]:com.instamojo.mojosdk.fragments..*||src[mojosdk]:com.instamojo.mojosdk.helpers..*||src[mojosdk]:com.instamojo.mojosdk.models..*||src[mojosdk]:com.instamojo.mojosdk.network..*" />
-</component>
