@@ -212,7 +212,7 @@ public class Request {
         order.setResourceURI(orderObject.getString("resource_uri"));
 
         JSONObject paymentOptionsObject = responseObject.getJSONObject("payment_options");
-        if (paymentOptionsObject.has("card_options")) {
+        if (paymentOptionsObject.has("card_options") && !paymentOptionsObject.isNull("card_options")) {
             JSONObject cardOptions = paymentOptionsObject.getJSONObject("card_options");
             JSONObject submissionData = cardOptions.getJSONObject("submission_data");
             String merchantID = submissionData.getString("merchant_id");
@@ -221,7 +221,7 @@ public class Request {
             order.setCardOptions(new CardOptions(orderID, merchantID, paymentURL));
         }
 
-        if (paymentOptionsObject.has("netbanking_options")) {
+        if (paymentOptionsObject.has("netbanking_options") && !paymentOptionsObject.isNull("netbanking_options")) {
             JSONObject netbankingOptions = paymentOptionsObject.getJSONObject("netbanking_options");
             String nbURL = netbankingOptions.getString("submission_url");
             JSONArray banksArray = netbankingOptions.getJSONArray("choices");
