@@ -13,7 +13,7 @@ ext {
     siteUrl = 'https://github.com/Instamojo/android-sdk'
     gitUrl = 'https://github.com/Instamojo/android-sdk.git'
 
-    libraryVersion = '1.0.2'
+    libraryVersion = '1.0.3'
 
     developerId = 'vedhavyas'
     developerName = 'Vedhavyas Singareddi'
