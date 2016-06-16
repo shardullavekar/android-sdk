@@ -51,7 +51,7 @@ public class PaymentActivity extends BaseActivity {
             returnResult(RESULT_CANCELED);
             return;
         }
-        currentFragment = (JuspayBrowserFragment) getSupportFragmentManager().findFragmentById(R.id.juspay_browser_fragment_activity);
+        currentFragment = (JuspayBrowserFragment) getSupportFragmentManager().findFragmentById(R.id.juspay_browser_fragment);
         currentFragment.startPaymentWithArguments(sourceArgs);
         Logger.logDebug(this.getClass().getSimpleName(), "Loaded Fragment - " + currentFragment.getClass().getSimpleName());
     }
