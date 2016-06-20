@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     tools:context="com.instamojo.android.activities.PaymentActivity">
 
-    <include layout="@layout/toolbar" />
+    <include layout="@layout/toolbar_instamojo" />
 
     <fragment
         android:id="@+id/juspay_browser_fragment"
@@ -25,7 +25,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="4dp"
-            android:background="@drawable/toolbar_shadow" />
+            android:background="@drawable/toolbar_shadow_instamojo" />
     </FrameLayout>
 
 </RelativeLayout>

@@ -28,7 +28,7 @@ public class ChoosePaymentOption extends BaseFragment implements View.OnClickLis
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_choose_payment, container, false);
+        View view = inflater.inflate(R.layout.fragment_choose_payment_instamojo, container, false);
         parentActivity = (PaymentDetailsActivity) getActivity();
         inflateXML(view);
         return view;

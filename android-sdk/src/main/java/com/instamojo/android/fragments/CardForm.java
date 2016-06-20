@@ -69,7 +69,7 @@ public class CardForm extends BaseFragment implements View.OnClickListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_card_form, container, false);
+        View view = inflater.inflate(R.layout.fragment_card_form_instamojo, container, false);
         parentActivity = (PaymentDetailsActivity) getActivity();
         inflateXML(view);
         return view;

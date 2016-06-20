@@ -25,7 +25,7 @@ public class PaymentActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_payment);
+        setContentView(R.layout.activity_payment_instamojo);
         inflateXML();
         showFragment();
     }

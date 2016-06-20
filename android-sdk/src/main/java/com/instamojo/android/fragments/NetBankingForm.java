@@ -44,7 +44,7 @@ public class NetBankingForm extends BaseFragment implements SearchView.OnQueryTe
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_net_banking_form, container, false);
+        View view = inflater.inflate(R.layout.fragment_net_banking_form_instamojo, container, false);
         parentActivity = (PaymentDetailsActivity) getActivity();
         inflateXML(view);
         loadBanks("");
@@ -76,7 +76,7 @@ public class NetBankingForm extends BaseFragment implements SearchView.OnQueryTe
             if (!bank.getKey().toLowerCase(Locale.US).contains(queryText.toLowerCase(Locale.US))) {
                 continue;
             }
-            View bankView = LayoutInflater.from(getContext()).inflate(R.layout.bank_view, banksContainer, false);
+            View bankView = LayoutInflater.from(getContext()).inflate(R.layout.bank_view_instamojo, banksContainer, false);
             ((TextView) bankView.findViewById(R.id.bank_name)).setText(bank.getKey());
             bankView.setOnClickListener(new View.OnClickListener() {
                 @Override
