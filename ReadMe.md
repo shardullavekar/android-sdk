@@ -1,5 +1,38 @@
-# Instamojo SDK Integration Documentation   
+# Instamojo SDK Integration Documentation 
 
+Table of Contents
+=================
+
+  * [Overview](#overview)
+  * [Payment flow Via SDK](#payment-flow-via-sdk)
+    * [Sample Application](#sample-application)
+    * [Installation](#installation-----)
+      * [Include SDK](#include-sdk)
+      * [SDK Permissions](#sdk-permissions)
+      * [Proguard rules](#proguard-rules)
+    * [Generating Access Token](#generating-access-token)
+    * [What is Transaction ID](#what-is-transaction-id)
+    * [Simple Integration](#simple-integration)
+      * [Initializing SDK](#initializing-sdk)
+      * [Initiating Payment](#initiating-payment)
+      * [Displaying Payment Forms](#displaying-payment-forms)
+      * [Receiving Payment result in the main activity](#receiving-payment-result-in-the-main-activity)
+    * [Using Custom Created UI](#using-custom-created-ui)
+      * [Changing the Caller method](#changing-the-caller-method)
+      * [Fetching order object in the CustomUIActivity](#fetching-order-object-in-the-customuiactivity)
+      * [Collecting Card Details](#collecting-card-details)
+        * [Validating Card Option](#validating-card-option)
+        * [Creating and validating Card deatils](#creating-and-validating-card-deatils)
+        * [Generating Juspay Bundle using Card](#generating-juspay-bundle-using-card)
+      * [Collecting Netbanking Details](#collecting-netbanking-details)
+        * [Validating Netbanking Option](#validating-netbanking-option)
+        * [Displaying available Banks](#displaying-available-banks)
+        * [Generating Juspay Bundle using Bank code](#generating-juspay-bundle-using-bank-code)
+      * [Starting the payment Activity using the bundle](#starting-the-payment-activity-using-the-bundle)
+      * [Passing the result back to main Activity](#passing-the-result-back-to-main-activity)
+    * [Integration with Test Environment](#integration-with-test-environment)
+    * [Verbose logging](#verbose-logging)
+    
 ##Overview
 This SDK allows you to integrate payments via Instamojo into your Android app. It currently supports following modes of payments:
 
