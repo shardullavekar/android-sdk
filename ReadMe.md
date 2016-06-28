@@ -1,38 +1,31 @@
-# Instamojo SDK Integration Documentation
+# Instamojo SDK Integration Documentation   
 
-Table of Contents
-=================
+##Overview
+This SDK allows you to integrate payments via Instamojo into your Android app. It currently supports following modes of payments:
 
-   * [Is there any Sample App](#sample-app)
-   * [Installation](#installation-----)
-     * [Include SDK](#include-sdk)
-     * [SDK Permissions](#sdk-permissions)
-     * [Proguard rules](#proguard-rules)
-   * [Initializing SDK](#initializing-sdk)
-   * [Initiating Payment](#initiating-payment)
-     * [Generating Access Token and Transaction ID](#generating-access-token-and-transaction-id)
-     * [Creating Order Object](#creating-order-object)
-   * [Payment](#payment)
-     * [Collecting Payment Information](#collecting-payment-information)
-       * [Using Pre\-Created UI](#using-pre-created-ui)
-       * [Using Custom Created UI](#using-custom-created-ui)
-         * [Changing the Caller method](#changing-the-caller-method)
-         * [Fetching order object in the CustomUIActivity](#fetching-order-object-in-the-customuiactivity)
-         * [Collecting Card Details](#collecting-card-details)
-           * [Validating Card Option](#validating-card-option)
-           * [Creating and validating Card deatils](#creating-and-validating-card-deatils)
-           * [Generating Juspay Bundle using Card](#generating-juspay-bundle-using-card)
-         * [Collecting Netbanking Details](#collecting-netbanking-details)
-           * [Validating Netbanking Option](#validating-netbanking-option)
-           * [Displaying available Banks](#displaying-available-banks)
-           * [Generating Juspay Bundle using Bank code](#generating-juspay-bundle-using-bank-code)
-         * [Starting the payment Activity using the bundle](#starting-the-payment-activity-using-the-bundle)
-         * [Passing the result back to main Activity](#passing-the-result-back-to-main-activity)
-     * [Receiving Payment result in the main activity](#receiving-payment-result-in-the-main-activity)
-   * [Integration Check](#integration-check)
-   * [Debugging](#debugging)
+1. Credit / Debit Cards
+2. Netbanking
 
-## Sample App
+This SDK also comes pre-integrated with Juspay Safe Browser, which makes payments on mobile easier, resulting in faster transaction time and improvement in conversions.
+
+1. 1-click OTP: Auto-processing Bank SMS OTP for 1-Click experience.
+2. Network optimizations: Smart 2G connection handling to reduce page load times.
+3. Input & Keyboard Enhancements: Displays right keyboard with password viewing option.
+4. Smooth User Experience: Aids the natural flow of users with features like Automatic Focus, Scroll/Zoom, Navigation buttons.
+
+#Payment flow Via SDK
+The section describes how the payment flow probably looks like, when you integrate with this SDK. Note that, this is just for reference and you are free to make changes to this flow that works well for you.
+
+- When the buyer clicks on Buy button, your app makes a call to your backend to initiate a transaction in your system.
+- Your backend systems create a transaction (uniquely identified by transaction_id). If required, it also obtains an access token from Instamojo servers. It passes back order details (like, buyer details, amount, transaction id etc.) and a valid Instamojo’s access token.
+- Your Android app creates a new Order (from the SDK), by passing it order details and access token.
+- If order is valid, the user is shown the payment modes, which will take him via the payment process as per mode selected.
+- Once a payment is completed, a callback is called in your Android app with your transaction_id.
+- Your Android app makes a request to your backend servers with the transaction_id.
+- Your backend servers checks the status of the transaction by making a request to Instamojo’ servers. Your backend servers updates the status in the database, and passes back the result (successful / failure) to your app.
+- Your app shows the success / failure screen based on the result if received from your backend.
+
+## Sample Application 
 Yes, we have a Sample app that is integrated with SDK. You can either use to a Base for your project or have a look at the integration in action.
 Check out the Documentation of the Sample App [here](https://github.com/Instamojo/android-sdk-sample-app/blob/master/ReadMe.md).
 
@@ -115,7 +108,18 @@ If you are using Proguard for code obfuscation, add following rules in the progu
 -keep class android.support.v7.** { *; }
 ```
 
-## Initializing SDK
+## Generating Access Token
+A valid access token should be generated on your server using your `Client ID` and `Client Secret` and the token is then passed on to the application.
+Access token will be valid for 10 hours after generation. Please check this [documentation](https://github.com/Instamojo/android-sdk-sample-app/blob/master/sample-sdk-server/Readme.md#generating-access-token) 
+on how to generate Access Token using the credentials.
+
+## What is Transaction ID
+Well, transaction ID is a unique ID for an Order. Using this transaction ID, you can fetch Order status, get order details, and even initiate a refund for the Order attached to that transaction ID.
+
+The transaction ID should be unique for every Order.
+
+## Simple Integration
+### Initializing SDK
 Add the following `android:name="com.instamojo.android.InstamojoApplication"` key to `<application>` tag in manifest tag
 ```XML
 
@@ -136,7 +140,7 @@ Then, add the following line to `onCreate()` method of that custom application c
         }
 ```
 
-## Initiating Payment
+### Initiating Payment
 To initiate a Payment, the following mandatory fields are required by the SDK.
 
 1. Name of the buyer (Max 100 characters)&nbsp;
@@ -147,14 +151,6 @@ To initiate a Payment, the following mandatory fields are required by the SDK.
 6. Access Token &nbsp;
 7. Transaction ID (Max 64 characters)&nbsp;
 
-### Generating Access Token and Transaction ID
-A valid access token should be generated on your server using your `Client ID` and `Client Secret` and the token is then passed on to the application.
-Access token will be valid for a max of 10 hours after generation. Please check this [documentation](https://github.com/Instamojo/android-sdk-sample-app/blob/master/sample-sdk-server/Readme.md#generating-access-token) 
-on how to generate Access Token using the credentials.
-
-An Unique transaction_id must be generated on your server to create an Order.
-
-### Creating Order Object
 With all the mandatory fields mentioned above, a `Order` object can created.
 ``` Java
 Order order = new Order(accessToken, transactionID, name, email, phone, amount, purpose);
@@ -260,19 +256,9 @@ Request request = new Request(order, new OrderRequestCallBack() {
         });
 ```
 
-## Payment
-### Collecting Payment Information
-SDK currently supports to forms of Payment methods.
+### Displaying Payment Forms
+This SDK comes by default with payment forms (Cards and Netbanking) that can be used to collect payment details from the buyer.
 
-1. Debit/Credit Card
-2. Netbanking
-
-These details can be collected in two ways.
-
-1. Pre-Created UI that comes with the SDK.
-2. Creating Custom UI to collect Debit/Credit card and Netbanking details.
-
-#### Using Pre-Created UI
 Add the following code snippet to your application's activity/fragment to use Pre-created UI.
 ``` Java
 private void startPreCreatedUI(Order order){
@@ -283,12 +269,39 @@ private void startPreCreatedUI(Order order){
 }
 ```
 
-#### Using Custom Created UI
+And you can call this once the order is created and validated, as per the above step:
+```Java
+startPreCreatedUI(order);
+```
+
+### Receiving Payment result in the main activity
+Add the following code snippet in the main activity.
+Note that TransactionID, OrderID, and paymentID maybe null. Please do a null check before proceeding.
+``` Java
+@Override
+protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == Constants.REQUEST_CODE && data != null) {
+                    String orderID = data.getStringExtra(Constants.ORDER_ID);
+                    String transactionID = data.getStringExtra(Constants.TRANSACTION_ID);
+                    String paymentID = data.getStringExtra(Constants.PAYMENT_ID);
+        
+                    // Check transactionID, orderID, and orderID for null before using them to check the Payment status.
+                    if (orderID != null && transactionID != null && paymentID != null) {
+                         //Check for Payment status with Order ID or Transaction ID
+                    } else {
+                         //Oops!! Payment was cancelled
+                    }
+        }
+}
+```
+
+## Using Custom Created UI
 We know that every application is unique. If you choose to create your own UI to collect Payment information, SDK has necessary APIs to achieve this.
 Use `CustomUIActivity` activity, which uses SDK APIs to collect Payment Information, to extend and modify as per your needs.
 You can change the name of the activity to anything you like. Best way to do in Android Studio is by refactoring the name of the activity.
 
-##### Changing the Caller method
+### Changing the Caller method
 Replace `startPreCreatedUI` method wih the following one.
 ```Java
 private void startCustomUI(Order order) {
@@ -299,14 +312,14 @@ private void startCustomUI(Order order) {
 }
 ```
 
-##### Fetching `order` object in the `CustomUIActivity`
+### Fetching `order` object in the `CustomUIActivity`
 To fetch the passed `order` object in the `CustomUIActivity`. Use the following snippet.
 ```Java
 final Order order = getIntent().getParcelableExtra(Constants.ORDER);
 ```
 
-##### Collecting Card Details
-###### Validating Card Option
+### Collecting Card Details
+#### Validating Card Option
 Always validate whether the current order has card payment enabled. You can check for `null` for the card options.
 ```Java
 if (order.getCardOptions() == null) {
@@ -316,7 +329,7 @@ if (order.getCardOptions() == null) {
 }
 ```
 
-###### Creating and validating `Card` deatils
+#### Creating and validating `Card` deatils
 Once the user has typed in all the card details and ready to proceed, you can create the `Card` object.
 ```Java
 Card card = new Card();
@@ -349,7 +362,7 @@ if (!card.isCardValid()) {
 }
 ```
 
-###### Generating Juspay Bundle using Card 
+#### Generating Juspay Bundle using Card 
 Once the card details are validated, You need to generate JusPay Bundle with the card details given
 ```Java
 //Good time to show progress dialog while the bundle is generated
@@ -384,8 +397,8 @@ request.execute();
 
 ```
 
-##### Collecting Netbanking Details
-###### Validating Netbanking Option
+### Collecting Netbanking Details
+#### Validating Netbanking Option
 Similar to Card Options, Netbanking options can be disabled. Check Netbanking Options for `null`
 ```Java
 if (order.getNetBankingOptions() == null) {
@@ -395,7 +408,7 @@ if (order.getNetBankingOptions() == null) {
 }
 ```
 
-###### Displaying available Banks
+#### Displaying available Banks
 The Bank and Its code set can be fetched from `order` itself.
 ```Java
 order.getNetBankingOptions().getBanks();
@@ -403,7 +416,7 @@ order.getNetBankingOptions().getBanks();
 The above code snippet will return a `HashMap<String, String>` with key as bank name and value as bank code.
 Use an android Spinner or List view to display the available banks and collect the bank code of the bank user selects.
 
-###### Generating Juspay Bundle using Bank code
+#### Generating Juspay Bundle using Bank code
 Once the bank code is collected, You can generate the Juspay Bundle using the following snippet.
 ```Java
 //User selected a Bank. Hence proceed to Juspay
@@ -415,7 +428,7 @@ bundle.putString(Constants.POST_DATA, order.getNetBankingOptions().getPostData(o
 startPaymentActivity(bundle)
 ```
 
-##### Starting the payment Activity using the bundle
+### Starting the payment Activity using the bundle
 Add the following method to the activity which will start the Payment Activity with the Juspay Bundle.
 ```Java
 private void startPaymentActivity(Bundle bundle) {
@@ -428,7 +441,7 @@ private void startPaymentActivity(Bundle bundle) {
  }
 ```
 
-##### Passing the result back to main Activity
+### Passing the result back to main Activity
 Paste the following snippet to pass the result to main activity.
 ```java
 @Override
@@ -443,40 +456,18 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 }
 ```
 
-### Receiving Payment result in the main activity
-Add the following code snippet in the main activity.
-Note that TransactionID, OrderID, and paymentID maybe null. Please do a null check before proceeding.
-``` Java
-@Override
-protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == Constants.REQUEST_CODE && data != null) {
-                    String orderID = data.getStringExtra(Constants.ORDER_ID);
-                    String transactionID = data.getStringExtra(Constants.TRANSACTION_ID);
-                    String paymentID = data.getStringExtra(Constants.PAYMENT_ID);
-        
-                    // Check transactionID, orderID, and orderID for null before using them to check the Payment status.
-                    if (orderID != null && transactionID != null && paymentID != null) {
-                         //Check for Payment status with Order ID or Transaction ID
-                    } else {
-                         //Oops!! Payment was cancelled
-                    }
-        }
-}
-```
-
-
-## Integration Check
+## Integration with Test Environment
 To do the integration in a test environment, add the following code snippet at any point in the code.
 ```Java
 Instamojo.setBaseUrl("https://test.instamojo.com/");
 ```
-Once the Integration check is complete, you can simply delete the line of code.
+You can remove this line to use production environment, before releasing the app.
 
-## Debugging
-Debugging can very useful during SDK Integration.
-Add following code snippet at any point in the code.
+## Verbose logging
+Detailed logs can very useful during SDK Integration, especially while debugging any issues in integration. To enable verbose logging, add the following code snippet at any point in the code:
 ``` Java
 Instamojo.setLogLevel(Log.DEBUG);
 ```
+Log level defaults to `Log.WARN`.
+
 Once the application is ready to be pushed to the Play Store, simply remove the line of code.
