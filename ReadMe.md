@@ -3,6 +3,7 @@
 Table of Contents
 =================
 
+   * [Is there any Sample App](#sample-app)
    * [Installation](#installation-----)
      * [Include SDK](#include-sdk)
      * [SDK Permissions](#sdk-permissions)
@@ -30,6 +31,10 @@ Table of Contents
      * [Receiving Payment result in the main activity](#receiving-payment-result-in-the-main-activity)
    * [Integration Check](#integration-check)
    * [Debugging](#debugging)
+
+## Sample App
+Yes, we have a Sample app that is integrated with SDK. You can either use to a Base for your project or have a look at the integration in action.
+Check out the Documentation of the Sample App [here](https://github.com/Instamojo/android-sdk-sample-app/blob/master/ReadMe.md).
 
 ## Installation   [ ![Download](https://api.bintray.com/packages/dev-accounts/maven/sdks/images/download.svg) ](https://bintray.com/dev-accounts/maven/sdks/_latestVersion)
 ### Include SDK
@@ -144,7 +149,8 @@ To initiate a Payment, the following mandatory fields are required by the SDK.
 
 ### Generating Access Token and Transaction ID
 A valid access token should be generated on your server using your `Client ID` and `Client Secret` and the token is then passed on to the application.
-Access token will be valid for a max of 30 minutes after generation.
+Access token will be valid for a max of 10 hours after generation. Please check this [documentation](https://github.com/Instamojo/android-sdk-sample-app/blob/master/sample-sdk-server/Readme.md#generating-access-token) 
+on how to generate Access Token using the credentials.
 
 An Unique transaction_id must be generated on your server to create an Order.
 
