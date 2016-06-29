@@ -34,6 +34,8 @@ Table of Contents
    * [Verbose logging](#verbose-logging)
     
 ##Overview
+**Note:** **SDK currently doesn't support MarketPlace Integration. MarketPlace API Documentation is available [here](https://docs.instamojo.com/v2/docs)**
+
 This SDK allows you to integrate payments via Instamojo into your Android app. It currently supports following modes of payments:
 
 1. Credit / Debit Cards
