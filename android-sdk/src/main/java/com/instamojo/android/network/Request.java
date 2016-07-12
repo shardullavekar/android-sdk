@@ -13,6 +13,7 @@ import com.instamojo.android.helpers.Logger;
 import com.instamojo.android.models.Card;
 import com.instamojo.android.models.CardOptions;
 import com.instamojo.android.models.EMIOption;
+import com.instamojo.android.models.EMIOptions;
 import com.instamojo.android.models.Errors;
 import com.instamojo.android.models.NetBankingOptions;
 import com.instamojo.android.models.Order;
@@ -237,14 +238,15 @@ public class Request {
         }
 
         if (paymentOptionsObject.has("emi_options") && !paymentOptionsObject.isNull("emi_options")){
-            JSONArray emiOptionsRaw = paymentOptionsObject.getJSONObject("emi_options").getJSONArray("emi_list");
+            JSONObject emiOptionsRaw = paymentOptionsObject.getJSONObject("emi_options");
+            JSONArray emiListRaw = emiOptionsRaw.getJSONArray("emi_list");
             EMIOption emiOption;
             JSONObject emiOptionRaw;
             JSONArray ratesRaw;
             JSONObject rateRaw;
-            ArrayList<EMIOption> emiOptions = new ArrayList<>();
-            for(int i=0; i<emiOptionsRaw.length(); i++){
-                emiOptionRaw = emiOptionsRaw.getJSONObject(i);
+            ArrayList<EMIOption> emis = new ArrayList<>();
+            for(int i=0; i<emiListRaw.length(); i++){
+                emiOptionRaw = emiListRaw.getJSONObject(i);
                 String bankName = emiOptionRaw.getString("bank_name");
                 String bankCode = emiOptionRaw.getString("bank_code");
                 HashMap<Integer, Integer> rates = new HashMap<>();
@@ -256,9 +258,13 @@ public class Request {
                     rates.put(tenure, interest);
                 }
                 emiOption = new EMIOption(bankName, bankCode, rates);
-                emiOptions.add(emiOption);
+                emis.add(emiOption);
             }
-            order.setEmiOptions(emiOptions);
+            String url = emiOptionsRaw.getString("submission_url");
+            JSONObject submissionData = emiOptionsRaw.getJSONObject("submission_data");
+            String merchantID = submissionData.getString("merchant_id");
+            String orderID = submissionData.getString("order_id");
+            order.setEmiOptions(new EMIOptions(merchantID, orderID, url, emis));
         }
     }
 

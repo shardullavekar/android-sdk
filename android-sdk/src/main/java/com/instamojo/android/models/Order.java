@@ -46,7 +46,7 @@ public class Order implements Parcelable {
     private String resourceURI;
     private CardOptions cardOptions;
     private NetBankingOptions netBankingOptions;
-    private ArrayList<EMIOption> emiOptions;
+    private EMIOptions emiOptions;
 
     /**
      * Order model with all the Mandatory Parameters passed.
@@ -90,15 +90,7 @@ public class Order implements Parcelable {
         resourceURI = in.readString();
         cardOptions = in.readParcelable(CardOptions.class.getClassLoader());
         netBankingOptions = in.readParcelable(NetBankingOptions.class.getClassLoader());
-        int emiOptionsSize = in.readInt();
-        if (emiOptionsSize == 0){
-            return;
-        }
-
-        emiOptions = new ArrayList<>();
-        for(int i=0; i<emiOptionsSize; i++){
-            emiOptions.add((EMIOption) in.readParcelable(EMIOption.class.getClassLoader()));
-        }
+        emiOptions = in.readParcelable(EMIOptions.class.getClassLoader());
     }
 
     @Override
@@ -117,10 +109,7 @@ public class Order implements Parcelable {
         dest.writeString(resourceURI);
         dest.writeParcelable(cardOptions, flags);
         dest.writeParcelable(netBankingOptions, flags);
-        dest.writeInt(emiOptions.size());
-        for (EMIOption emiOption : emiOptions){
-            dest.writeParcelable(emiOption, flags);
-        }
+        dest.writeParcelable(emiOptions, flags);
     }
 
     /**
@@ -294,17 +283,17 @@ public class Order implements Parcelable {
 
     /**
      * EMI Options if enabled for the seller
-     * @return ArrayList of {@link EMIOption}
+     * @return {@link EMIOptions}
      */
-    public ArrayList<EMIOption> getEmiOptions() {
+    public EMIOptions getEmiOptions() {
         return emiOptions;
     }
 
     /**
      * Set EMI Options for this order if enabled for seller
-     * @param emiOptions ArrayList of {@link EMIOption}
+     * @param emiOptions {@link EMIOptions}
      */
-    public void setEmiOptions(ArrayList<EMIOption> emiOptions) {
+    public void setEmiOptions(EMIOptions emiOptions) {
         this.emiOptions = emiOptions;
     }
 

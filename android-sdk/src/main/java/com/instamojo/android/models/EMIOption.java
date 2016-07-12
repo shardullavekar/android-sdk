@@ -7,9 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * CardOptions object that holds the Card transaction information received from Mojo Server
- * for a particular order.
- *
+ * EMIOption object that holds the EMI details of a bank
  *
  * @author vedhavyas
  * @version 1.1
