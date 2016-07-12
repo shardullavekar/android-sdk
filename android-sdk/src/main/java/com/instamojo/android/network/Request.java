@@ -12,6 +12,7 @@ import com.instamojo.android.helpers.Constants;
 import com.instamojo.android.helpers.Logger;
 import com.instamojo.android.models.Card;
 import com.instamojo.android.models.CardOptions;
+import com.instamojo.android.models.EMIOption;
 import com.instamojo.android.models.Errors;
 import com.instamojo.android.models.NetBankingOptions;
 import com.instamojo.android.models.Order;
@@ -21,6 +22,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import okhttp3.Call;
@@ -232,6 +234,31 @@ public class Request {
                 banks.put(bank.getString("name"), bank.getString("id"));
             }
             order.setNetBankingOptions(new NetBankingOptions(nbURL, banks));
+        }
+
+        if (paymentOptionsObject.has("emi_options") && !paymentOptionsObject.isNull("emi_options")){
+            JSONArray emiOptionsRaw = paymentOptionsObject.getJSONObject("emi_options").getJSONArray("emi_list");
+            EMIOption emiOption;
+            JSONObject emiOptionRaw;
+            JSONArray ratesRaw;
+            JSONObject rateRaw;
+            ArrayList<EMIOption> emiOptions = new ArrayList<>();
+            for(int i=0; i<emiOptionsRaw.length(); i++){
+                emiOptionRaw = emiOptionsRaw.getJSONObject(i);
+                String bankName = emiOptionRaw.getString("bank_name");
+                String bankCode = emiOptionRaw.getString("bank_code");
+                HashMap<Integer, Integer> rates = new HashMap<>();
+                ratesRaw = emiOptionRaw.getJSONArray("rates");
+                for(int j=0; j<ratesRaw.length(); j++){
+                    rateRaw = ratesRaw.getJSONObject(j);
+                    int tenure = rateRaw.getInt("tenure");
+                    int interest = rateRaw.getInt("interest");
+                    rates.put(tenure, interest);
+                }
+                emiOption = new EMIOption(bankName, bankCode, rates);
+                emiOptions.add(emiOption);
+            }
+            order.setEmiOptions(emiOptions);
         }
     }
 
