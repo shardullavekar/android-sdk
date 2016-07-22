@@ -78,7 +78,12 @@ public class CardForm extends BaseFragment implements View.OnClickListener {
     @Override
     public void onResume() {
         super.onResume();
-        parentActivity.updateActionBarTitle(R.string.title_fragment_credit_debit_card_form);
+        int title = R.string.title_fragment_credit_debit_card_form;
+        if (parentActivity.getOrder().getEmiOptions() != null
+                && parentActivity.getOrder().getEmiOptions().getSelectedBankCode() != null){
+            title = R.string.emi_on_credit_card;
+        }
+        parentActivity.updateActionBarTitle(title);
     }
 
     @Override
@@ -236,8 +241,13 @@ public class CardForm extends BaseFragment implements View.OnClickListener {
                 });
                 dialog.dismiss();
                 if (error != null) {
-                    Toast.makeText(parentActivity, R.string.error_message_juspay,
-                            Toast.LENGTH_SHORT).show();
+                    parentActivity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(parentActivity, R.string.error_message_juspay,
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    });
                     Logger.logError(this.getClass().getSimpleName(), "Card checkout failed due to - " + error.getMessage());
                     return;
                 }

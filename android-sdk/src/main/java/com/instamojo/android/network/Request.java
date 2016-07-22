@@ -12,7 +12,7 @@ import com.instamojo.android.helpers.Constants;
 import com.instamojo.android.helpers.Logger;
 import com.instamojo.android.models.Card;
 import com.instamojo.android.models.CardOptions;
-import com.instamojo.android.models.EMIOption;
+import com.instamojo.android.models.EMIBank;
 import com.instamojo.android.models.EMIOptions;
 import com.instamojo.android.models.Errors;
 import com.instamojo.android.models.NetBankingOptions;
@@ -24,7 +24,12 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.Map;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -100,7 +105,7 @@ public class Request {
             }
         }
 
-        RequestBody body = new FormBody.Builder()
+        FormBody.Builder body = new FormBody.Builder()
                 .add("order_id", order.getCardOptions().getOrderID())
                 .add("merchant_id", order.getCardOptions().getMerchantID())
                 .add("payment_method_type", "CARD")
@@ -111,12 +116,18 @@ public class Request {
                 .add("card_security_code", card.getCvv())
                 .add("save_to_locker", card.canSaveCard() ? "true" : "false")
                 .add("redirect_after_payment", "true")
-                .add("format", "json")
-                .build();
+                .add("format", "json");
+        if (order.getEmiOptions() != null
+                && order.getEmiOptions().getSelectedBankCode() != null){
+            Logger.logDebug(this.getClass().getSimpleName(), "emi selected....");
+            body.add("is_emi", "true");
+            body.add("emi_bank", order.getEmiOptions().getSelectedBankCode());
+            body.add("emi_tenure", String.valueOf(order.getEmiOptions().getSelectedTenure()));
+        }
 
         final okhttp3.Request request = new okhttp3.Request.Builder()
                 .url(order.getCardOptions().getUrl())
-                .post(body)
+                .post(body.build())
                 .build();
         client.newCall(request).enqueue(new Callback() {
             @Override
@@ -240,16 +251,16 @@ public class Request {
         if (paymentOptionsObject.has("emi_options") && !paymentOptionsObject.isNull("emi_options")){
             JSONObject emiOptionsRaw = paymentOptionsObject.getJSONObject("emi_options");
             JSONArray emiListRaw = emiOptionsRaw.getJSONArray("emi_list");
-            EMIOption emiOption;
+            EMIBank emiBank;
             JSONObject emiOptionRaw;
             JSONArray ratesRaw;
             JSONObject rateRaw;
-            ArrayList<EMIOption> emis = new ArrayList<>();
+            ArrayList<EMIBank> emis = new ArrayList<>();
             for(int i=0; i<emiListRaw.length(); i++){
                 emiOptionRaw = emiListRaw.getJSONObject(i);
                 String bankName = emiOptionRaw.getString("bank_name");
                 String bankCode = emiOptionRaw.getString("bank_code");
-                HashMap<Integer, Integer> rates = new HashMap<>();
+                Map<Integer, Integer> rates = new HashMap<>();
                 ratesRaw = emiOptionRaw.getJSONArray("rates");
                 for(int j=0; j<ratesRaw.length(); j++){
                     rateRaw = ratesRaw.getJSONObject(j);
@@ -257,8 +268,19 @@ public class Request {
                     int interest = rateRaw.getInt("interest");
                     rates.put(tenure, interest);
                 }
-                emiOption = new EMIOption(bankName, bankCode, rates);
-                emis.add(emiOption);
+                LinkedList<Map.Entry<Integer, Integer>> ratesList = new LinkedList<>(rates.entrySet());
+                Collections.sort(ratesList, new Comparator<Map.Entry<Integer, Integer>>() {
+                    @Override
+                    public int compare(Map.Entry<Integer, Integer> lhs, Map.Entry<Integer, Integer> rhs) {
+                        return lhs.getKey() - rhs.getKey();
+                    }
+                });
+                LinkedHashMap<Integer,Integer> sortedRates = new LinkedHashMap<>();
+                for (Map.Entry<Integer, Integer> entry : ratesList){
+                    sortedRates.put(entry.getKey(), entry.getValue());
+                }
+                emiBank = new EMIBank(bankName, bankCode, sortedRates);
+                emis.add(emiBank);
             }
             String url = emiOptionsRaw.getString("submission_url");
             JSONObject submissionData = emiOptionsRaw.getJSONObject("submission_data");

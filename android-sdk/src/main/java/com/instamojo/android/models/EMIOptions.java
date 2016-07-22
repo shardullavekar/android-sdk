@@ -6,7 +6,7 @@ import android.os.Parcelable;
 import java.util.ArrayList;
 
 /**
- * EMIOptions object that holds an array {@link EMIOption} and order details
+ * EMIOptions object that holds an array {@link EMIBank} and order details
  *
  * @author vedhavyas
  * @version 1.1
@@ -17,13 +17,15 @@ public class EMIOptions implements Parcelable {
     private String merchantID;
     private String orderID;
     private String url;
-    private ArrayList<EMIOption> emis;
+    private ArrayList<EMIBank> emiBanks;
+    private String selectedBankCode;
+    private int selectedTenure = -1;
 
-    public EMIOptions(String merchantID, String orderID, String url, ArrayList<EMIOption> emis) {
+    public EMIOptions(String merchantID, String orderID, String url, ArrayList<EMIBank> emiBanks) {
         this.merchantID = merchantID;
         this.orderID = orderID;
         this.url = url;
-        this.emis = emis;
+        this.emiBanks = emiBanks;
     }
 
     public String getMerchantID() {
@@ -50,27 +52,45 @@ public class EMIOptions implements Parcelable {
         this.url = url;
     }
 
-    public ArrayList<EMIOption> getEmis() {
-        return emis;
+    public ArrayList<EMIBank> getEmiBanks() {
+        return emiBanks;
     }
 
-    public void setEmis(ArrayList<EMIOption> emis) {
-        this.emis = emis;
+    public void setEmiBanks(ArrayList<EMIBank> emiBanks) {
+        this.emiBanks = emiBanks;
+    }
+
+    public String getSelectedBankCode() {
+        return selectedBankCode;
+    }
+
+    public void setSelectedBankCode(String selectedBankCode) {
+        this.selectedBankCode = selectedBankCode;
+    }
+
+    public int getSelectedTenure() {
+        return selectedTenure;
+    }
+
+    public void setSelectedTenure(int selectedTenure) {
+        this.selectedTenure = selectedTenure;
     }
 
     protected EMIOptions(Parcel in) {
         merchantID = in.readString();
         orderID = in.readString();
         url = in.readString();
-        int emiOptionsSize = in.readInt();
-        if (emiOptionsSize == 0){
+        int emiBanksSize = in.readInt();
+        if (emiBanksSize == 0){
             return;
         }
 
-        emis = new ArrayList<>();
-        for(int i=0; i<emiOptionsSize; i++){
-            emis.add((EMIOption) in.readParcelable(EMIOption.class.getClassLoader()));
+        emiBanks = new ArrayList<>();
+        for(int i=0; i<emiBanksSize; i++){
+            emiBanks.add((EMIBank) in.readParcelable(EMIBank.class.getClassLoader()));
         }
+        selectedBankCode = in.readString();
+        selectedTenure = in.readInt();
     }
 
     @Override
@@ -83,10 +103,12 @@ public class EMIOptions implements Parcelable {
         dest.writeString(merchantID);
         dest.writeString(orderID);
         dest.writeString(url);
-        dest.writeInt(emis.size());
-        for (EMIOption emiOption : emis){
-            dest.writeParcelable(emiOption, flags);
+        dest.writeInt(emiBanks.size());
+        for (EMIBank emiBank : emiBanks){
+            dest.writeParcelable(emiBank, flags);
         }
+        dest.writeString(selectedBankCode);
+        dest.writeInt(selectedTenure);
     }
 
     @SuppressWarnings("unused")

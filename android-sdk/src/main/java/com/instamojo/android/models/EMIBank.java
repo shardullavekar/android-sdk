@@ -4,22 +4,23 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- * EMIOption object that holds the EMI details of a bank
+ * EMIBank object that holds the EMI details of a bank
  *
  * @author vedhavyas
  * @version 1.1
  * @since 12/07/16
  */
 
-public class EMIOption implements Parcelable {
+public class EMIBank implements Parcelable {
     private String bankName;
     private String bankCode;
-    private HashMap<Integer, Integer> rates;
+    private LinkedHashMap<Integer, Integer> rates;
 
-    public EMIOption(String bankName, String bankCode, HashMap<Integer, Integer> rates) {
+    public EMIBank(String bankName, String bankCode, LinkedHashMap<Integer, Integer> rates) {
         this.bankName = bankName;
         this.bankCode = bankCode;
         this.rates = rates;
@@ -45,18 +46,18 @@ public class EMIOption implements Parcelable {
         return rates;
     }
 
-    public void setRates(HashMap<Integer, Integer> rates) {
+    public void setRates(LinkedHashMap<Integer, Integer> rates) {
         this.rates = rates;
     }
 
-    protected EMIOption(Parcel in) {
+    protected EMIBank(Parcel in) {
         bankName = in.readString();
         bankCode = in.readString();
         int ratesSize = in.readInt();
         if (ratesSize == 0){
             return;
         }
-        rates = new HashMap<>();
+        rates = new LinkedHashMap<>();
         for (int i=0; i< ratesSize; i++){
             int tenure = in.readInt();
             int interest = in.readInt();
@@ -82,15 +83,15 @@ public class EMIOption implements Parcelable {
     }
 
     @SuppressWarnings("unused")
-    public static final Parcelable.Creator<EMIOption> CREATOR = new Parcelable.Creator<EMIOption>() {
+    public static final Parcelable.Creator<EMIBank> CREATOR = new Parcelable.Creator<EMIBank>() {
         @Override
-        public EMIOption createFromParcel(Parcel in) {
-            return new EMIOption(in);
+        public EMIBank createFromParcel(Parcel in) {
+            return new EMIBank(in);
         }
 
         @Override
-        public EMIOption[] newArray(int size) {
-            return new EMIOption[size];
+        public EMIBank[] newArray(int size) {
+            return new EMIBank[size];
         }
     };
 }
