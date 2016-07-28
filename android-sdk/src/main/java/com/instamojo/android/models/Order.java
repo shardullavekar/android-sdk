@@ -6,6 +6,8 @@ import android.support.annotation.NonNull;
 
 import com.instamojo.android.network.Urls;
 
+import java.util.ArrayList;
+
 /**
  * Order Class to hold the details of a Order.
  *
@@ -44,6 +46,7 @@ public class Order implements Parcelable {
     private String resourceURI;
     private CardOptions cardOptions;
     private NetBankingOptions netBankingOptions;
+    private EMIOptions emiOptions;
 
     /**
      * Order model with all the Mandatory Parameters passed.
@@ -87,6 +90,7 @@ public class Order implements Parcelable {
         resourceURI = in.readString();
         cardOptions = in.readParcelable(CardOptions.class.getClassLoader());
         netBankingOptions = in.readParcelable(NetBankingOptions.class.getClassLoader());
+        emiOptions = in.readParcelable(EMIOptions.class.getClassLoader());
     }
 
     @Override
@@ -105,6 +109,7 @@ public class Order implements Parcelable {
         dest.writeString(resourceURI);
         dest.writeParcelable(cardOptions, flags);
         dest.writeParcelable(netBankingOptions, flags);
+        dest.writeParcelable(emiOptions, flags);
     }
 
     /**
@@ -274,6 +279,22 @@ public class Order implements Parcelable {
      */
     public void setNetBankingOptions(NetBankingOptions netBankingOptions) {
         this.netBankingOptions = netBankingOptions;
+    }
+
+    /**
+     * EMI Options if enabled for the seller
+     * @return {@link EMIOptions}
+     */
+    public EMIOptions getEmiOptions() {
+        return emiOptions;
+    }
+
+    /**
+     * Set EMI Options for this order if enabled for seller
+     * @param emiOptions {@link EMIOptions}
+     */
+    public void setEmiOptions(EMIOptions emiOptions) {
+        this.emiOptions = emiOptions;
     }
 
     /**

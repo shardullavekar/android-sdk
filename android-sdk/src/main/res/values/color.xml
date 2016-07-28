@@ -7,4 +7,5 @@
     <color name="accent_color">@android:color/black</color>
     <color name="separator_color">#CCD1D9</color>
     <color name="edit_text_color">#61000000</color>
+    <color name="base_dark">#717D8B</color>
 </resources>
