@@ -76,8 +76,10 @@ public class ChoosePaymentOption extends BaseFragment implements View.OnClickLis
             Logger.logDebug(this.getClass().getSimpleName(), "Starting CardForm");
             //since the user is directly jumping to Card from instead of EMI.
             // We can safely assume that emi is not chosen. Hence, clear all emi related stuff in order
-            parentActivity.getOrder().getEmiOptions().setSelectedBankCode(null);
-            parentActivity.getOrder().getEmiOptions().setSelectedTenure(-1);
+            if (parentActivity.getOrder().getEmiOptions() != null) {
+                parentActivity.getOrder().getEmiOptions().setSelectedBankCode(null);
+                parentActivity.getOrder().getEmiOptions().setSelectedTenure(-1);
+            }
             parentActivity.loadFragment(new CardForm(), true);
         } else if (id == R.id.net_banking_layout){
             Logger.logDebug(this.getClass().getSimpleName(), "Starting Net Banking Form");
