@@ -232,26 +232,21 @@ public class CardForm extends BaseFragment implements View.OnClickListener {
         final ProgressDialog dialog = ProgressDialog.show(parentActivity, "", getString(R.string.please_wait), true, false);
         Request request = new Request(parentActivity.getOrder(), card, new JusPayRequestCallback() {
             @Override
-            public void onFinish(Bundle bundle, Exception error) {
+            public void onFinish(final Bundle bundle, final Exception error) {
                 parentActivity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         changeEditBoxesState(true);
-                    }
-                });
-                dialog.dismiss();
-                if (error != null) {
-                    parentActivity.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
+                        dialog.dismiss();
+                        if (error != null) {
                             Toast.makeText(parentActivity, R.string.error_message_juspay,
                                     Toast.LENGTH_SHORT).show();
+                            Logger.logError(this.getClass().getSimpleName(), "Card checkout failed due to - " + error.getMessage());
+                            return;
                         }
-                    });
-                    Logger.logError(this.getClass().getSimpleName(), "Card checkout failed due to - " + error.getMessage());
-                    return;
-                }
-                parentActivity.startPaymentActivity(bundle);
+                        parentActivity.startPaymentActivity(bundle);
+                    }
+                });
             }
         });
         request.execute();
