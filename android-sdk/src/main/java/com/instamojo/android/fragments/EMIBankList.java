@@ -49,8 +49,8 @@ public class EMIBankList extends BaseFragment{
     private void loadBanks() {
         emiBanksContainer.removeAllViews();
         for (final EMIBank bank : parentActivity.getOrder().getEmiOptions().getEmiBanks()) {
-            View bankView = LayoutInflater.from(getContext()).inflate(R.layout.bank_view_instamojo, emiBanksContainer, false);
-            ((TextView) bankView.findViewById(R.id.bank_name)).setText(bank.getBankName());
+            View bankView = LayoutInflater.from(getContext()).inflate(R.layout.list_view_instamojo, emiBanksContainer, false);
+            ((TextView) bankView.findViewById(R.id.item_name)).setText(bank.getBankName());
             bankView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

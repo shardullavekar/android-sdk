@@ -17,6 +17,8 @@ import com.instamojo.android.models.EMIOptions;
 import com.instamojo.android.models.Errors;
 import com.instamojo.android.models.NetBankingOptions;
 import com.instamojo.android.models.Order;
+import com.instamojo.android.models.Wallet;
+import com.instamojo.android.models.WalletOptions;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -287,6 +289,23 @@ public class Request {
             String merchantID = submissionData.getString("merchant_id");
             String orderID = submissionData.getString("order_id");
             order.setEmiOptions(new EMIOptions(merchantID, orderID, url, emis));
+        }
+
+        if (paymentOptionsObject.has("wallet_options") && !paymentOptionsObject.isNull("wallet_options")){
+            JSONObject walletOptionsObject = paymentOptionsObject.getJSONObject("wallet_options");
+            JSONArray walletChoices = walletOptionsObject.getJSONArray("choices");
+            JSONObject walletObject;
+            ArrayList<Wallet> wallets = new ArrayList<>();
+            for(int i=0; i<walletChoices.length(); i++){
+                walletObject = walletChoices.getJSONObject(i);
+                String name = walletObject.getString("name");
+                String walletID = walletObject.getString("id");
+                String walletImage = walletObject.getString("image");
+                wallets.add(new Wallet(name, walletImage, walletID));
+            }
+
+            String url = walletOptionsObject.getString("submission_url");
+            order.setWalletOptions(new WalletOptions(url, wallets));
         }
     }
 

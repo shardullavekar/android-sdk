@@ -46,6 +46,7 @@ public class ChoosePaymentOption extends BaseFragment implements View.OnClickLis
         View cardLayout = view.findViewById(R.id.card_layout);
         View netBankingLayout = view.findViewById(R.id.net_banking_layout);
         View emiLayout = view.findViewById(R.id.emi_layout);
+        View walletLayout = view.findViewById(R.id.wallet_layout);
 
         if (order.getNetBankingOptions() == null) {
             Logger.logDebug(this.getClass().getSimpleName(), "Hiding Net banking Layout");
@@ -62,9 +63,15 @@ public class ChoosePaymentOption extends BaseFragment implements View.OnClickLis
             emiLayout.setVisibility(View.GONE);
         }
 
+        if (order.getWalletOptions() == null){
+            Logger.logDebug(this.getClass().getSimpleName(), "Hiding Wallet Layout");
+            walletLayout.setVisibility(View.GONE);
+        }
+
         cardLayout.setOnClickListener(this);
         netBankingLayout.setOnClickListener(this);
         emiLayout.setOnClickListener(this);
+        walletLayout.setOnClickListener(this);
         Logger.logDebug(this.getClass().getSimpleName(), "Inflated XML");
     }
 
@@ -83,10 +90,13 @@ public class ChoosePaymentOption extends BaseFragment implements View.OnClickLis
             parentActivity.loadFragment(new CardForm(), true);
         } else if (id == R.id.net_banking_layout){
             Logger.logDebug(this.getClass().getSimpleName(), "Starting Net Banking Form");
-            parentActivity.loadFragment(new NetBankingForm(), true);
-        } else {
+            parentActivity.loadFragment(ListForm.getListFormFragment(ListForm.Mode.NetBanking), true);
+        } else if (id == R.id.emi_layout){
             Logger.logDebug(this.getClass().getSimpleName(), "Starting EMI Form");
             parentActivity.loadFragment(new EMIBankList(), true);
+        } else {
+            Logger.logDebug(this.getClass().getSimpleName(), "Starting Wallet Form");
+            parentActivity.loadFragment(ListForm.getListFormFragment(ListForm.Mode.Wallet), true);
         }
     }
 
