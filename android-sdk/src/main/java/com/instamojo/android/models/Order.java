@@ -19,19 +19,6 @@ import java.util.ArrayList;
 
 public class Order implements Parcelable {
 
-    @SuppressWarnings("unused")
-    public static final Parcelable.Creator<Order> CREATOR = new Parcelable.Creator<Order>() {
-        @Override
-        public Order createFromParcel(Parcel in) {
-            return new Order(in);
-        }
-
-        @Override
-        public Order[] newArray(int size) {
-            return new Order[size];
-        }
-    };
-
     private String id;
     private String transactionID;
     private String buyerName;
@@ -47,6 +34,7 @@ public class Order implements Parcelable {
     private CardOptions cardOptions;
     private NetBankingOptions netBankingOptions;
     private EMIOptions emiOptions;
+    private WalletOptions walletOptions;
 
     /**
      * Order model with all the Mandatory Parameters passed.
@@ -72,44 +60,6 @@ public class Order implements Parcelable {
         this.authToken = authToken;
         this.transactionID = transactionID;
         this.redirectionUrl = Urls.getDefaultRedirectUrl();
-    }
-
-    @SuppressWarnings("unchecked")
-    protected Order(Parcel in) {
-        id = in.readString();
-        transactionID = in.readString();
-        buyerName = in.readString();
-        buyerEmail = in.readString();
-        buyerPhone = in.readString();
-        amount = in.readString();
-        description = in.readString();
-        currency = in.readString();
-        mode = in.readString();
-        redirectionUrl = in.readString();
-        authToken = in.readString();
-        resourceURI = in.readString();
-        cardOptions = in.readParcelable(CardOptions.class.getClassLoader());
-        netBankingOptions = in.readParcelable(NetBankingOptions.class.getClassLoader());
-        emiOptions = in.readParcelable(EMIOptions.class.getClassLoader());
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(id);
-        dest.writeString(transactionID);
-        dest.writeString(buyerName);
-        dest.writeString(buyerEmail);
-        dest.writeString(buyerPhone);
-        dest.writeString(amount);
-        dest.writeString(description);
-        dest.writeString(currency);
-        dest.writeString(mode);
-        dest.writeString(redirectionUrl);
-        dest.writeString(authToken);
-        dest.writeString(resourceURI);
-        dest.writeParcelable(cardOptions, flags);
-        dest.writeParcelable(netBankingOptions, flags);
-        dest.writeParcelable(emiOptions, flags);
     }
 
     /**
@@ -305,15 +255,26 @@ public class Order implements Parcelable {
     }
 
     /**
+     * Get wallet options for this order if enabled for seller
+     * @return walletOptions {@link WalletOptions}
+     */
+    public WalletOptions getWalletOptions() {
+        return walletOptions;
+    }
+
+    /**
+     * Set wallet options for this order
+     * @param walletOptions {@link WalletOptions}
+     */
+    public void setWalletOptions(WalletOptions walletOptions) {
+        this.walletOptions = walletOptions;
+    }
+
+    /**
      * @param transactionID Unique TransactionID generated for this order
      */
     public void setTransactionID(String transactionID) {
         this.transactionID = transactionID;
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
     }
 
     /**
@@ -399,4 +360,61 @@ public class Order implements Parcelable {
         return !redirectionUrl.trim().isEmpty() && !redirectionUrl.contains("?");
     }
 
+
+    protected Order(Parcel in) {
+        id = in.readString();
+        transactionID = in.readString();
+        buyerName = in.readString();
+        buyerEmail = in.readString();
+        buyerPhone = in.readString();
+        amount = in.readString();
+        description = in.readString();
+        currency = in.readString();
+        redirectionUrl = in.readString();
+        mode = in.readString();
+        authToken = in.readString();
+        resourceURI = in.readString();
+        cardOptions = in.readParcelable(CardOptions.class.getClassLoader());
+        netBankingOptions = in.readParcelable(NetBankingOptions.class.getClassLoader());
+        emiOptions = in.readParcelable(EMIOptions.class.getClassLoader());
+        walletOptions = in.readParcelable(WalletOptions.class.getClassLoader());
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
+        dest.writeString(transactionID);
+        dest.writeString(buyerName);
+        dest.writeString(buyerEmail);
+        dest.writeString(buyerPhone);
+        dest.writeString(amount);
+        dest.writeString(description);
+        dest.writeString(currency);
+        dest.writeString(redirectionUrl);
+        dest.writeString(mode);
+        dest.writeString(authToken);
+        dest.writeString(resourceURI);
+        dest.writeParcelable(cardOptions, flags);
+        dest.writeParcelable(netBankingOptions, flags);
+        dest.writeParcelable(emiOptions, flags);
+        dest.writeParcelable(walletOptions, flags);
+    }
+
+    @SuppressWarnings("unused")
+    public static final Parcelable.Creator<Order> CREATOR = new Parcelable.Creator<Order>() {
+        @Override
+        public Order createFromParcel(Parcel in) {
+            return new Order(in);
+        }
+
+        @Override
+        public Order[] newArray(int size) {
+            return new Order[size];
+        }
+    };
 }

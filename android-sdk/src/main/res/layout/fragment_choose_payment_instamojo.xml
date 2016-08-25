@@ -69,6 +69,27 @@
 
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/wallet_layout"
+        style="@style/SelectableItemBackground"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:orientation="vertical">
+
+        <TextView
+            style="@style/PaymentOptionButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/wallets" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/separator_color" />
+
+    </LinearLayout>
+
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

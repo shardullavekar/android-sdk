@@ -4,13 +4,13 @@
     android:layout_height="match_parent"
     android:background="@color/background"
     android:orientation="vertical"
-    tools:context="com.instamojo.android.fragments.NetBankingForm">
+    tools:context="com.instamojo.android.fragments.ListForm">
 
     <TextView
+        android:id="@+id/header_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="@dimen/margin_16"
-        android:text="@string/choose_your_bank"
         android:textColor="@color/edit_text_color" />
 
     <View
@@ -23,7 +23,7 @@
         android:layout_height="match_parent">
 
         <LinearLayout
-            android:id="@+id/banks_container"
+            android:id="@+id/list_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:baselineAligned="true"

@@ -13,9 +13,12 @@
     <string name="title_fragment_credit_debit_card_form">Debit or Credit Card</string>
     <string name="title_fragment_emi_form">EMI</string>
     <string name="choose_your_bank">Choose your Bank</string>
+    <string name="choose_your_wallet">Choose your Wallet</string>
     <string name="search_your_bank">Search your Bank</string>
+    <string name="search_your_wallet">Search your Wallet</string>
     <string name="brand_trust_logos">Brand trust logos</string>
     <string name="choose_your_credit_card">Choose your Credit Card</string>
     <string name="choose_an_emi_option">Choose an EMI Option</string>
     <string name="emi_on_credit_card">EMI on Credit Card</string>
+    <string name="wallets">Wallets</string>
 </resources>
