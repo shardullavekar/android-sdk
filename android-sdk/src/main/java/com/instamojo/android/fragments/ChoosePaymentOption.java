@@ -43,7 +43,8 @@ public class ChoosePaymentOption extends BaseFragment implements View.OnClickLis
     @Override
     public void inflateXML(View view) {
         Order order = parentActivity.getOrder();
-        View cardLayout = view.findViewById(R.id.card_layout);
+        View debitCardLayout = view.findViewById(R.id.debit_card_layout);
+        View creditCardLayout = view.findViewById(R.id.credit_card_layout);
         View netBankingLayout = view.findViewById(R.id.net_banking_layout);
         View emiLayout = view.findViewById(R.id.emi_layout);
         View walletLayout = view.findViewById(R.id.wallet_layout);
@@ -54,8 +55,9 @@ public class ChoosePaymentOption extends BaseFragment implements View.OnClickLis
         }
 
         if (order.getCardOptions() == null) {
-            Logger.logDebug(this.getClass().getSimpleName(), "Hiding Card Layout");
-            cardLayout.setVisibility(View.GONE);
+            Logger.logDebug(this.getClass().getSimpleName(), "Hiding Debit and Credit Card Layout");
+            debitCardLayout.setVisibility(View.GONE);
+            creditCardLayout.setVisibility(View.GONE);
         }
 
         if (order.getEmiOptions() == null){
@@ -68,7 +70,8 @@ public class ChoosePaymentOption extends BaseFragment implements View.OnClickLis
             walletLayout.setVisibility(View.GONE);
         }
 
-        cardLayout.setOnClickListener(this);
+        debitCardLayout.setOnClickListener(this);
+        creditCardLayout.setOnClickListener(this);
         netBankingLayout.setOnClickListener(this);
         emiLayout.setOnClickListener(this);
         walletLayout.setOnClickListener(this);
@@ -79,15 +82,9 @@ public class ChoosePaymentOption extends BaseFragment implements View.OnClickLis
     public void onClick(View v) {
         int id = v.getId();
 
-        if (id == R.id.card_layout) {
-            Logger.logDebug(this.getClass().getSimpleName(), "Starting CardForm");
-            //since the user is directly jumping to Card from instead of EMI.
-            // We can safely assume that emi is not chosen. Hence, clear all emi related stuff in order
-            if (parentActivity.getOrder().getEmiOptions() != null) {
-                parentActivity.getOrder().getEmiOptions().setSelectedBankCode(null);
-                parentActivity.getOrder().getEmiOptions().setSelectedTenure(-1);
-            }
-            parentActivity.loadFragment(new CardForm(), true);
+        if (id == R.id.wallet_layout) {
+            Logger.logDebug(this.getClass().getSimpleName(), "Starting Wallet Form");
+            parentActivity.loadFragment(ListForm.getListFormFragment(ListForm.Mode.Wallet), true);
         } else if (id == R.id.net_banking_layout){
             Logger.logDebug(this.getClass().getSimpleName(), "Starting Net Banking Form");
             parentActivity.loadFragment(ListForm.getListFormFragment(ListForm.Mode.NetBanking), true);
@@ -95,8 +92,19 @@ public class ChoosePaymentOption extends BaseFragment implements View.OnClickLis
             Logger.logDebug(this.getClass().getSimpleName(), "Starting EMI Form");
             parentActivity.loadFragment(new EMIBankList(), true);
         } else {
-            Logger.logDebug(this.getClass().getSimpleName(), "Starting Wallet Form");
-            parentActivity.loadFragment(ListForm.getListFormFragment(ListForm.Mode.Wallet), true);
+            Logger.logDebug(this.getClass().getSimpleName(), "Starting CardForm");
+            //since the user is directly jumping to Card from instead of EMI.
+            // We can safely assume that emi is not chosen. Hence, clear all emi related stuff in order
+            if (parentActivity.getOrder().getEmiOptions() != null) {
+                parentActivity.getOrder().getEmiOptions().setSelectedBankCode(null);
+                parentActivity.getOrder().getEmiOptions().setSelectedTenure(-1);
+            }
+
+            if (id == R.id.debit_card_layout) {
+                parentActivity.loadFragment(CardForm.getCardForm(CardForm.Mode.DebitCard), true);
+            } else {
+                parentActivity.loadFragment(CardForm.getCardForm(CardForm.Mode.CreditCard), true);
+            }
         }
     }
 

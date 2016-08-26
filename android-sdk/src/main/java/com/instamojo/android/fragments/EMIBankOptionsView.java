@@ -94,7 +94,7 @@ public class EMIBankOptionsView extends BaseFragment{
                     parentActivity.getOrder().getEmiOptions()
                             .setSelectedBankCode(selectedBank.getBankCode());
                     parentActivity.getOrder().getEmiOptions().setSelectedTenure(option.getKey());
-                    parentActivity.loadFragment(new CardForm(), true);
+                    parentActivity.loadFragment(CardForm.getCardForm(CardForm.Mode.EMI), true);
                 }
             });
             optionsContainer.addView(optionView);
