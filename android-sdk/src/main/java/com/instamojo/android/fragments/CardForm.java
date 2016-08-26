@@ -44,12 +44,25 @@ public class CardForm extends BaseFragment implements View.OnClickListener {
     private MaterialEditText cardNumberBox, nameOnCardBox, cvvBox, dateBox;
     private List<MaterialEditText> editTexts;
     private PaymentDetailsActivity parentActivity;
+    private Mode mode;
+
+    enum Mode{
+        DebitCard,
+        CreditCard,
+        EMI
+    }
 
     /**
      * Creates a new instance of Fragment
      */
     public CardForm() {
         // Required empty public constructor
+    }
+
+    public static CardForm getCardForm(Mode mode){
+        CardForm form = new CardForm();
+        form.mode = mode;
+        return form;
     }
 
     private static boolean isEditBoxesValid(List<MaterialEditText> editTexts) {
@@ -78,9 +91,10 @@ public class CardForm extends BaseFragment implements View.OnClickListener {
     @Override
     public void onResume() {
         super.onResume();
-        int title = R.string.title_fragment_credit_debit_card_form;
-        if (parentActivity.getOrder().getEmiOptions() != null
-                && parentActivity.getOrder().getEmiOptions().getSelectedBankCode() != null){
+        int title = R.string.title_fragment_debit_card_form;
+        if (mode == Mode.CreditCard){
+            title = R.string.title_fragment_credit_card_form;
+        } else if (mode == Mode.EMI){
             title = R.string.emi_on_credit_card;
         }
         parentActivity.updateActionBarTitle(title);

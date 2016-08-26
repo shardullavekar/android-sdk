@@ -6,7 +6,7 @@
     android:orientation="vertical">
 
     <LinearLayout
-        android:id="@+id/card_layout"
+        android:id="@+id/debit_card_layout"
         style="@style/SelectableItemBackground"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -17,7 +17,49 @@
             style="@style/PaymentOptionButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/title_fragment_credit_debit_card_form" />
+            android:text="@string/title_fragment_debit_card_form" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/separator_color" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/net_banking_layout"
+        style="@style/SelectableItemBackground"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:orientation="vertical">
+
+        <TextView
+            style="@style/PaymentOptionButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/net_banking" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/separator_color" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/credit_card_layout"
+        style="@style/SelectableItemBackground"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:orientation="vertical">
+
+        <TextView
+            style="@style/PaymentOptionButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/title_fragment_credit_card_form" />
 
         <View
             android:layout_width="match_parent"
@@ -39,28 +81,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/title_fragment_emi_form" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/separator_color" />
-
-    </LinearLayout>
-
-
-    <LinearLayout
-        android:id="@+id/net_banking_layout"
-        style="@style/SelectableItemBackground"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:clickable="true"
-        android:orientation="vertical">
-
-        <TextView
-            style="@style/PaymentOptionButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/net_banking" />
 
         <View
             android:layout_width="match_parent"
