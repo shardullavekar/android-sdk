@@ -33,13 +33,14 @@ Table of Contents
    * [Integration with Test Environment](#integration-with-test-environment)
    * [Verbose logging](#verbose-logging)
     
+##***Note:SDK currently doesn't support MarketPlace Integration. MarketPlace API Documentation is available [here](https://docs.instamojo.com/v2/docs)***
 ##Overview
-**Note:** **SDK currently doesn't support MarketPlace Integration. MarketPlace API Documentation is available [here](https://docs.instamojo.com/v2/docs)**
-
 This SDK allows you to integrate payments via Instamojo into your Android app. It currently supports following modes of payments:
 
 1. Credit / Debit Cards
-2. Netbanking
+2. EMI 
+3. Netbanking
+4. Walllets
 
 This SDK also comes pre-integrated with Juspay Safe Browser, which makes payments on mobile easier, resulting in faster transaction time and improvement in conversions.
 
@@ -61,12 +62,12 @@ The section describes how the payment flow probably looks like, when you integra
 - Your app shows the success / failure screen based on the result if received from your backend.
 
 ## Sample Application 
-Yes, we have a Sample app that is integrated with SDK. You can either use to a Base for your project or have a look at the integration in action.
-Check out the Documentation of the Sample App [here](https://github.com/Instamojo/android-sdk-sample-app/blob/master/ReadMe.md).
+Yes, we have a Sample app that is integrated with SDK. You can either use it as a base for your project or have a look at the integration in action.
+Check out the documentation of the Sample App [here](https://github.com/Instamojo/android-sdk-sample-app/blob/master/ReadMe.md).
 
 ## Installation   [ ![Download](https://api.bintray.com/packages/dev-accounts/maven/sdks/images/download.svg) ](https://bintray.com/dev-accounts/maven/sdks/_latestVersion)
 ### Include SDK
-The SDK currently supports Android Version >= ICS 4.0.3(14). Just add the following to your application’s `build.gradle` file, inside the dependencies section.
+The SDK currently supports Android Version >= ICS 4.0.3(14). Just add the following to your application’s `build.gradle` file, inside the dependencies section.
 ```
 repositories {
     mavenCentral()
@@ -82,14 +83,14 @@ dependencies {
 ```
 
 ### SDK Permissions
-The following are the minimum set of permissions required by the SDK. Add the following set of permissions in the application’s Manifest file above the `<application>` tag.
+The following are the minimum set of permissions required by the SDK. Add the following set of permissions in the application’s manifest file above the `<application>` tag.
 ```
 //General permissions 
 <uses-permission android:name="android.permission.INTERNET" />
 <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-<uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
 //required for Juspay to read the OTP from the SMS sent to the device
+<uses-permission android:name="android.permission.READ_PHONE_STATE" />
 <uses-permission android:name="android.permission.READ_SMS" />
 <uses-permission android:name="android.permission.RECEIVE_SMS" />
 ```
@@ -165,7 +166,7 @@ Add the following `android:name="com.instamojo.android.InstamojoApplication"` ke
 ```
 
 What if there is a custom `Application` class already?
-Then, add the following line to `onCreate()` method of that custom application class.
+Then, add the following code snippet inside the `onCreate()` method of that custom application class.
 ```Java
     @Override
         public void onCreate() {
@@ -232,7 +233,7 @@ Add the following code snippet to validate the `Order` object.
         //Validation is successful. Proceed
 ```
 
-Once `Order` is validated. Add the following snippet to create an order with Instamojo.
+Once `Order` is validated. Add the following code snippet to create an order with Instamojo.
 ``` Java
 // Good time to show progress dialog to user
 Request request = new Request(order, new OrderRequestCallBack() {
@@ -355,7 +356,7 @@ final Order order = getIntent().getParcelableExtra(Constants.ORDER);
 
 ### Collecting Card Details
 #### Validating Card Option
-Always validate whether the current order has card payment enabled. You can check for `null` for the card options.
+Always validate whether the current order has card payment enabled.
 ```Java
 if (order.getCardOptions() == null) {
    //seems like card payment is not enabled. Make the necessary UI Changes.
@@ -434,7 +435,7 @@ request.execute();
 
 ### Collecting Netbanking Details
 #### Validating Netbanking Option
-Similar to Card Options, Netbanking options can be disabled. Check Netbanking Options for `null`
+Similar to Card Options, Netbanking options might be disabled. Check Netbanking Options for `null`
 ```Java
 if (order.getNetBankingOptions() == null) {
    //seems like Netbanking option is not enabled. Make the necessary UI Changes.
@@ -444,14 +445,14 @@ if (order.getNetBankingOptions() == null) {
 ```
 
 #### Displaying available Banks
-The Bank and Its code set can be fetched from `order` itself.
+The Bank and its code set can be fetched from `order` itself.
 ```Java
 order.getNetBankingOptions().getBanks();
 ```
-The above code snippet will return a `HashMap<String, String>` with key as bank name and value as bank code.
-Use an android Spinner or List view to display the available banks and collect the bank code of the bank user selects.
+The above code snippet will return a `HashMap<String, String>` with key = bank name and value =   bank code.
+Use an android spinner or list view to display the available banks and collect the bank code of the bank user selects.
 
-#### Generating Juspay Bundle using Bank code
+#### Generating Juspay Bundle using bank code
 Once the bank code is collected, You can generate the Juspay Bundle using the following snippet.
 ```Java
 //User selected a Bank. Hence proceed to Juspay
@@ -459,12 +460,12 @@ Bundle bundle = new Bundle();
 bundle.putString(Constants.URL, order.getNetBankingOptions().getUrl());
 bundle.putString(Constants.POST_DATA, order.getNetBankingOptions().getPostData(order.getAuthToken(), bankCode));
 
-//Pass the bundle to start payment Activity
+//Pass the bundle to start payment activity
 startPaymentActivity(bundle)
 ```
 
-### Starting the payment Activity using the bundle
-Add the following method to the activity which will start the Payment Activity with the Juspay Bundle.
+### Starting the payment activity using the bundle
+Add the following method to the activity which will start the payment activity with the Juspay Bundle.
 ```Java
 private void startPaymentActivity(Bundle bundle) {
         // Start the payment activity
@@ -476,7 +477,7 @@ private void startPaymentActivity(Bundle bundle) {
  }
 ```
 
-### Passing the result back to main Activity
+### Passing the result back to main activity
 Paste the following snippet to pass the result to main activity.
 ```java
 @Override
