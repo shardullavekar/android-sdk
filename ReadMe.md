@@ -468,9 +468,54 @@ bundle.putString(Constants.POST_DATA, order.getNetBankingOptions().getPostData(o
 startPaymentActivity(bundle)
 ```
 
+### Collecting EMI Details
+#### Validating EMI Options
+Similar to Card Options, EMI options might be disabled. Check EMI Options for `null`.
+```Java
+if (order.getEmiOptions() == null) {
+   //seems like EMI option is not enabled. Make the necessary UI Changes.
+} else{
+   // EMI is enabled.
+}
+```
+
+#### Displaying available EMI Options
+For EMI, user should be given an option to choose his/her Credit Card Bank.
+The list of Banks enabled for EMI can be fetched as `ArrayList<EMIBank>` using the following code snippet.
+```Java
+order.getEmiOptions().getEmiBanks()
+```
+Each `EMIBank` has following fields
+
+1. Bank Name
+2. Bank Code
+3. List of rate and tenure
+
+We recommend using a `ListView` to show the List of EMIBanks availble.
+
+Once the user choose a Bank from the list, you would need to present user with availble tenure options and the interest rate for each tenure.
+
+To fetch the tenure and tenure's interest rate, please use the following code snippet.
+```Java
+selectedEMIBank.getRates()
+```
+The result will fetch you `LinkedHashMap<Integer, Integer>` with `key = tenure` and `value = interest rate`.
+The map is sorted in ascending order wrt `key` ie.. `tenure`.
+We recommend you to use a `ListView` to show the tenure and its interest rate to the user.
+
+#### Updating Order and Collecting Card Details
+Once the user choose a tenure, please set the selected `bankCode` and `tenure` in `order`. 
+```Java
+order.getEmiOptions().setSelectedBankCode(selectedBank.getBankCode());
+order.getEmiOptions().setSelectedTenure(<SELECTED_TENURE>);
+```
+
+From this point, the further steps will be same as normal `Card` payment.
+SDK will take the `EMI` details from the `order` while generating Bundle for Juspay.
+
 ### Collecting Wallet details
 #### Validating Wallet Options
-Similar to Card Options, Wallet options might be disabled. Check Wallet Options for `null`
+Similar to Card Options, Wallet options might be disabled. Check Wallet Options for `null`.
 ```Java
 if (order.getWalletOptions() == null) {
    //seems like Wallet option is not enabled. Make the necessary UI Changes.
