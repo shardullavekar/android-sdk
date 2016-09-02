@@ -424,7 +424,7 @@ Request request = new Request(order, card, new JusPayRequestCallback() {
                         }
                         
                         // Everything is fine. Pass the bundle to start payment Activity
-                        startPaymentActivity(bundle);
+                        startPaymentActivity(bundle)
                     }
                 });
             }
@@ -459,6 +459,42 @@ Once the bank code is collected, You can generate the Juspay Bundle using the fo
 Bundle bundle = new Bundle();
 bundle.putString(Constants.URL, order.getNetBankingOptions().getUrl());
 bundle.putString(Constants.POST_DATA, order.getNetBankingOptions().getPostData(order.getAuthToken(), bankCode));
+
+//Pass the bundle to start payment activity
+startPaymentActivity(bundle)
+```
+
+### Collecting Wallet details
+#### Validating Wallet Options
+Similar to Card Options, Wallet options might be disabled. Check Wallet Options for `null`
+```Java
+if (order.getWalletOptions() == null) {
+   //seems like Wallet option is not enabled. Make the necessary UI Changes.
+} else{
+   // Wallet is enabled.
+}
+```
+
+#### Displaying available Wallets
+Enabled Wallets can be fetched from the `order` as a `ArrayList<Wallet>`.
+```Java
+order.getWalletOptions().getWallets();
+```
+
+Each `Wallet` object has three fields namely 
+1. Wallet Name
+2. Wallet ID
+3. Wallet Image URL
+
+We recommend using a `ListView` to show the list of Wallets.
+
+#### Generating Juspay bundle using Wallet ID
+Once the user choose a Wallet to proceed, budle should be generated with the selected Wallet ID.
+Generate the bundle using the follwing code snippet
+```Java
+Bundle bundle = new Bundle();
+bundle.putString(Constants.URL, order.getWalletOptions().getUrl());
+bundle.putString(Constants.POST_DATA, order.getWalletOptions().getPostData(order.getAuthToken(), <Selected Wallet ID>));
 
 //Pass the bundle to start payment activity
 startPaymentActivity(bundle)
