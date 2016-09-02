@@ -28,6 +28,14 @@ Table of Contents
        * [Validating Netbanking Option](#validating-netbanking-option)
        * [Displaying available Banks](#displaying-available-banks)
        * [Generating Juspay Bundle using Bank code](#generating-juspay-bundle-using-bank-code)
+     * [Collecting EMI Details](#collecting-emi-details)
+       * [Validating EMI Options](#validating-emi-options)
+       * [Displaying available EMI Options](#displaying-available-emi-options)
+       * [Updating Order and Collecting Card Details](#updating-order-and-collecting-card-details)
+     * [Collecting Wallet Details](#collecting-wallet-details)
+       * [Validating Wallet Options](#validating-wallet-options)
+       * [Displaying available Wallets](#displaying-available-wallets)
+       * [Generating Juspay Bundle using Wallet ID](#generating-juspay-bundle-using-wallet-id)
      * [Starting the payment Activity using the bundle](#starting-the-payment-activity-using-the-bundle)
      * [Passing the result back to main Activity](#passing-the-result-back-to-main-activity)
    * [Integration with Test Environment](#integration-with-test-environment)
@@ -424,7 +432,7 @@ Request request = new Request(order, card, new JusPayRequestCallback() {
                         }
                         
                         // Everything is fine. Pass the bundle to start payment Activity
-                        startPaymentActivity(bundle);
+                        startPaymentActivity(bundle)
                     }
                 });
             }
@@ -459,6 +467,88 @@ Once the bank code is collected, You can generate the Juspay Bundle using the fo
 Bundle bundle = new Bundle();
 bundle.putString(Constants.URL, order.getNetBankingOptions().getUrl());
 bundle.putString(Constants.POST_DATA, order.getNetBankingOptions().getPostData(order.getAuthToken(), bankCode));
+
+//Pass the bundle to start payment activity
+startPaymentActivity(bundle)
+```
+
+### Collecting EMI Details
+#### Validating EMI Options
+Similar to Card Options, EMI options might be disabled. Check EMI Options for `null`.
+```Java
+if (order.getEmiOptions() == null) {
+   //seems like EMI option is not enabled. Make the necessary UI Changes.
+} else{
+   // EMI is enabled.
+}
+```
+
+#### Displaying available EMI Options
+For EMI, user should be given an option to choose his/her Credit Card Bank.
+The list of Banks enabled for EMI can be fetched as `ArrayList<EMIBank>` using the following code snippet.
+```Java
+order.getEmiOptions().getEmiBanks()
+```
+Each `EMIBank` has following fields
+
+1. Bank Name
+2. Bank Code
+3. List of rate and tenure
+
+We recommend using a `ListView` to show the List of EMIBanks availble.
+
+Once the user choose a Bank from the list, you would need to present user with availble tenure options and the interest rate for each tenure.
+
+To fetch the tenure and tenure's interest rate, please use the following code snippet.
+```Java
+selectedEMIBank.getRates()
+```
+The result will fetch you `LinkedHashMap<Integer, Integer>` with `key = tenure` and `value = interest rate`.
+The map is sorted in ascending order wrt `key` ie.. `tenure`.
+We recommend you to use a `ListView` to show the tenure and its interest rate to the user.
+
+#### Updating Order and Collecting Card Details
+Once the user choose a tenure, please set the selected `bankCode` and `tenure` in `order`. 
+```Java
+order.getEmiOptions().setSelectedBankCode(selectedBank.getBankCode());
+order.getEmiOptions().setSelectedTenure(<SELECTED_TENURE>);
+```
+
+From this point, the further steps will be same as normal `Card` payment.
+SDK will take the `EMI` details from the `order` while generating Bundle for Juspay.
+
+### Collecting Wallet details
+#### Validating Wallet Options
+Similar to Card Options, Wallet options might be disabled. Check Wallet Options for `null`.
+```Java
+if (order.getWalletOptions() == null) {
+   //seems like Wallet option is not enabled. Make the necessary UI Changes.
+} else{
+   // Wallet is enabled.
+}
+```
+
+#### Displaying available Wallets
+Enabled Wallets can be fetched from the `order` as a `ArrayList<Wallet>`.
+```Java
+order.getWalletOptions().getWallets();
+```
+
+Each `Wallet` object has three fields namely
+
+1. Wallet Name
+2. Wallet ID
+3. Wallet Image URL
+
+We recommend using a `ListView` to show the list of Wallets.
+
+#### Generating Juspay bundle using Wallet ID
+Once the user choose a Wallet to proceed, budle should be generated with the selected Wallet ID.
+Generate the bundle using the follwing code snippet
+```Java
+Bundle bundle = new Bundle();
+bundle.putString(Constants.URL, order.getWalletOptions().getUrl());
+bundle.putString(Constants.POST_DATA, order.getWalletOptions().getPostData(order.getAuthToken(), <Selected Wallet ID>));
 
 //Pass the bundle to start payment activity
 startPaymentActivity(bundle)
