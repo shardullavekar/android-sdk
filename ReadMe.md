@@ -28,6 +28,10 @@ Table of Contents
        * [Validating Netbanking Option](#validating-netbanking-option)
        * [Displaying available Banks](#displaying-available-banks)
        * [Generating Juspay Bundle using Bank code](#generating-juspay-bundle-using-bank-code)
+     * [Collecting Wallet Details](#collecting-wallet-details)
+       * [Validating Wallet Options](#validating-wallet-options)
+       * [Displaying available Wallets](#displaying-available-wallets)
+       * [Generating Juspay Bundle using Wallet ID](#generating-juspay-bundle-using-wallet-id)
      * [Starting the payment Activity using the bundle](#starting-the-payment-activity-using-the-bundle)
      * [Passing the result back to main Activity](#passing-the-result-back-to-main-activity)
    * [Integration with Test Environment](#integration-with-test-environment)
@@ -481,7 +485,8 @@ Enabled Wallets can be fetched from the `order` as a `ArrayList<Wallet>`.
 order.getWalletOptions().getWallets();
 ```
 
-Each `Wallet` object has three fields namely 
+Each `Wallet` object has three fields namely
+
 1. Wallet Name
 2. Wallet ID
 3. Wallet Image URL
