@@ -18,7 +18,7 @@ import java.util.Map;
 public class EMIBank implements Parcelable {
     private String bankName;
     private String bankCode;
-    private LinkedHashMap<Integer, Integer> rates;
+    private LinkedHashMap<Integer, Integer> rates = new LinkedHashMap<>();
 
     public EMIBank(String bankName, String bankCode, LinkedHashMap<Integer, Integer> rates) {
         this.bankName = bankName;
@@ -75,6 +75,11 @@ public class EMIBank implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(bankName);
         dest.writeString(bankCode);
+        if (rates.size() < 1){
+            dest.writeInt(0);
+            return;
+        }
+
         dest.writeInt(rates.size());
         for (Map.Entry<Integer, Integer> entry : rates.entrySet()){
             dest.writeInt(entry.getKey());

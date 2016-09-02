@@ -17,7 +17,7 @@ public class EMIOptions implements Parcelable {
     private String merchantID;
     private String orderID;
     private String url;
-    private ArrayList<EMIBank> emiBanks;
+    private ArrayList<EMIBank> emiBanks = new ArrayList<>();
     private String selectedBankCode;
     private int selectedTenure = -1;
 
@@ -80,6 +80,8 @@ public class EMIOptions implements Parcelable {
         merchantID = in.readString();
         orderID = in.readString();
         url = in.readString();
+        selectedBankCode = in.readString();
+        selectedTenure = in.readInt();
         int emiBanksSize = in.readInt();
         if (emiBanksSize == 0){
             return;
@@ -89,8 +91,7 @@ public class EMIOptions implements Parcelable {
         for(int i=0; i<emiBanksSize; i++){
             emiBanks.add((EMIBank) in.readParcelable(EMIBank.class.getClassLoader()));
         }
-        selectedBankCode = in.readString();
-        selectedTenure = in.readInt();
+
     }
 
     @Override
@@ -103,12 +104,18 @@ public class EMIOptions implements Parcelable {
         dest.writeString(merchantID);
         dest.writeString(orderID);
         dest.writeString(url);
-        dest.writeInt(emiBanks.size());
-        for (EMIBank emiBank : emiBanks){
-            dest.writeParcelable(emiBank, flags);
-        }
         dest.writeString(selectedBankCode);
         dest.writeInt(selectedTenure);
+
+        if (emiBanks.size() < 1){
+            dest.writeInt(0);
+            return;
+        }
+
+        dest.writeInt(emiBanks.size());
+        for (EMIBank emiBank : emiBanks) {
+            dest.writeParcelable(emiBank, flags);
+        }
     }
 
     @SuppressWarnings("unused")
