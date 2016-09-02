@@ -28,7 +28,7 @@ public class NetBankingOptions implements Parcelable {
         }
     };
     private String url;
-    private HashMap<String, String> banks;
+    private HashMap<String, String> banks = new HashMap<>();
 
     /**
      * Constructor for Net Banking options.
@@ -91,6 +91,10 @@ public class NetBankingOptions implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(url);
+        if (banks.size() < 1){
+            dest.writeInt(0);
+            return;
+        }
         dest.writeInt(banks.size());
         for (HashMap.Entry<String, String> entry : banks.entrySet()) {
             dest.writeString(entry.getKey());

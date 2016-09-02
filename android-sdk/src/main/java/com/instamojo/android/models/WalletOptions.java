@@ -59,6 +59,11 @@ public class WalletOptions implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(url);
+        if (wallets.size() < 1){
+            dest.writeInt(0);
+            return;
+        }
+
         dest.writeInt(wallets.size());
         for (Wallet wallet : wallets){
             dest.writeParcelable(wallet, flags);

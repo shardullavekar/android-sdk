@@ -247,7 +247,9 @@ public class Request {
                 bank = banksArray.getJSONObject(i);
                 banks.put(bank.getString("name"), bank.getString("id"));
             }
-            order.setNetBankingOptions(new NetBankingOptions(nbURL, banks));
+            if(banks.size() > 0){
+                order.setNetBankingOptions(new NetBankingOptions(nbURL, banks));
+            }
         }
 
         if (paymentOptionsObject.has("emi_options") && !paymentOptionsObject.isNull("emi_options")){
@@ -281,14 +283,19 @@ public class Request {
                 for (Map.Entry<Integer, Integer> entry : ratesList){
                     sortedRates.put(entry.getKey(), entry.getValue());
                 }
-                emiBank = new EMIBank(bankName, bankCode, sortedRates);
-                emis.add(emiBank);
+
+                if(sortedRates.size() > 0) {
+                    emiBank = new EMIBank(bankName, bankCode, sortedRates);
+                    emis.add(emiBank);
+                }
             }
             String url = emiOptionsRaw.getString("submission_url");
             JSONObject submissionData = emiOptionsRaw.getJSONObject("submission_data");
             String merchantID = submissionData.getString("merchant_id");
             String orderID = submissionData.getString("order_id");
-            order.setEmiOptions(new EMIOptions(merchantID, orderID, url, emis));
+            if(emis.size() > 0) {
+                order.setEmiOptions(new EMIOptions(merchantID, orderID, url, emis));
+            }
         }
 
         if (paymentOptionsObject.has("wallet_options") && !paymentOptionsObject.isNull("wallet_options")){
@@ -305,7 +312,10 @@ public class Request {
             }
 
             String url = walletOptionsObject.getString("submission_url");
-            order.setWalletOptions(new WalletOptions(url, wallets));
+
+            if(wallets.size() > 0) {
+                order.setWalletOptions(new WalletOptions(url, wallets));
+            }
         }
     }
 
