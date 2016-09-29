@@ -48,7 +48,7 @@ This SDK allows you to integrate payments via Instamojo into your Android app. I
 1. Credit / Debit Cards
 2. EMI 
 3. Netbanking
-4. Walllets
+4. Wallets
 
 This SDK also comes pre-integrated with Juspay Safe Browser, which makes payments on mobile easier, resulting in faster transaction time and improvement in conversions.
 
