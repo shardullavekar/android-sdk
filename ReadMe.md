@@ -153,8 +153,15 @@ If you are using Proguard for code obfuscation, add following rules in the progu
 ```
 
 ## Generating Access Token
-A valid access token should be generated on your server using your `Client ID` and `Client Secret` and the token is then passed on to the application.
-Access token will be valid for 10 hours after generation. Please check this [documentation](https://github.com/Instamojo/android-sdk-sample-app/blob/master/sample-sdk-server/Readme.md#generating-access-token) 
+A valid access token should be generated on your server using your `Client ID` and `Client Secret`.
+
+Generate CLIENT_ID and CLIENT_SECRET for specific environments from the following links.
+ - [Test Environment](https://test.instamojo.com/integrations)
+ - [Production Environment](https://www.instamojo.com/integrations)
+
+Related support article: [How Do I Get My Client ID And Client Secret?](https://support.instamojo.com/hc/en-us/articles/212214265-How-do-I-get-my-Client-ID-and-Client-Secret-)
+
+Access token should be generated using CLIENT_ID and CLIENT_SECRET and will be valid for 10 hours after generation. Please check this [documentation](https://github.com/Instamojo/android-sdk-sample-app/blob/master/sample-sdk-server/Readme.md#generating-access-token) 
 on how to generate Access Token using the credentials.
 
 ## What is Transaction ID
