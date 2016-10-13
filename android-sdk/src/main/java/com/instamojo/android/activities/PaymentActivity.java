@@ -54,14 +54,14 @@ public class PaymentActivity extends BaseActivity {
             return;
         }
         currentFragment = (JuspayBrowserFragment) getSupportFragmentManager().findFragmentById(R.id.juspay_browser_fragment);
-        JuspayBrowserFragment.JuspayWebviewCallback juspayWebviewCallback = new JuspayBrowserFragment.JuspayWebviewCallback() {
+        JuspayBrowserFragment.JuspayWebviewCallback juspayWebViewCallback = new JuspayBrowserFragment.JuspayWebviewCallback() {
             public void webviewReady() {
                 JuspayWebView juspayWebView = currentFragment.getWebView();
                 juspayWebView.setWebViewClient(new JuspayWebViewClient(juspayWebView, currentFragment));
                 currentFragment.startPaymentWithArguments(sourceArgs);
             }
         };
-        currentFragment.setupJuspayWebviewCallbackInterface(juspayWebviewCallback);
+        currentFragment.setupJuspayWebviewCallbackInterface(juspayWebViewCallback);
         Logger.logDebug(this.getClass().getSimpleName(), "Loaded Fragment - " + currentFragment.getClass().getSimpleName());
     }
 
