@@ -9,7 +9,9 @@ import com.instamojo.android.fragments.JusPaySafeBrowser;
 import com.instamojo.android.helpers.Constants;
 import com.instamojo.android.helpers.Logger;
 
+import in.juspay.godel.browser.JuspayWebViewClient;
 import in.juspay.godel.ui.JuspayBrowserFragment;
+import in.juspay.godel.ui.JuspayWebView;
 
 /**
  * Activity subclass extending {@link BaseActivity}. Activity for {@link JusPaySafeBrowser} fragment.
@@ -52,7 +54,14 @@ public class PaymentActivity extends BaseActivity {
             return;
         }
         currentFragment = (JuspayBrowserFragment) getSupportFragmentManager().findFragmentById(R.id.juspay_browser_fragment);
-        currentFragment.startPaymentWithArguments(sourceArgs);
+        JuspayBrowserFragment.JuspayWebviewCallback juspayWebviewCallback = new JuspayBrowserFragment.JuspayWebviewCallback() {
+            public void webviewReady() {
+                JuspayWebView juspayWebView = currentFragment.getWebView();
+                juspayWebView.setWebViewClient(new JuspayWebViewClient(juspayWebView, currentFragment));
+                currentFragment.startPaymentWithArguments(sourceArgs);
+            }
+        };
+        currentFragment.setupJuspayWebviewCallbackInterface(juspayWebviewCallback);
         Logger.logDebug(this.getClass().getSimpleName(), "Loaded Fragment - " + currentFragment.getClass().getSimpleName());
     }
 
