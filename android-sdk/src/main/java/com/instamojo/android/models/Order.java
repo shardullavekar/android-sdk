@@ -6,7 +6,8 @@ import android.support.annotation.NonNull;
 
 import com.instamojo.android.network.Urls;
 
-import java.util.ArrayList;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 /**
  * Order Class to hold the details of a Order.
@@ -28,6 +29,7 @@ public class Order implements Parcelable {
     private String description;
     private String currency;
     private String redirectionUrl;
+    private String webhook;
     private String mode;
     private String authToken;
     private String resourceURI;
@@ -158,7 +160,22 @@ public class Order implements Parcelable {
      *                after payment. Should not be called unless you know what you are doing.
      */
     public void setRedirectionUrl(@NonNull String redirectionUrl) {
-        this.redirectionUrl = redirectionUrl;
+        this.redirectionUrl = redirectionUrl.trim();
+    }
+
+    /**
+     * @return Webhook for this Order
+     */
+    public String getWebhook() {
+        return webhook;
+    }
+
+    /**
+     * Sets the webhook for this order
+     * @param webhookUrl String.
+     */
+    public void setWebhook(@NonNull String webhookUrl) {
+        this.webhook = webhookUrl.trim();
     }
 
     /**
@@ -282,7 +299,8 @@ public class Order implements Parcelable {
      */
     public boolean isValid() {
         return isValidName() && isValidEmail() && isValidPhone() && isValidAmount()
-                && isValidDescription() && isValidTransactionID() && isValidRedirectURL();
+                && isValidDescription() && isValidTransactionID() && isValidRedirectURL()
+                && isValidWebhook();
     }
 
     /**
@@ -357,7 +375,29 @@ public class Order implements Parcelable {
      * @return false if the redirection URL is empty or contains any query parameters.
      */
     public boolean isValidRedirectURL() {
-        return !redirectionUrl.trim().isEmpty() && !redirectionUrl.contains("?");
+        return this.redirectionUrl != null && isUrlValid(this.redirectionUrl);
+
+    }
+
+    /**
+     * @return false if webhook is set and not a valid url or has query parameters
+     */
+    public boolean isValidWebhook() {
+        return this.webhook == null || isUrlValid(this.webhook);
+
+    }
+
+    private static boolean isUrlValid(String url){
+        try {
+            URL parsedUrl = new URL(url);
+            if (parsedUrl.getQuery() != null){
+                return false;
+            }
+        } catch (MalformedURLException e) {
+            return false;
+        }
+
+        return true;
     }
 
 
@@ -371,6 +411,7 @@ public class Order implements Parcelable {
         description = in.readString();
         currency = in.readString();
         redirectionUrl = in.readString();
+        webhook = in.readString();
         mode = in.readString();
         authToken = in.readString();
         resourceURI = in.readString();
@@ -396,6 +437,7 @@ public class Order implements Parcelable {
         dest.writeString(description);
         dest.writeString(currency);
         dest.writeString(redirectionUrl);
+        dest.writeString(webhook);
         dest.writeString(mode);
         dest.writeString(authToken);
         dest.writeString(resourceURI);

@@ -182,6 +182,9 @@ public class Request {
                 .add("redirect_url", order.getRedirectionUrl())
                 .add("advanced_payment_options", "true")
                 .add("mode", order.getMode());
+        if (order.getWebhook() != null){
+            builder.add("webhook_url", order.getWebhook());
+        }
         RequestBody body = builder.build();
         HashMap<String, String> headers = new HashMap<>();
         headers.put("User-Agent", getUserAgent());

@@ -78,6 +78,7 @@ public class Errors {
 
         private boolean validTransactionID = true;
         private boolean validRedirectURL = true;
+        private boolean validWebhook = true;
         private boolean validName = true;
         private boolean validPhone = true;
         private boolean validEmail = true;
@@ -117,6 +118,10 @@ public class Errors {
 
             if (errorObject.has("name")) {
                 validName = false;
+            }
+
+            if (errorObject.has("webhook_url")){
+                validWebhook = false;
             }
         }
 
@@ -161,6 +166,13 @@ public class Errors {
          */
         public boolean isValidAmount() {
             return validAmount;
+        }
+
+        /**
+         * @return false if the webhook is invalid
+         */
+        public boolean isValidWebhook(){
+            return validWebhook;
         }
     }
 }
