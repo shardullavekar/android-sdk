@@ -13,7 +13,7 @@ ext {
     siteUrl = 'https://github.com/Instamojo/android-sdk'
     gitUrl = 'https://github.com/Instamojo/android-sdk.git'
 
-    libraryVersion = '1.2.1'
+    libraryVersion = '1.2.3'
 
     developerId = 'vedhavyas'
     developerName = 'Vedhavyas Singareddi'
@@ -38,8 +38,8 @@ android {
     defaultConfig {
         minSdkVersion 15
         targetSdkVersion 23
-        versionCode 6
-        versionName "1.2.1"
+        versionCode 8
+        versionName "1.2.3"
         vectorDrawables.useSupportLibrary = true
         consumerProguardFiles 'proguard-rules.pro'
     }
