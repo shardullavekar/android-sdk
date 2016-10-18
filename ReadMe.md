@@ -106,50 +106,8 @@ The following are the minimum set of permissions required by the SDK. Add the fo
 ### Proguard rules
 If you are using Proguard for code obfuscation, add following rules in the proguard configuration file `proguard-rules.pro`
 ```
--keep class * implements android.os.Parcelable {
-  public static final android.os.Parcelable$Creator *;
-}
--keepclassmembers class **.R$* {
-    public static <fields>;
-}
--keepclassmembers class * {
-    @android.webkit.JavascriptInterface <methods>;
-}
--keepattributes JavascriptInterface
--keep public class com.instamojo.android.network.JavaScriptInterface
--keep public class * implements com.instamojo.android.network.JavaScriptInterface
--keepclassmembers class com.instamojo.android.network.JavaScriptInterface{
-    <methods>;
-}
-
-# The support library contains references to newer platform versions.
-# Don't warn about those in case this app is linking against an older
-# platform version.  We know about them, and they are safe.
--dontwarn android.support.**
-
-# Keep source file names, line numbers for easier debugging
--keepattributes SourceFile,LineNumberTable
-
--keepattributes Signature
--dontwarn com.squareup.**
--dontwarn okio.**
-
-# OkHttp
--keep class com.squareup.okhttp.** { *; }
--keep interface com.squareup.okhttp.** { *; }
--dontwarn com.squareup.okhttp.**
-
-# apache http
--dontwarn org.apache.http.**
--dontwarn android.net.http.AndroidHttpClient
-
-# Juspay rules
--keep class in.juspay.** {*;}
--dontwarn in.juspay.**
-
-# support class
--keep class android.support.v4.** { *; }
--keep class android.support.v7.** { *; }
+# Rules for Instamojo SDK
+-keep class com.instamojo.android.**{*;}
 ```
 
 ## Generating Access Token
@@ -207,6 +165,11 @@ With all the mandatory fields mentioned above, a `Order` object can created.
 Order order = new Order(accessToken, transactionID, name, email, phone, amount, purpose);
 ```
 
+You can also set webhook for this particular order using the following code snippet
+```java
+order.setWebhook("http://your.server.com/webhook/");
+```
+
 `Order` object must be validated locally before creating Order with Instamojo.
 Add the following code snippet to validate the `Order` object.
 ```Java
@@ -240,6 +203,10 @@ Add the following code snippet to validate the `Order` object.
 
             if (!order.isValidRedirectURL()){
                 Log.e("App", "Redirection URL is invalid");
+            }
+            
+            if (!order.isValidWebhook()) {
+                showToast("Webhook URL is invalid");
             }
 
             return;
@@ -276,6 +243,12 @@ Request request = new Request(order, new OrderRequestCallBack() {
                                          Log.e("App", "Redirect url is invalid");
                                          return;
                                   }
+                                  
+                                  if (!validationError.isValidWebhook()) {
+                                         showToast("Webhook url is invalid");
+                                         return;
+                                  }
+                                  
                                   if (!validationError.isValidPhone()) {
                                          Log.e("App", "Buyer's Phone Number is invalid/empty");
                                          return;
