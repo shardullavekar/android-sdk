@@ -165,7 +165,7 @@ With all the mandatory fields mentioned above, a `Order` object can created.
 Order order = new Order(accessToken, transactionID, name, email, phone, amount, purpose);
 ```
 
-You can also set webhook for this particular orer using the following code snippet
+You can also set webhook for this particular order using the following code snippet
 ```java
 order.setWebhook("http://your.server.com/webhook/");
 ```
