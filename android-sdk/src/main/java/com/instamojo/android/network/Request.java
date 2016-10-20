@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import com.instamojo.android.BuildConfig;
 import com.instamojo.android.callbacks.JusPayRequestCallback;
 import com.instamojo.android.callbacks.OrderRequestCallBack;
+import com.instamojo.android.callbacks.UPICallback;
 import com.instamojo.android.helpers.CardValidator;
 import com.instamojo.android.helpers.Constants;
 import com.instamojo.android.helpers.Logger;
@@ -17,6 +18,8 @@ import com.instamojo.android.models.EMIOptions;
 import com.instamojo.android.models.Errors;
 import com.instamojo.android.models.NetBankingOptions;
 import com.instamojo.android.models.Order;
+import com.instamojo.android.models.UPIOptions;
+import com.instamojo.android.models.UPISubmissionResponse;
 import com.instamojo.android.models.Wallet;
 import com.instamojo.android.models.WalletOptions;
 
@@ -44,7 +47,6 @@ import okhttp3.Response;
 /**
  * Network Request Class.
  *
- *
  * @author vedhavyas
  * @version 1.0
  * @since 14/03/16
@@ -55,15 +57,28 @@ public class Request {
     private Order order;
     private OrderRequestCallBack orderRequestCallBack;
     private JusPayRequestCallback jusPayRequestCallback;
+    private UPICallback upiCallback;
+    private String virtualPaymentAddress;
+    private UPISubmissionResponse upiSubmissionResponse;
     private Card card;
+    private MODE mode;
+
+    private static enum MODE {
+        OrderCreate,
+        Juspay,
+        UPISubmission,
+        UPIStatusCheck
+    }
+
 
     /**
      * Network Request to create an order ID from Instamojo server.
      *
-     * @param order Order model with all the mandatory fields set.
+     * @param order                Order model with all the mandatory fields set.
      * @param orderRequestCallBack Callback interface for the Asynchronous Network Call.
      */
     public Request(@NonNull Order order, @NonNull OrderRequestCallBack orderRequestCallBack) {
+        this.mode = MODE.OrderCreate;
         this.order = order;
         this.orderRequestCallBack = orderRequestCallBack;
     }
@@ -71,26 +86,64 @@ public class Request {
     /**
      * Network Request to get order details from Juspay for JuspaySafeBrowser.
      *
-     * @param order           Order model with all the mandatory fields set.
+     * @param order                 Order model with all the mandatory fields set.
      * @param card                  Card with all the proper validations done.
      * @param jusPayRequestCallback Callback for Asynchronous network call.
      */
     public Request(@NonNull Order order, @NonNull Card card, @NonNull JusPayRequestCallback jusPayRequestCallback) {
+        this.mode = MODE.Juspay;
         this.card = card;
         this.order = order;
         this.jusPayRequestCallback = jusPayRequestCallback;
     }
 
     /**
+     * Network request for UPISubmission Submission
+     *
+     * @param order {@link Order}
+     * @param virtualPaymentAddress String
+     * @param upiCallback {@link UPICallback}
+     */
+    public Request(@NonNull Order order, @NonNull String virtualPaymentAddress, @NonNull UPICallback upiCallback) {
+        this.mode = MODE.UPISubmission;
+        this.order = order;
+        this.virtualPaymentAddress = virtualPaymentAddress;
+        this.upiCallback = upiCallback;
+    }
+
+    /**
+     * Network Request to check the status of the transaction
+     * @param order {@link Order}
+     * @param upiSubmissionResponse {@link UPISubmissionResponse}
+     * @param upiCallback {@link UPICallback}
+     */
+    public Request(@NonNull Order order, @NonNull UPISubmissionResponse upiSubmissionResponse, @NonNull UPICallback upiCallback){
+        this.mode = MODE.UPIStatusCheck;
+        this.order = order;
+        this.upiSubmissionResponse = upiSubmissionResponse;
+        this.upiCallback = upiCallback;
+    }
+
+    /**
      * Executes the call to the server and calls the callback with  {@link Exception} if failed.
      */
     public void execute() {
-        if (card == null) {
-            executeInstamojoRequest();
-            return;
+        switch (this.mode) {
+            case OrderCreate:
+                executeInstamojoRequest();
+                break;
+            case Juspay:
+                executeJusPayRequest();
+                break;
+            case UPISubmission:
+                executeUPIRequest();
+                break;
+            case UPIStatusCheck:
+                executeUPIStatusCheck();
+                break;
+            default:
+                throw new RuntimeException("Unknown Mode");
         }
-
-        executeJusPayRequest();
     }
 
     private void executeJusPayRequest() {
@@ -120,7 +173,7 @@ public class Request {
                 .add("redirect_after_payment", "true")
                 .add("format", "json");
         if (order.getEmiOptions() != null
-                && order.getEmiOptions().getSelectedBankCode() != null){
+                && order.getEmiOptions().getSelectedBankCode() != null) {
             Logger.logDebug(this.getClass().getSimpleName(), "emi selected....");
             body.add("is_emi", "true");
             body.add("emi_bank", order.getEmiOptions().getSelectedBankCode());
@@ -182,7 +235,7 @@ public class Request {
                 .add("redirect_url", order.getRedirectionUrl())
                 .add("advanced_payment_options", "true")
                 .add("mode", order.getMode());
-        if (order.getWebhook() != null){
+        if (order.getWebhook() != null) {
             builder.add("webhook_url", order.getWebhook());
         }
         RequestBody body = builder.build();
@@ -250,12 +303,12 @@ public class Request {
                 bank = banksArray.getJSONObject(i);
                 banks.put(bank.getString("name"), bank.getString("id"));
             }
-            if(banks.size() > 0){
+            if (banks.size() > 0) {
                 order.setNetBankingOptions(new NetBankingOptions(nbURL, banks));
             }
         }
 
-        if (paymentOptionsObject.has("emi_options") && !paymentOptionsObject.isNull("emi_options")){
+        if (paymentOptionsObject.has("emi_options") && !paymentOptionsObject.isNull("emi_options")) {
             JSONObject emiOptionsRaw = paymentOptionsObject.getJSONObject("emi_options");
             JSONArray emiListRaw = emiOptionsRaw.getJSONArray("emi_list");
             EMIBank emiBank;
@@ -263,13 +316,13 @@ public class Request {
             JSONArray ratesRaw;
             JSONObject rateRaw;
             ArrayList<EMIBank> emis = new ArrayList<>();
-            for(int i=0; i<emiListRaw.length(); i++){
+            for (int i = 0; i < emiListRaw.length(); i++) {
                 emiOptionRaw = emiListRaw.getJSONObject(i);
                 String bankName = emiOptionRaw.getString("bank_name");
                 String bankCode = emiOptionRaw.getString("bank_code");
                 Map<Integer, Integer> rates = new HashMap<>();
                 ratesRaw = emiOptionRaw.getJSONArray("rates");
-                for(int j=0; j<ratesRaw.length(); j++){
+                for (int j = 0; j < ratesRaw.length(); j++) {
                     rateRaw = ratesRaw.getJSONObject(j);
                     int tenure = rateRaw.getInt("tenure");
                     int interest = rateRaw.getInt("interest");
@@ -282,12 +335,12 @@ public class Request {
                         return lhs.getKey() - rhs.getKey();
                     }
                 });
-                LinkedHashMap<Integer,Integer> sortedRates = new LinkedHashMap<>();
-                for (Map.Entry<Integer, Integer> entry : ratesList){
+                LinkedHashMap<Integer, Integer> sortedRates = new LinkedHashMap<>();
+                for (Map.Entry<Integer, Integer> entry : ratesList) {
                     sortedRates.put(entry.getKey(), entry.getValue());
                 }
 
-                if(sortedRates.size() > 0) {
+                if (sortedRates.size() > 0) {
                     emiBank = new EMIBank(bankName, bankCode, sortedRates);
                     emis.add(emiBank);
                 }
@@ -296,17 +349,17 @@ public class Request {
             JSONObject submissionData = emiOptionsRaw.getJSONObject("submission_data");
             String merchantID = submissionData.getString("merchant_id");
             String orderID = submissionData.getString("order_id");
-            if(emis.size() > 0) {
+            if (emis.size() > 0) {
                 order.setEmiOptions(new EMIOptions(merchantID, orderID, url, emis));
             }
         }
 
-        if (paymentOptionsObject.has("wallet_options") && !paymentOptionsObject.isNull("wallet_options")){
+        if (paymentOptionsObject.has("wallet_options") && !paymentOptionsObject.isNull("wallet_options")) {
             JSONObject walletOptionsObject = paymentOptionsObject.getJSONObject("wallet_options");
             JSONArray walletChoices = walletOptionsObject.getJSONArray("choices");
             JSONObject walletObject;
             ArrayList<Wallet> wallets = new ArrayList<>();
-            for(int i=0; i<walletChoices.length(); i++){
+            for (int i = 0; i < walletChoices.length(); i++) {
                 walletObject = walletChoices.getJSONObject(i);
                 String name = walletObject.getString("name");
                 String walletID = walletObject.getString("id");
@@ -316,10 +369,124 @@ public class Request {
 
             String url = walletOptionsObject.getString("submission_url");
 
-            if(wallets.size() > 0) {
+            if (wallets.size() > 0) {
                 order.setWalletOptions(new WalletOptions(url, wallets));
             }
         }
+
+        if (paymentOptionsObject.has("upi_options") && !paymentOptionsObject.isNull("upi_options")) {
+            JSONObject upiOptionsRaw = paymentOptionsObject.getJSONObject("upi_options");
+            UPIOptions upiOptions = new UPIOptions(upiOptionsRaw.getString("submission_url"));
+            order.setUpiOptions(upiOptions);
+        }
+    }
+
+    private void executeUPIRequest() {
+        OkHttpClient client = new OkHttpClient();
+
+        RequestBody body = new FormBody.Builder()
+                .add("virtual_address", this.virtualPaymentAddress)
+                .build();
+
+        HashMap<String, String> headers = new HashMap<>();
+        headers.put("User-Agent", getUserAgent());
+        headers.put("Authorization", "Bearer " + order.getAuthToken());
+
+        okhttp3.Request request = new okhttp3.Request.Builder()
+                .url(order.getUpiOptions().getUrl())
+                .removeHeader("User-Agent")
+                .headers(Headers.of(headers))
+                .post(body)
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Logger.logError(this.getClass().getSimpleName(),
+                        "Error while making UPI Submission request - " + e.getMessage());
+                upiCallback.onSubmission(null, e);
+            }
+
+            @Override
+            public void onResponse(Call call, Response r) {
+                String responseBody = "";
+                try {
+                    responseBody = r.body().string();
+                    r.body().close();
+                    upiCallback.onSubmission(parseUPIResponse(responseBody), null);
+                } catch (IOException | JSONException e) {
+                    Logger.logError(this.getClass().getSimpleName(),
+                            "Error while making UPI Submission request - " + e.getMessage());
+                    upiCallback.onSubmission(null, e);
+                }
+            }
+        });
+    }
+
+    private UPISubmissionResponse parseUPIResponse(String responseString) throws JSONException {
+        JSONObject responseObject = new JSONObject(responseString);
+        String paymentID = responseObject.getString("payment_id");
+        int statusCode = responseObject.getInt("status_code");
+        String payerVirtualAddress = responseObject.getString("payer_virtual_address");
+        String payeeVirtualAddress = responseObject.getString("payee_virtual_address");
+        String statusCheckURL = responseObject.getString("status_check_url");
+        String upiBank = responseObject.getString("upi_bank");
+        String statusMessage = responseObject.getString("status_message");
+
+        return new UPISubmissionResponse(paymentID, statusCode, payerVirtualAddress,
+                payeeVirtualAddress, statusCheckURL, upiBank, statusMessage);
+    }
+
+    private void executeUPIStatusCheck(){
+        OkHttpClient client = new OkHttpClient();
+
+        HashMap<String, String> headers = new HashMap<>();
+        headers.put("User-Agent", getUserAgent());
+        headers.put("Authorization", "Bearer " + order.getAuthToken());
+
+        okhttp3.Request request = new okhttp3.Request.Builder()
+                .url(upiSubmissionResponse.getStatusCheckURL())
+                .removeHeader("User-Agent")
+                .headers(Headers.of(headers))
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Logger.logError(this.getClass().getSimpleName(),
+                        "Error while making UPI Status Check request - " + e.getMessage());
+                upiCallback.onStatusCheckComplete(null, false, e);
+            }
+
+            @Override
+            public void onResponse(Call call, Response r) {
+                String responseBody = "";
+                try {
+                    responseBody = r.body().string();
+                    r.body().close();
+                    boolean transactionComplete = isTransactionComplete(responseBody);
+                    if (!transactionComplete){
+                        upiCallback.onStatusCheckComplete(null, false, null);
+                        return;
+                    }
+
+                    Bundle bundle = new Bundle();
+                    bundle.putString(Constants.ORDER_ID, order.getId());
+                    bundle.putString(Constants.TRANSACTION_ID, order.getTransactionID());
+                    bundle.putString(Constants.PAYMENT_ID, upiSubmissionResponse.getPaymentID());
+                    upiCallback.onStatusCheckComplete(bundle, true, null);
+                } catch (IOException | JSONException e) {
+                    Logger.logError(this.getClass().getSimpleName(),
+                            "Error while making UPI Status Check request - " + e.getMessage());
+                    upiCallback.onStatusCheckComplete(null, false, e);
+                }
+            }
+        });
+    }
+
+    private boolean isTransactionComplete(String responseBody) throws JSONException{
+        JSONObject responseObject = new JSONObject(responseBody);
+        return responseObject.getInt("status_code") != Constants.PENDING_PAYMENT;
     }
 
     private String getUserAgent() {

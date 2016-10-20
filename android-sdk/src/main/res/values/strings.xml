@@ -12,6 +12,7 @@
     <string name="title_fragment_credit_card_form">Credit Card</string>
     <string name="title_fragment_debit_card_form">Debit Card</string>
     <string name="title_fragment_emi_form">EMI</string>
+    <string name="title_fragment_upi">Enter VPA</string>
     <string name="choose_your_bank">Choose your Bank</string>
     <string name="choose_your_wallet">Choose your Wallet</string>
     <string name="search_your_bank">Search your Bank</string>
@@ -22,4 +23,11 @@
     <string name="emi_on_credit_card">EMI on Credit Card</string>
     <string name="wallets">Wallets</string>
     <string name="net_banking">Net Banking</string>
+    <string name="upi">UPI</string>
+    <string name="enter_your_virual_payment_address">Enter your virual payment address</string>
+    <string name="example_mohit_icici">Example: mohit@icici</string>
+    <string name="verify_payment">Verify Payment</string>
+    <string name="verify_payment_image_description">Verify Payemnt Image</string>
+    <string name="waiting">Waiting…</string>
+    <string name="complete_payment_description">You will receive a notification on your Bank UPI app.\nPlease confirm it to complete the payment.</string>
 </resources>

@@ -37,6 +37,7 @@ public class Order implements Parcelable {
     private NetBankingOptions netBankingOptions;
     private EMIOptions emiOptions;
     private WalletOptions walletOptions;
+    private UPIOptions upiOptions;
 
     /**
      * Order model with all the Mandatory Parameters passed.
@@ -288,6 +289,22 @@ public class Order implements Parcelable {
     }
 
     /**
+     * Get UPISubmission otions for this order
+     * @return UPIOptions
+     */
+    public UPIOptions getUpiOptions() {
+        return upiOptions;
+    }
+
+    /**
+     * Set UPISubmission otions for this order
+     * @param upiOptions {@link UPIOptions}
+     */
+    public void setUpiOptions(UPIOptions upiOptions) {
+        this.upiOptions = upiOptions;
+    }
+
+    /**
      * @param transactionID Unique TransactionID generated for this order
      */
     public void setTransactionID(String transactionID) {
@@ -419,6 +436,7 @@ public class Order implements Parcelable {
         netBankingOptions = in.readParcelable(NetBankingOptions.class.getClassLoader());
         emiOptions = in.readParcelable(EMIOptions.class.getClassLoader());
         walletOptions = in.readParcelable(WalletOptions.class.getClassLoader());
+        upiOptions = in.readParcelable(UPIOptions.class.getClassLoader());
     }
 
     @Override
@@ -445,6 +463,7 @@ public class Order implements Parcelable {
         dest.writeParcelable(netBankingOptions, flags);
         dest.writeParcelable(emiOptions, flags);
         dest.writeParcelable(walletOptions, flags);
+        dest.writeParcelable(upiOptions, flags);
     }
 
     @SuppressWarnings("unused")

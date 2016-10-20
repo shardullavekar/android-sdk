@@ -80,4 +80,33 @@ public class Validators {
             return result != 0;
         }
     }
+
+    /**
+     * Virtual Payment address Validator
+     */
+    public static class VPAValidator extends METValidator{
+
+
+        public VPAValidator() {
+            super("Invalid Virtual Payment Address");
+        }
+
+        @Override
+        public boolean isValid(@NonNull CharSequence text, boolean isEmpty) {
+            if (isEmpty){
+                return false;
+            }
+
+            String[] splitData = text.toString().split("@");
+            if (splitData.length != 2){
+                return false;
+            }
+
+            if (text.toString().contains(".com")){
+                return false;
+            }
+
+            return true;
+        }
+    }
 }
