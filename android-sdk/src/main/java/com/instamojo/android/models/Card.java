@@ -11,7 +11,6 @@ import com.instamojo.android.helpers.CardValidator;
  * Can be passed between activities through Bundle since
  * the it implements {@link Parcelable}.
  *
- *
  * @author vedhavyas
  * @version 1.0
  * @since 14/03/16
@@ -181,6 +180,7 @@ public class Card implements Parcelable {
     /**
      * Check if the Cvv Exists. {@link Card#cvv} must not be null.
      * Takes care of all the edge cases involved.
+     *
      * @return True if valid. Else False.
      */
     public boolean isCVVValid() {
@@ -194,6 +194,7 @@ public class Card implements Parcelable {
     /**
      * Check if the Card Number is Valid using Luhn's algorithm.
      * Takes care of all the Edge cases. Requires atleast first four digits of the card.
+     *
      * @return True if Valid. Else False.
      */
     public boolean isCardNumberValid() {
@@ -222,6 +223,7 @@ public class Card implements Parcelable {
      * {@link Card#isCVVValid()},
      * {@link Card#isDateValid()}
      * to pinpoint the which field failed.
+     *
      * @return True if Valid. Else False.
      */
     public boolean isCardValid() {

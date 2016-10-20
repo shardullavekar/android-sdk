@@ -31,7 +31,6 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass. The {@link Fragment} to get Debit Card details from user.
  *
- *
  * @author vedhavyas
  * @version 1.0
  * @since 14/03/16
@@ -46,12 +45,6 @@ public class CardForm extends BaseFragment implements View.OnClickListener {
     private PaymentDetailsActivity parentActivity;
     private Mode mode;
 
-    enum Mode{
-        DebitCard,
-        CreditCard,
-        EMI
-    }
-
     /**
      * Creates a new instance of Fragment
      */
@@ -59,7 +52,7 @@ public class CardForm extends BaseFragment implements View.OnClickListener {
         // Required empty public constructor
     }
 
-    public static CardForm getCardForm(Mode mode){
+    public static CardForm getCardForm(Mode mode) {
         CardForm form = new CardForm();
         form.mode = mode;
         return form;
@@ -92,9 +85,9 @@ public class CardForm extends BaseFragment implements View.OnClickListener {
     public void onResume() {
         super.onResume();
         int title = R.string.title_fragment_debit_card_form;
-        if (mode == Mode.CreditCard){
+        if (mode == Mode.CreditCard) {
             title = R.string.title_fragment_credit_card_form;
-        } else if (mode == Mode.EMI){
+        } else if (mode == Mode.EMI) {
             title = R.string.emi_on_credit_card;
         }
         parentActivity.updateActionBarTitle(title);
@@ -272,6 +265,12 @@ public class CardForm extends BaseFragment implements View.OnClickListener {
         if (id == R.id.checkout) {
             prepareCheckOut();
         }
+    }
+
+    enum Mode {
+        DebitCard,
+        CreditCard,
+        EMI
     }
 
     private class CardTextWatcher implements TextWatcher {

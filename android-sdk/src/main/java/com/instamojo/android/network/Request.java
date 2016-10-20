@@ -63,14 +63,6 @@ public class Request {
     private Card card;
     private MODE mode;
 
-    private static enum MODE {
-        OrderCreate,
-        Juspay,
-        UPISubmission,
-        UPIStatusCheck
-    }
-
-
     /**
      * Network Request to create an order ID from Instamojo server.
      *
@@ -82,6 +74,7 @@ public class Request {
         this.order = order;
         this.orderRequestCallBack = orderRequestCallBack;
     }
+
 
     /**
      * Network Request to get order details from Juspay for JuspaySafeBrowser.
@@ -100,9 +93,9 @@ public class Request {
     /**
      * Network request for UPISubmission Submission
      *
-     * @param order {@link Order}
+     * @param order                 {@link Order}
      * @param virtualPaymentAddress String
-     * @param upiCallback {@link UPICallback}
+     * @param upiCallback           {@link UPICallback}
      */
     public Request(@NonNull Order order, @NonNull String virtualPaymentAddress, @NonNull UPICallback upiCallback) {
         this.mode = MODE.UPISubmission;
@@ -113,11 +106,12 @@ public class Request {
 
     /**
      * Network Request to check the status of the transaction
-     * @param order {@link Order}
+     *
+     * @param order                 {@link Order}
      * @param upiSubmissionResponse {@link UPISubmissionResponse}
-     * @param upiCallback {@link UPICallback}
+     * @param upiCallback           {@link UPICallback}
      */
-    public Request(@NonNull Order order, @NonNull UPISubmissionResponse upiSubmissionResponse, @NonNull UPICallback upiCallback){
+    public Request(@NonNull Order order, @NonNull UPISubmissionResponse upiSubmissionResponse, @NonNull UPICallback upiCallback) {
         this.mode = MODE.UPIStatusCheck;
         this.order = order;
         this.upiSubmissionResponse = upiSubmissionResponse;
@@ -437,7 +431,7 @@ public class Request {
                 payeeVirtualAddress, statusCheckURL, upiBank, statusMessage);
     }
 
-    private void executeUPIStatusCheck(){
+    private void executeUPIStatusCheck() {
         OkHttpClient client = new OkHttpClient();
 
         HashMap<String, String> headers = new HashMap<>();
@@ -465,7 +459,7 @@ public class Request {
                     responseBody = r.body().string();
                     r.body().close();
                     boolean transactionComplete = isTransactionComplete(responseBody);
-                    if (!transactionComplete){
+                    if (!transactionComplete) {
                         upiCallback.onStatusCheckComplete(null, false, null);
                         return;
                     }
@@ -484,7 +478,7 @@ public class Request {
         });
     }
 
-    private boolean isTransactionComplete(String responseBody) throws JSONException{
+    private boolean isTransactionComplete(String responseBody) throws JSONException {
         JSONObject responseObject = new JSONObject(responseBody);
         return responseObject.getInt("status_code") != Constants.PENDING_PAYMENT;
     }
@@ -492,6 +486,13 @@ public class Request {
     private String getUserAgent() {
         return "Instamojo Android SDK;" + Build.MODEL + ";" + Build.BRAND + ";" + Build.VERSION.SDK_INT
                 + ";" + BuildConfig.APPLICATION_ID + ";" + BuildConfig.VERSION_NAME + ";" + BuildConfig.VERSION_CODE;
+    }
+
+    private static enum MODE {
+        OrderCreate,
+        Juspay,
+        UPISubmission,
+        UPIStatusCheck
     }
 
 }

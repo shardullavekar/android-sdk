@@ -61,17 +61,17 @@ public class ChoosePaymentOption extends BaseFragment implements View.OnClickLis
             creditCardLayout.setVisibility(View.GONE);
         }
 
-        if (order.getEmiOptions() == null){
+        if (order.getEmiOptions() == null) {
             Logger.logDebug(this.getClass().getSimpleName(), "Hiding EMI Layout");
             emiLayout.setVisibility(View.GONE);
         }
 
-        if (order.getWalletOptions() == null){
+        if (order.getWalletOptions() == null) {
             Logger.logDebug(this.getClass().getSimpleName(), "Hiding Wallet Layout");
             walletLayout.setVisibility(View.GONE);
         }
 
-        if (order.getUpiOptions() == null){
+        if (order.getUpiOptions() == null) {
             Logger.logDebug(this.getClass().getSimpleName(), "Hiding UPISubmission layout");
             upiLayout.setVisibility(View.GONE);
         }
@@ -92,13 +92,13 @@ public class ChoosePaymentOption extends BaseFragment implements View.OnClickLis
         if (id == R.id.wallet_layout) {
             Logger.logDebug(this.getClass().getSimpleName(), "Starting Wallet Form");
             parentActivity.loadFragment(ListForm.getListFormFragment(ListForm.Mode.Wallet), true);
-        } else if (id == R.id.net_banking_layout){
+        } else if (id == R.id.net_banking_layout) {
             Logger.logDebug(this.getClass().getSimpleName(), "Starting Net Banking Form");
             parentActivity.loadFragment(ListForm.getListFormFragment(ListForm.Mode.NetBanking), true);
         } else if (id == R.id.emi_layout) {
             Logger.logDebug(this.getClass().getSimpleName(), "Starting EMI Form");
             parentActivity.loadFragment(new EMIBankList(), true);
-        } else if (id == R.id.upi_layout){
+        } else if (id == R.id.upi_layout) {
             Logger.logDebug(this.getClass().getSimpleName(), "Starting UPISubmission Form");
             parentActivity.loadFragment(new UPIpaymentFragment(), true);
         } else {

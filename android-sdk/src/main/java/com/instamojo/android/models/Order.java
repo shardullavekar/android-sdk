@@ -12,7 +12,6 @@ import java.net.URL;
 /**
  * Order Class to hold the details of a Order.
  *
- *
  * @author vedhavyas
  * @version 1.0
  * @since 14/03/16
@@ -20,6 +19,18 @@ import java.net.URL;
 
 public class Order implements Parcelable {
 
+    @SuppressWarnings("unused")
+    public static final Parcelable.Creator<Order> CREATOR = new Parcelable.Creator<Order>() {
+        @Override
+        public Order createFromParcel(Parcel in) {
+            return new Order(in);
+        }
+
+        @Override
+        public Order[] newArray(int size) {
+            return new Order[size];
+        }
+    };
     private String id;
     private String transactionID;
     private String buyerName;
@@ -42,14 +53,13 @@ public class Order implements Parcelable {
     /**
      * Order model with all the Mandatory Parameters passed.
      *
-     * @param buyerName Name of the buyer.
-     * @param buyerEmail Email of the buyer.
-     * @param buyerPhone Phone number of the buyer.
-     * @param amount Order amount.
-     * @param description Order description.
-     * @param authToken App access token generated using client id and secret.
+     * @param buyerName     Name of the buyer.
+     * @param buyerEmail    Email of the buyer.
+     * @param buyerPhone    Phone number of the buyer.
+     * @param amount        Order amount.
+     * @param description   Order description.
+     * @param authToken     App access token generated using client id and secret.
      * @param transactionID A unique Transaction ID generated on the developers side
-     *
      */
     public Order(@NonNull String authToken, @NonNull String transactionID, @NonNull String buyerName, @NonNull String buyerEmail, @NonNull String buyerPhone,
                  @NonNull String amount, @NonNull String description) {
@@ -63,6 +73,40 @@ public class Order implements Parcelable {
         this.authToken = authToken;
         this.transactionID = transactionID;
         this.redirectionUrl = Urls.getDefaultRedirectUrl();
+    }
+
+    protected Order(Parcel in) {
+        id = in.readString();
+        transactionID = in.readString();
+        buyerName = in.readString();
+        buyerEmail = in.readString();
+        buyerPhone = in.readString();
+        amount = in.readString();
+        description = in.readString();
+        currency = in.readString();
+        redirectionUrl = in.readString();
+        webhook = in.readString();
+        mode = in.readString();
+        authToken = in.readString();
+        resourceURI = in.readString();
+        cardOptions = in.readParcelable(CardOptions.class.getClassLoader());
+        netBankingOptions = in.readParcelable(NetBankingOptions.class.getClassLoader());
+        emiOptions = in.readParcelable(EMIOptions.class.getClassLoader());
+        walletOptions = in.readParcelable(WalletOptions.class.getClassLoader());
+        upiOptions = in.readParcelable(UPIOptions.class.getClassLoader());
+    }
+
+    private static boolean isUrlValid(String url) {
+        try {
+            URL parsedUrl = new URL(url);
+            if (parsedUrl.getQuery() != null) {
+                return false;
+            }
+        } catch (MalformedURLException e) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -158,7 +202,7 @@ public class Order implements Parcelable {
 
     /**
      * @param redirectionUrl Web hook for this order. Will be redirected to this URL
-     *                after payment. Should not be called unless you know what you are doing.
+     *                       after payment. Should not be called unless you know what you are doing.
      */
     public void setRedirectionUrl(@NonNull String redirectionUrl) {
         this.redirectionUrl = redirectionUrl.trim();
@@ -173,6 +217,7 @@ public class Order implements Parcelable {
 
     /**
      * Sets the webhook for this order
+     *
      * @param webhookUrl String.
      */
     public void setWebhook(@NonNull String webhookUrl) {
@@ -251,6 +296,7 @@ public class Order implements Parcelable {
 
     /**
      * EMI Options if enabled for the seller
+     *
      * @return {@link EMIOptions}
      */
     public EMIOptions getEmiOptions() {
@@ -259,6 +305,7 @@ public class Order implements Parcelable {
 
     /**
      * Set EMI Options for this order if enabled for seller
+     *
      * @param emiOptions {@link EMIOptions}
      */
     public void setEmiOptions(EMIOptions emiOptions) {
@@ -273,7 +320,15 @@ public class Order implements Parcelable {
     }
 
     /**
+     * @param transactionID Unique TransactionID generated for this order
+     */
+    public void setTransactionID(String transactionID) {
+        this.transactionID = transactionID;
+    }
+
+    /**
      * Get wallet options for this order if enabled for seller
+     *
      * @return walletOptions {@link WalletOptions}
      */
     public WalletOptions getWalletOptions() {
@@ -282,6 +337,7 @@ public class Order implements Parcelable {
 
     /**
      * Set wallet options for this order
+     *
      * @param walletOptions {@link WalletOptions}
      */
     public void setWalletOptions(WalletOptions walletOptions) {
@@ -290,6 +346,7 @@ public class Order implements Parcelable {
 
     /**
      * Get UPISubmission otions for this order
+     *
      * @return UPIOptions
      */
     public UPIOptions getUpiOptions() {
@@ -298,17 +355,11 @@ public class Order implements Parcelable {
 
     /**
      * Set UPISubmission otions for this order
+     *
      * @param upiOptions {@link UPIOptions}
      */
     public void setUpiOptions(UPIOptions upiOptions) {
         this.upiOptions = upiOptions;
-    }
-
-    /**
-     * @param transactionID Unique TransactionID generated for this order
-     */
-    public void setTransactionID(String transactionID) {
-        this.transactionID = transactionID;
     }
 
     /**
@@ -404,41 +455,6 @@ public class Order implements Parcelable {
 
     }
 
-    private static boolean isUrlValid(String url){
-        try {
-            URL parsedUrl = new URL(url);
-            if (parsedUrl.getQuery() != null){
-                return false;
-            }
-        } catch (MalformedURLException e) {
-            return false;
-        }
-
-        return true;
-    }
-
-
-    protected Order(Parcel in) {
-        id = in.readString();
-        transactionID = in.readString();
-        buyerName = in.readString();
-        buyerEmail = in.readString();
-        buyerPhone = in.readString();
-        amount = in.readString();
-        description = in.readString();
-        currency = in.readString();
-        redirectionUrl = in.readString();
-        webhook = in.readString();
-        mode = in.readString();
-        authToken = in.readString();
-        resourceURI = in.readString();
-        cardOptions = in.readParcelable(CardOptions.class.getClassLoader());
-        netBankingOptions = in.readParcelable(NetBankingOptions.class.getClassLoader());
-        emiOptions = in.readParcelable(EMIOptions.class.getClassLoader());
-        walletOptions = in.readParcelable(WalletOptions.class.getClassLoader());
-        upiOptions = in.readParcelable(UPIOptions.class.getClassLoader());
-    }
-
     @Override
     public int describeContents() {
         return 0;
@@ -465,17 +481,4 @@ public class Order implements Parcelable {
         dest.writeParcelable(walletOptions, flags);
         dest.writeParcelable(upiOptions, flags);
     }
-
-    @SuppressWarnings("unused")
-    public static final Parcelable.Creator<Order> CREATOR = new Parcelable.Creator<Order>() {
-        @Override
-        public Order createFromParcel(Parcel in) {
-            return new Order(in);
-        }
-
-        @Override
-        public Order[] newArray(int size) {
-            return new Order[size];
-        }
-    };
 }

@@ -8,7 +8,6 @@ import android.support.annotation.NonNull;
  * CardOptions object that holds the Card transaction information received from Mojo Server
  * for a particular order.
  *
- *
  * @author vedhavyas
  * @version 1.0
  * @since 14/03/16

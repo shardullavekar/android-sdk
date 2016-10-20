@@ -3,7 +3,6 @@ package com.instamojo.android.models;
 /**
  * Response Model for UPISubmission submission Call.
  *
- *
  * @author vedhavyas
  * @version 1.2.4
  * @since 20/10/16
@@ -31,6 +30,7 @@ public class UPISubmissionResponse {
 
     /**
      * Payment ID for this UPISubmission Method
+     *
      * @return String
      */
     public String getPaymentID() {
@@ -39,6 +39,7 @@ public class UPISubmissionResponse {
 
     /**
      * Set payment ID for this UPISubmission method
+     *
      * @param paymentID String
      */
     public void setPaymentID(String paymentID) {
@@ -47,6 +48,7 @@ public class UPISubmissionResponse {
 
     /**
      * Status Code for this Submission
+     *
      * @return int
      */
     public int getStatusCode() {
@@ -55,6 +57,7 @@ public class UPISubmissionResponse {
 
     /**
      * Set status code for this submission
+     *
      * @param statusCode int
      */
     public void setStatusCode(int statusCode) {
@@ -63,6 +66,7 @@ public class UPISubmissionResponse {
 
     /**
      * Payer's Virtual Address
+     *
      * @return String
      */
     public String getPayerVirtualAddress() {
@@ -71,6 +75,7 @@ public class UPISubmissionResponse {
 
     /**
      * Set Payer's Virtual Address
+     *
      * @param payerVirtualAddress String
      */
     public void setPayerVirtualAddress(String payerVirtualAddress) {
@@ -79,6 +84,7 @@ public class UPISubmissionResponse {
 
     /**
      * Payee's Vitual Address
+     *
      * @return String
      */
     public String getPayeeVirtualAddress() {
@@ -87,6 +93,7 @@ public class UPISubmissionResponse {
 
     /**
      * Set Payee's Virtual Address
+     *
      * @param payeeVirtualAddress String
      */
     public void setPayeeVirtualAddress(String payeeVirtualAddress) {
@@ -95,6 +102,7 @@ public class UPISubmissionResponse {
 
     /**
      * Status Check URl for this Submission
+     *
      * @return String
      */
     public String getStatusCheckURL() {
@@ -103,6 +111,7 @@ public class UPISubmissionResponse {
 
     /**
      * Set Status Check URL for this Submission
+     *
      * @param statusCheckURL String
      */
     public void setStatusCheckURL(String statusCheckURL) {
@@ -111,6 +120,7 @@ public class UPISubmissionResponse {
 
     /**
      * PSP name of the Payer's Virtual Address
+     *
      * @return String
      */
     public String getUpiBank() {
@@ -119,6 +129,7 @@ public class UPISubmissionResponse {
 
     /**
      * Set PSP Name of the Payer's Virtual Address
+     *
      * @param upiBank String
      */
     public void setUpiBank(String upiBank) {
@@ -127,6 +138,7 @@ public class UPISubmissionResponse {
 
     /**
      * Status Message for this submission
+     *
      * @return String
      */
     public String getStatusMessage() {
@@ -135,6 +147,7 @@ public class UPISubmissionResponse {
 
     /**
      * Set Status Message for this submission
+     *
      * @param statusMessage String
      */
     public void setStatusMessage(String statusMessage) {

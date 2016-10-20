@@ -1,7 +1,6 @@
 package com.instamojo.android.fragments;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -23,13 +22,12 @@ import com.rengwuxian.materialedittext.MaterialEditText;
 /**
  * A simple {@link Fragment} subclass. The {@link Fragment} to get Virtual Private Address from user.
  *
- *
  * @author vedhavyas
  * @version 1.2.4
  * @since 20/10/16
  */
 
-public class UPIpaymentFragment extends BaseFragment implements View.OnClickListener, UPICallback{
+public class UPIpaymentFragment extends BaseFragment implements View.OnClickListener, UPICallback {
 
     private static final String FRAGMENT_NAME = "UPISubmission Form";
     private static final long DELAY_CHECK = 2000;
@@ -66,7 +64,7 @@ public class UPIpaymentFragment extends BaseFragment implements View.OnClickList
 
     @Override
     public void inflateXML(View view) {
-        virtualAddressBox = (MaterialEditText)view.findViewById(R.id.virtual_address_box);
+        virtualAddressBox = (MaterialEditText) view.findViewById(R.id.virtual_address_box);
         virtualAddressBox.addValidator(new Validators.EmptyFieldValidator());
         virtualAddressBox.addValidator(new Validators.VPAValidator());
         preVPALayout = view.findViewById(R.id.pre_vpa_layout);
@@ -83,7 +81,7 @@ public class UPIpaymentFragment extends BaseFragment implements View.OnClickList
 
     @Override
     public void onClick(View view) {
-        if (!virtualAddressBox.validate()){
+        if (!virtualAddressBox.validate()) {
             return;
         }
 
@@ -94,7 +92,7 @@ public class UPIpaymentFragment extends BaseFragment implements View.OnClickList
         request.execute();
     }
 
-    private void checkStatusOfTransaction(){
+    private void checkStatusOfTransaction() {
         Request request = new Request(parentActivity.getOrder(), this.upiSubmissionResponse, this);
         request.execute();
     }
@@ -104,7 +102,7 @@ public class UPIpaymentFragment extends BaseFragment implements View.OnClickList
         parentActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if (e != null || upiSubmissionResponse.getStatusCode() != Constants.PENDING_PAYMENT){
+                if (e != null || upiSubmissionResponse.getStatusCode() != Constants.PENDING_PAYMENT) {
                     virtualAddressBox.setEnabled(true);
                     verifyPayment.setEnabled(true);
                     Toast.makeText(getContext(), "please try again...", Toast.LENGTH_SHORT).show();
@@ -122,7 +120,7 @@ public class UPIpaymentFragment extends BaseFragment implements View.OnClickList
 
     @Override
     public void onStatusCheckComplete(Bundle bundle, boolean paymentComplete, Exception e) {
-        if (e != null || !paymentComplete){
+        if (e != null || !paymentComplete) {
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {

@@ -10,7 +10,6 @@ import com.rengwuxian.materialedittext.validation.METValidator;
  * Can be assigned through {@link MaterialEditText#addValidator(METValidator)}
  * and {@link MaterialEditText#validate()} should be called to validate the Edit Text.
  *
- *
  * @author vedhavyas
  * @version 1.0
  * @since 14/03/16
@@ -84,7 +83,7 @@ public class Validators {
     /**
      * Virtual Payment address Validator
      */
-    public static class VPAValidator extends METValidator{
+    public static class VPAValidator extends METValidator {
 
 
         public VPAValidator() {
@@ -93,16 +92,16 @@ public class Validators {
 
         @Override
         public boolean isValid(@NonNull CharSequence text, boolean isEmpty) {
-            if (isEmpty){
+            if (isEmpty) {
                 return false;
             }
 
             String[] splitData = text.toString().split("@");
-            if (splitData.length != 2){
+            if (splitData.length != 2) {
                 return false;
             }
 
-            if (text.toString().contains(".com")){
+            if (text.toString().contains(".com")) {
                 return false;
             }
 

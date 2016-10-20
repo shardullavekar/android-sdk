@@ -6,7 +6,6 @@ import org.json.JSONObject;
 /**
  * Custom Error class for the SDK.
  *
- *
  * @author vedhavyas
  * @version 1.0
  * @since 14/03/16
@@ -120,7 +119,7 @@ public class Errors {
                 validName = false;
             }
 
-            if (errorObject.has("webhook_url")){
+            if (errorObject.has("webhook_url")) {
                 validWebhook = false;
             }
         }
@@ -171,7 +170,7 @@ public class Errors {
         /**
          * @return false if the webhook is invalid
          */
-        public boolean isValidWebhook(){
+        public boolean isValidWebhook() {
             return validWebhook;
         }
     }

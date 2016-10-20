@@ -19,7 +19,8 @@ public class CardValidator {
 
     /**
      * Luhn's algorithm implementation to validate the card passed.
-     * @param card Card number. Require atleast first 4 to give a valid result.
+     *
+     * @param card            Card number. Require atleast first 4 to give a valid result.
      * @param skipLengthCheck skip the length check for Maestro cards.
      * @return 1 for valid card , 0 for invalid card.
      */
@@ -176,6 +177,7 @@ public class CardValidator {
 
     /**
      * Check for Amex Card.
+     *
      * @param card Card Number to be validated.
      * @return True if card is Amex else False.
      */
@@ -187,6 +189,7 @@ public class CardValidator {
 
     /**
      * Check for Master Card.
+     *
      * @param card Card Number to be validated.
      * @return True if card is Master else False.
      */
@@ -198,6 +201,7 @@ public class CardValidator {
 
     /**
      * Check for Visa Card.
+     *
      * @param card Card Number to be validated, requires atleast first digit of the card.
      * @return True if card is Visa else False.
      */
@@ -208,6 +212,7 @@ public class CardValidator {
 
     /**
      * Check for Discover Card.
+     *
      * @param card Card Number to be validated, requires atleast first four digits of the card.
      * @return True if card is Discover else False.
      */
@@ -218,6 +223,7 @@ public class CardValidator {
 
     /**
      * Check for Dinner's club International Card.
+     *
      * @param card Card Number to be validated, requires atleast first two digits of the card.
      * @return True if card is Dinner's club International else False.
      */
@@ -228,6 +234,7 @@ public class CardValidator {
 
     /**
      * Check for Amex Card.
+     *
      * @param card Card Number to be validated, requires atleast first two digits of the card.
      * @return True if card is Amex else False.
      */
@@ -239,6 +246,7 @@ public class CardValidator {
 
     /**
      * Check for Master Card.
+     *
      * @param card Card Number to be validated, requires atleast first two digits of the card.
      * @return True if card is Master else False.
      */
@@ -250,6 +258,7 @@ public class CardValidator {
 
     /**
      * Check for Maestro Card.
+     *
      * @param card Card Number to be validated, requires atleast first four digits of the card.
      * @return True if card is Maestro else False.
      */
@@ -261,9 +270,10 @@ public class CardValidator {
 
     /**
      * Returns the drawable of the card issuer.
+     *
      * @param card Card number with atleast first four digits.
      * @return Drawable int of appropriate issuer if found.
-     *          Else returns drawable of {@link com.instamojo.android.R.drawable#ic_unknown_card}.
+     * Else returns drawable of {@link com.instamojo.android.R.drawable#ic_unknown_card}.
      */
     public static int getCardDrawable(String card) {
 
@@ -290,6 +300,7 @@ public class CardValidator {
 
     /**
      * Returns the String Name of the card issuer.
+     *
      * @param card Card number with atleast first four digits.
      * @return Drawable int of appropriate issuer if found. Else returns Unknown.
      */
@@ -318,6 +329,7 @@ public class CardValidator {
 
     /**
      * Method to get the supposed length of the card type.
+     *
      * @param card Card Number to validate, requires atleast first four digits of the card
      *             to return the valid length.
      * @return Either actual length of the card type else default 19.
@@ -350,6 +362,7 @@ public class CardValidator {
 
     /**
      * Check method to see if the card expiry date is valid.
+     *
      * @param expiry Date string in the formt - MM/yy.
      * @return True if the Date is expired Else False.
      */

@@ -19,7 +19,6 @@ import java.lang.reflect.Method;
  * as defined in the Calligraphy Documentation. Any newly created activity must extend this BaseActivity
  * for the proper application of the default font.
  *
- *
  * @author vedhavyas
  * @version 1.0
  * @since 14/03/16
