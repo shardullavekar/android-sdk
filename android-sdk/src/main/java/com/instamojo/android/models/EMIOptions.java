@@ -14,6 +14,18 @@ import java.util.ArrayList;
  */
 public class EMIOptions implements Parcelable {
 
+    @SuppressWarnings("unused")
+    public static final Parcelable.Creator<EMIOptions> CREATOR = new Parcelable.Creator<EMIOptions>() {
+        @Override
+        public EMIOptions createFromParcel(Parcel in) {
+            return new EMIOptions(in);
+        }
+
+        @Override
+        public EMIOptions[] newArray(int size) {
+            return new EMIOptions[size];
+        }
+    };
     private String merchantID;
     private String orderID;
     private String url;
@@ -26,6 +38,24 @@ public class EMIOptions implements Parcelable {
         this.orderID = orderID;
         this.url = url;
         this.emiBanks = emiBanks;
+    }
+
+    protected EMIOptions(Parcel in) {
+        merchantID = in.readString();
+        orderID = in.readString();
+        url = in.readString();
+        selectedBankCode = in.readString();
+        selectedTenure = in.readInt();
+        int emiBanksSize = in.readInt();
+        if (emiBanksSize == 0) {
+            return;
+        }
+
+        emiBanks = new ArrayList<>();
+        for (int i = 0; i < emiBanksSize; i++) {
+            emiBanks.add((EMIBank) in.readParcelable(EMIBank.class.getClassLoader()));
+        }
+
     }
 
     public String getMerchantID() {
@@ -76,24 +106,6 @@ public class EMIOptions implements Parcelable {
         this.selectedTenure = selectedTenure;
     }
 
-    protected EMIOptions(Parcel in) {
-        merchantID = in.readString();
-        orderID = in.readString();
-        url = in.readString();
-        selectedBankCode = in.readString();
-        selectedTenure = in.readInt();
-        int emiBanksSize = in.readInt();
-        if (emiBanksSize == 0){
-            return;
-        }
-
-        emiBanks = new ArrayList<>();
-        for(int i=0; i<emiBanksSize; i++){
-            emiBanks.add((EMIBank) in.readParcelable(EMIBank.class.getClassLoader()));
-        }
-
-    }
-
     @Override
     public int describeContents() {
         return 0;
@@ -107,7 +119,7 @@ public class EMIOptions implements Parcelable {
         dest.writeString(selectedBankCode);
         dest.writeInt(selectedTenure);
 
-        if (emiBanks.size() < 1){
+        if (emiBanks.size() < 1) {
             dest.writeInt(0);
             return;
         }
@@ -117,17 +129,4 @@ public class EMIOptions implements Parcelable {
             dest.writeParcelable(emiBank, flags);
         }
     }
-
-    @SuppressWarnings("unused")
-    public static final Parcelable.Creator<EMIOptions> CREATOR = new Parcelable.Creator<EMIOptions>() {
-        @Override
-        public EMIOptions createFromParcel(Parcel in) {
-            return new EMIOptions(in);
-        }
-
-        @Override
-        public EMIOptions[] newArray(int size) {
-            return new EMIOptions[size];
-        }
-    };
 }

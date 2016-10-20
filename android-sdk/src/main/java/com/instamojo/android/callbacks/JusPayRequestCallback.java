@@ -11,7 +11,6 @@ import com.instamojo.android.models.Order;
  * and {@link com.instamojo.android.models.Card} to
  * {@link com.instamojo.android.network.Request#Request(Order, Card, JusPayRequestCallback)}.
  *
- *
  * @author vedhavyas
  * @version 1.0
  * @since 14/03/16

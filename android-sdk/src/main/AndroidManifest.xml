@@ -20,10 +20,10 @@
 
         <activity
             android:name=".activities.PaymentActivity"
+            android:hardwareAccelerated="true"
             android:label="Payment"
             android:screenOrientation="portrait"
             android:theme="@style/SdkTheme"
-            android:hardwareAccelerated="true"
             android:windowSoftInputMode="adjustResize" />
     </application>
 

@@ -16,6 +16,18 @@ import java.util.Map;
  */
 
 public class EMIBank implements Parcelable {
+    @SuppressWarnings("unused")
+    public static final Parcelable.Creator<EMIBank> CREATOR = new Parcelable.Creator<EMIBank>() {
+        @Override
+        public EMIBank createFromParcel(Parcel in) {
+            return new EMIBank(in);
+        }
+
+        @Override
+        public EMIBank[] newArray(int size) {
+            return new EMIBank[size];
+        }
+    };
     private String bankName;
     private String bankCode;
     private LinkedHashMap<Integer, Integer> rates = new LinkedHashMap<>();
@@ -24,6 +36,22 @@ public class EMIBank implements Parcelable {
         this.bankName = bankName;
         this.bankCode = bankCode;
         this.rates = rates;
+    }
+
+    protected EMIBank(Parcel in) {
+        bankName = in.readString();
+        bankCode = in.readString();
+        int ratesSize = in.readInt();
+        if (ratesSize == 0) {
+            return;
+        }
+        rates = new LinkedHashMap<>();
+        for (int i = 0; i < ratesSize; i++) {
+            int tenure = in.readInt();
+            int interest = in.readInt();
+            rates.put(tenure, interest);
+        }
+
     }
 
     public String getBankName() {
@@ -50,22 +78,6 @@ public class EMIBank implements Parcelable {
         this.rates = rates;
     }
 
-    protected EMIBank(Parcel in) {
-        bankName = in.readString();
-        bankCode = in.readString();
-        int ratesSize = in.readInt();
-        if (ratesSize == 0){
-            return;
-        }
-        rates = new LinkedHashMap<>();
-        for (int i=0; i< ratesSize; i++){
-            int tenure = in.readInt();
-            int interest = in.readInt();
-            rates.put(tenure, interest);
-        }
-
-    }
-
     @Override
     public int describeContents() {
         return 0;
@@ -75,28 +87,15 @@ public class EMIBank implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(bankName);
         dest.writeString(bankCode);
-        if (rates.size() < 1){
+        if (rates.size() < 1) {
             dest.writeInt(0);
             return;
         }
 
         dest.writeInt(rates.size());
-        for (Map.Entry<Integer, Integer> entry : rates.entrySet()){
+        for (Map.Entry<Integer, Integer> entry : rates.entrySet()) {
             dest.writeInt(entry.getKey());
             dest.writeInt(entry.getValue());
         }
     }
-
-    @SuppressWarnings("unused")
-    public static final Parcelable.Creator<EMIBank> CREATOR = new Parcelable.Creator<EMIBank>() {
-        @Override
-        public EMIBank createFromParcel(Parcel in) {
-            return new EMIBank(in);
-        }
-
-        @Override
-        public EMIBank[] newArray(int size) {
-            return new EMIBank[size];
-        }
-    };
 }

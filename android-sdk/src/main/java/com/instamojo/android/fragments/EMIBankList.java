@@ -15,7 +15,7 @@ import com.instamojo.android.models.EMIBank;
 /**
  * Authored by vedhavyas on 22/07/16.
  */
-public class EMIBankList extends BaseFragment{
+public class EMIBankList extends BaseFragment {
 
     private PaymentDetailsActivity parentActivity;
     private LinearLayout emiBanksContainer;

@@ -48,6 +48,7 @@ public class ChoosePaymentOption extends BaseFragment implements View.OnClickLis
         View netBankingLayout = view.findViewById(R.id.net_banking_layout);
         View emiLayout = view.findViewById(R.id.emi_layout);
         View walletLayout = view.findViewById(R.id.wallet_layout);
+        View upiLayout = view.findViewById(R.id.upi_layout);
 
         if (order.getNetBankingOptions() == null) {
             Logger.logDebug(this.getClass().getSimpleName(), "Hiding Net banking Layout");
@@ -60,14 +61,19 @@ public class ChoosePaymentOption extends BaseFragment implements View.OnClickLis
             creditCardLayout.setVisibility(View.GONE);
         }
 
-        if (order.getEmiOptions() == null){
+        if (order.getEmiOptions() == null) {
             Logger.logDebug(this.getClass().getSimpleName(), "Hiding EMI Layout");
             emiLayout.setVisibility(View.GONE);
         }
 
-        if (order.getWalletOptions() == null){
+        if (order.getWalletOptions() == null) {
             Logger.logDebug(this.getClass().getSimpleName(), "Hiding Wallet Layout");
             walletLayout.setVisibility(View.GONE);
+        }
+
+        if (order.getUpiOptions() == null) {
+            Logger.logDebug(this.getClass().getSimpleName(), "Hiding UPISubmission layout");
+            upiLayout.setVisibility(View.GONE);
         }
 
         debitCardLayout.setOnClickListener(this);
@@ -75,6 +81,7 @@ public class ChoosePaymentOption extends BaseFragment implements View.OnClickLis
         netBankingLayout.setOnClickListener(this);
         emiLayout.setOnClickListener(this);
         walletLayout.setOnClickListener(this);
+        upiLayout.setOnClickListener(this);
         Logger.logDebug(this.getClass().getSimpleName(), "Inflated XML");
     }
 
@@ -85,12 +92,15 @@ public class ChoosePaymentOption extends BaseFragment implements View.OnClickLis
         if (id == R.id.wallet_layout) {
             Logger.logDebug(this.getClass().getSimpleName(), "Starting Wallet Form");
             parentActivity.loadFragment(ListForm.getListFormFragment(ListForm.Mode.Wallet), true);
-        } else if (id == R.id.net_banking_layout){
+        } else if (id == R.id.net_banking_layout) {
             Logger.logDebug(this.getClass().getSimpleName(), "Starting Net Banking Form");
             parentActivity.loadFragment(ListForm.getListFormFragment(ListForm.Mode.NetBanking), true);
-        } else if (id == R.id.emi_layout){
+        } else if (id == R.id.emi_layout) {
             Logger.logDebug(this.getClass().getSimpleName(), "Starting EMI Form");
             parentActivity.loadFragment(new EMIBankList(), true);
+        } else if (id == R.id.upi_layout) {
+            Logger.logDebug(this.getClass().getSimpleName(), "Starting UPISubmission Form");
+            parentActivity.loadFragment(new UPIpaymentFragment(), true);
         } else {
             Logger.logDebug(this.getClass().getSimpleName(), "Starting CardForm");
             //since the user is directly jumping to Card from instead of EMI.

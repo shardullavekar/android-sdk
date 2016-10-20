@@ -23,7 +23,6 @@ import java.util.Map;
 /**
  * A simple {@link Fragment} subclass. The {@link Fragment} to show Net Banking options to User.
  *
- *
  * @author vedhavyas
  * @version 1.0
  * @since 14/03/16
@@ -35,11 +34,6 @@ public class ListForm extends BaseFragment implements SearchView.OnQueryTextList
     private TextView headerTextView;
     private Mode mode;
 
-    public enum Mode{
-        Wallet,
-        NetBanking
-    }
-
     /**
      * Creates a new Instance of Fragment.
      */
@@ -47,12 +41,11 @@ public class ListForm extends BaseFragment implements SearchView.OnQueryTextList
         // Required empty public constructor
     }
 
-    public static ListForm getListFormFragment(Mode mode){
+    public static ListForm getListFormFragment(Mode mode) {
         ListForm form = new ListForm();
         form.mode = mode;
         return form;
     }
-
 
     @SuppressWarnings("unchecked")
     @Override
@@ -91,7 +84,7 @@ public class ListForm extends BaseFragment implements SearchView.OnQueryTextList
         Logger.logDebug(this.getClass().getSimpleName(), "Inflated XML");
     }
 
-    private void loadBanks(String queryText){
+    private void loadBanks(String queryText) {
         for (final Map.Entry<String, String> bank : parentActivity.getOrder().getNetBankingOptions().getBanks().entrySet()) {
             if (!bank.getKey().toLowerCase(Locale.US).contains(queryText.toLowerCase(Locale.US))) {
                 continue;
@@ -114,8 +107,8 @@ public class ListForm extends BaseFragment implements SearchView.OnQueryTextList
         }
     }
 
-    private void loadWallets(String queryText){
-        for (final Wallet wallet: parentActivity.getOrder().getWalletOptions().getWallets()) {
+    private void loadWallets(String queryText) {
+        for (final Wallet wallet : parentActivity.getOrder().getWalletOptions().getWallets()) {
             if (!wallet.getName().toLowerCase(Locale.US).contains(queryText.toLowerCase(Locale.US))) {
                 continue;
             }
@@ -139,7 +132,7 @@ public class ListForm extends BaseFragment implements SearchView.OnQueryTextList
 
     private void loadList(String queryText) {
         listContainer.removeAllViews();
-        if (mode == Mode.Wallet){
+        if (mode == Mode.Wallet) {
             loadWallets(queryText);
         } else {
             loadBanks(queryText);
@@ -158,5 +151,10 @@ public class ListForm extends BaseFragment implements SearchView.OnQueryTextList
     public boolean onQueryTextChange(String newText) {
         loadList(newText);
         return false;
+    }
+
+    public enum Mode {
+        Wallet,
+        NetBanking
     }
 }
