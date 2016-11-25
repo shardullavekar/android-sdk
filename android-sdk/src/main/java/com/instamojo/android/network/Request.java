@@ -62,6 +62,8 @@ public class Request {
     private UPISubmissionResponse upiSubmissionResponse;
     private Card card;
     private MODE mode;
+    private String accessToken;
+    private String orderID;
 
     /**
      * Network Request to create an order ID from Instamojo server.
@@ -119,15 +121,28 @@ public class Request {
     }
 
     /**
+     * Network request to fetch the order
+     * @param accessToken           String
+     * @param orderID               String
+     * @param orderRequestCallBack  {@link OrderRequestCallBack}
+     */
+    public Request(@NonNull String accessToken, @NonNull String orderID, @NonNull OrderRequestCallBack orderRequestCallBack){
+        this.mode = MODE.FetchOrder;
+        this.accessToken = accessToken;
+        this.orderID = orderID;
+        this.orderRequestCallBack = orderRequestCallBack;
+    }
+
+    /**
      * Executes the call to the server and calls the callback with  {@link Exception} if failed.
      */
     public void execute() {
         switch (this.mode) {
             case OrderCreate:
-                executeInstamojoRequest();
+                executeCreateOrder();
                 break;
             case Juspay:
-                executeJusPayRequest();
+                executeJuspayRequest();
                 break;
             case UPISubmission:
                 executeUPIRequest();
@@ -135,12 +150,15 @@ public class Request {
             case UPIStatusCheck:
                 executeUPIStatusCheck();
                 break;
+            case FetchOrder:
+                executeFetchOrder();
+                break;
             default:
                 throw new RuntimeException("Unknown Mode");
         }
     }
 
-    private void executeJusPayRequest() {
+    private void executeJuspayRequest() {
         OkHttpClient client = new OkHttpClient();
 
         //For maestro, add the default values if empty
@@ -215,7 +233,45 @@ public class Request {
         return args;
     }
 
-    private void executeInstamojoRequest() {
+    private void executeFetchOrder(){
+        OkHttpClient client = new OkHttpClient();
+        HashMap<String, String> headers = new HashMap<>();
+        headers.put("User-Agent", getUserAgent());
+        headers.put("Authorization", "Bearer " + accessToken);
+
+        okhttp3.Request request = new okhttp3.Request.Builder()
+                .url(Urls.getOrderFetchURL(orderID))
+                .removeHeader("User-Agent")
+                .headers(Headers.of(headers))
+                .get()
+                .build();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Logger.logError(this.getClass().getSimpleName(), "Error while making Instamojo request - " + e.getMessage());
+                orderRequestCallBack.onFinish(null, new Errors.ConnectionError(e.getMessage()));
+            }
+
+            @Override
+            public void onResponse(Call call, Response r) throws IOException {
+                String responseBody = "";
+                try {
+                    responseBody = r.body().string();
+                    r.body().close();
+                    parseOrder(responseBody);
+                    orderRequestCallBack.onFinish(order, null);
+                } catch (IOException e) {
+                    Logger.logError(this.getClass().getSimpleName(), "Error while making Instamojo request - " + e.getMessage());
+                    orderRequestCallBack.onFinish(order, new Errors.ServerError(e.getMessage()));
+                } catch (JSONException e) {
+                    Logger.logError(this.getClass().getSimpleName(), "Error while making Instamojo request - " + e.getMessage());
+                    orderRequestCallBack.onFinish(order, Errors.getAppropriateError(responseBody));
+                }
+            }
+        });
+    }
+
+    private void executeCreateOrder() {
         OkHttpClient client = new OkHttpClient();
 
         FormBody.Builder builder = new FormBody.Builder()
@@ -257,7 +313,12 @@ public class Request {
                 try {
                     responseBody = r.body().string();
                     r.body().close();
-                    updateTransactionDetails(responseBody);
+                    JSONObject responseObject = new JSONObject(responseBody);
+                    JSONObject orderObject = responseObject.getJSONObject("order");
+                    order.setId(orderObject.getString("id"));
+                    order.setTransactionID(orderObject.getString("transaction_id"));
+                    order.setResourceURI(orderObject.getString("resource_uri"));
+                    updateTransactionDetails(responseObject);
                     orderRequestCallBack.onFinish(order, null);
                 } catch (IOException e) {
                     Logger.logError(this.getClass().getSimpleName(), "Error while making Instamojo request - " + e.getMessage());
@@ -270,12 +331,30 @@ public class Request {
         });
     }
 
-    private void updateTransactionDetails(String responseBody) throws JSONException {
+    private void parseOrder(String responseBody) throws JSONException {
         JSONObject responseObject = new JSONObject(responseBody);
         JSONObject orderObject = responseObject.getJSONObject("order");
-        order.setId(orderObject.getString("id"));
-        order.setTransactionID(orderObject.getString("transaction_id"));
-        order.setResourceURI(orderObject.getString("resource_uri"));
+        String id = orderObject.getString("id");
+        String transactionID = orderObject.getString("transaction_id");
+        String buyerName = orderObject.getString("name");
+        String buyerEmail = orderObject.getString("email");
+        String phone = orderObject.getString("phone");
+        String amount = orderObject.getString("amount");
+        String description = orderObject.getString("description");
+        String currency = orderObject.getString("currency");
+        String redirectionURL = orderObject.getString("redirect_url");
+        String webhookURL = orderObject.getString("webhook_url");
+        String resourceURI = orderObject.getString("resource_uri");
+        order = new Order(accessToken, transactionID, buyerName, buyerEmail, phone, amount, description);
+        order.setId(id);
+        order.setCurrency(currency);
+        order.setRedirectionUrl(redirectionURL);
+        order.setWebhook(webhookURL);
+        order.setResourceURI(resourceURI);
+        updateTransactionDetails(responseObject);
+    }
+
+    private void updateTransactionDetails(JSONObject responseObject) throws JSONException {
 
         JSONObject paymentOptionsObject = responseObject.getJSONObject("payment_options");
         if (paymentOptionsObject.has("card_options") && !paymentOptionsObject.isNull("card_options")) {
@@ -490,6 +569,7 @@ public class Request {
 
     private static enum MODE {
         OrderCreate,
+        FetchOrder,
         Juspay,
         UPISubmission,
         UPIStatusCheck

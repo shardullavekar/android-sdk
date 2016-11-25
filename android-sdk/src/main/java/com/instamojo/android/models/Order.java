@@ -295,6 +295,13 @@ public class Order implements Parcelable {
     }
 
     /**
+     * @param currency  Currency for this order
+     */
+    public void setCurrency(String currency) {
+        this.currency = currency;
+    }
+
+    /**
      * EMI Options if enabled for the seller
      *
      * @return {@link EMIOptions}
