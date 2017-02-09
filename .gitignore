@@ -1,8 +1,11 @@
 *.iml
-.gradle
-/local.properties
-/.idea/workspace.xml
-/.idea/libraries
 .DS_Store
+.gradle
+/.idea/libraries
+/.idea/markdown-navigator
+/.idea/markdown-exported-files.xml
+/.idea/markdown-navigator.xml
+/.idea/workspace.xml
 /build
 /captures
+/local.properties
