@@ -19,6 +19,9 @@ import com.instamojo.android.activities.PaymentActivity;
 import com.instamojo.android.helpers.Logger;
 import com.instamojo.android.network.JavaScriptInterface;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import in.juspay.godel.ui.JuspayBrowserFragment;
 
 public class JusPaySafeBrowser extends JuspayBrowserFragment {
@@ -47,6 +50,11 @@ public class JusPaySafeBrowser extends JuspayBrowserFragment {
         setupJuspayBackButtonCallbackInterface(new JuspayBackButtonCallback() {
             @Override
             public void transactionCancelled() {
+
+            }
+
+            @Override
+            public void transactionCancelled(JSONObject jsonObject) throws JSONException {
                 ((PaymentActivity) getActivity()).returnResult(Activity.RESULT_CANCELED);
             }
         });
