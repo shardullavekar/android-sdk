@@ -21,10 +21,6 @@ import com.rengwuxian.materialedittext.MaterialEditText;
 
 /**
  * A simple {@link Fragment} subclass. The {@link Fragment} to get Virtual Private Address from user.
- *
- * @author vedhavyas
- * @version 1.2.4
- * @since 20/10/16
  */
 
 public class UPIpaymentFragment extends BaseFragment implements View.OnClickListener, UPICallback {

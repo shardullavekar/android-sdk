@@ -22,10 +22,6 @@ import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass. The {@link Fragment} to show Net Banking options to User.
- *
- * @author vedhavyas
- * @version 1.0
- * @since 14/03/16
  */
 public class ListForm extends BaseFragment implements SearchView.OnQueryTextListener {
 

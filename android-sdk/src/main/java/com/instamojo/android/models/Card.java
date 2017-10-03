@@ -10,10 +10,6 @@ import com.instamojo.android.helpers.CardValidator;
  * Card object to hold the User card details.
  * Can be passed between activities through Bundle since
  * the it implements {@link Parcelable}.
- *
- * @author vedhavyas
- * @version 1.0
- * @since 14/03/16
  */
 public class Card implements Parcelable {
 

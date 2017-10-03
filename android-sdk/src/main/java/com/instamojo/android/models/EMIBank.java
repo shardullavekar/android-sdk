@@ -9,10 +9,6 @@ import java.util.Map;
 
 /**
  * EMIBank object that holds the EMI details of a bank
- *
- * @author vedhavyas
- * @version 1.1
- * @since 12/07/16
  */
 
 public class EMIBank implements Parcelable {

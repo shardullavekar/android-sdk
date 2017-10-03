@@ -5,10 +5,6 @@ import org.json.JSONObject;
 
 /**
  * Custom Error class for the SDK.
- *
- * @author vedhavyas
- * @version 1.0
- * @since 14/03/16
  */
 public class Errors {
 

@@ -9,10 +9,6 @@ import com.rengwuxian.materialedittext.validation.METValidator;
  * {@link MaterialEditText} related Validators.
  * Can be assigned through {@link MaterialEditText#addValidator(METValidator)}
  * and {@link MaterialEditText#validate()} should be called to validate the Edit Text.
- *
- * @author vedhavyas
- * @version 1.0
- * @since 14/03/16
  */
 public class Validators {
 

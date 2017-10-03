@@ -3,9 +3,6 @@ package com.instamojo.android.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-/**
- * Authored by vedhavyas on 25/08/16.
- */
 
 public class Wallet implements Parcelable {
     @SuppressWarnings("unused")

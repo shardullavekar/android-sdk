@@ -15,10 +15,6 @@ import in.juspay.godel.ui.JuspayWebView;
 
 /**
  * Activity subclass extending {@link BaseActivity}. Activity for {@link JusPaySafeBrowser} fragment.
- *
- * @author vedhavyas
- * @version 1.0
- * @since 14/03/16
  */
 public class PaymentActivity extends BaseActivity {
 

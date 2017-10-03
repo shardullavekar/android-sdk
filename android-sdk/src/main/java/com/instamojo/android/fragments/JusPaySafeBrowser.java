@@ -1,13 +1,5 @@
 package com.instamojo.android.fragments;
 
-/**
- * JuspaySafe Brwoser Fragment extending {@link in.juspay.godel.ui.JuspayBrowserFragment}.
- *
- * @author vedhavyas
- * @version 1.0
- * @since 14/03/16
- */
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.os.Bundle;
@@ -24,6 +16,9 @@ import org.json.JSONObject;
 
 import in.juspay.godel.ui.JuspayBrowserFragment;
 
+/**
+ * JuspaySafe Brwoser Fragment extending {@link in.juspay.godel.ui.JuspayBrowserFragment}.
+ */
 public class JusPaySafeBrowser extends JuspayBrowserFragment {
 
     /**

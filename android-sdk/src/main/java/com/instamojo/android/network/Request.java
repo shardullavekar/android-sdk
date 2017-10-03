@@ -46,10 +46,6 @@ import okhttp3.Response;
 
 /**
  * Network Request Class.
- *
- * @author vedhavyas
- * @version 1.0
- * @since 14/03/16
  */
 
 public class Request {

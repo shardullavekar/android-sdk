@@ -11,10 +11,6 @@ import java.net.URL;
 
 /**
  * Order Class to hold the details of a Order.
- *
- * @author vedhavyas
- * @version 1.0
- * @since 14/03/16
  */
 
 public class Order implements Parcelable {

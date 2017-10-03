@@ -21,10 +21,6 @@ import com.instamojo.android.models.Order;
 
 /**
  * Payment Details Activity extends the {@link BaseActivity}. Activity lets user to choose a Payment method
- *
- * @author vedhavyas
- * @version 1.0
- * @since 14/03/16
  */
 public class PaymentDetailsActivity extends BaseActivity {
 

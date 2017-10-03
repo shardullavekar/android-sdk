@@ -6,10 +6,6 @@ import com.instamojo.android.models.Order;
 /**
  * Callback listener that is passed along with {@link Order} to
  * {@link com.instamojo.android.network.Request#Request(Order, OrderRequestCallBack)}.
- *
- * @author vedhavyas
- * @version 1.0
- * @since 14/03/16
  */
 
 public interface OrderRequestCallBack {

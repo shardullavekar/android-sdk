@@ -14,9 +14,6 @@ import com.instamojo.android.models.EMIBank;
 import java.math.BigDecimal;
 import java.util.Map;
 
-/**
- * Authored by vedhavyas on 22/07/16.
- */
 public class EMIBankOptionsView extends BaseFragment {
 
     private PaymentDetailsActivity parentActivity;

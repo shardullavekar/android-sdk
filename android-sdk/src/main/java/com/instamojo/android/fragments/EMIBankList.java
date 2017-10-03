@@ -12,9 +12,6 @@ import com.instamojo.android.activities.PaymentDetailsActivity;
 import com.instamojo.android.helpers.Logger;
 import com.instamojo.android.models.EMIBank;
 
-/**
- * Authored by vedhavyas on 22/07/16.
- */
 public class EMIBankList extends BaseFragment {
 
     private PaymentDetailsActivity parentActivity;

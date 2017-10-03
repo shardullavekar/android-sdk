@@ -8,10 +8,6 @@ import java.util.HashMap;
 
 /**
  * Netbanking options details for a transaction.
- *
- * @author vedhavyas
- * @version 1.0
- * @since 14/03/16
  */
 public class NetBankingOptions implements Parcelable {
     @SuppressWarnings("unused")

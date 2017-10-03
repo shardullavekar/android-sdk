@@ -9,10 +9,6 @@ import com.instamojo.android.helpers.Logger;
 
 /**
  * JavaScript interface to transfer control from Webview to Application.
- *
- * @author vedhavyas
- * @version 1.0
- * @since 14/03/16
  */
 public class JavaScriptInterface {
 
