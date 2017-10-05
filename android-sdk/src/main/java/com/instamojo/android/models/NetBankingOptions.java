@@ -5,6 +5,7 @@ import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 /**
  * Netbanking options details for a transaction.
@@ -23,7 +24,7 @@ public class NetBankingOptions implements Parcelable {
         }
     };
     private String url;
-    private HashMap<String, String> banks = new HashMap<>();
+    private LinkedHashMap<String, String> banks = new LinkedHashMap<>();
 
     /**
      * Constructor for Net Banking options.
@@ -31,7 +32,7 @@ public class NetBankingOptions implements Parcelable {
      * @param url   Url for Net Banking Options. Must not be null.
      * @param banks HashMap with Bank Code and Bank Name. Must not be null or empty.
      */
-    public NetBankingOptions(@NonNull String url, @NonNull HashMap<String, String> banks) {
+    public NetBankingOptions(@NonNull String url, @NonNull LinkedHashMap<String, String> banks) {
         this.url = url;
         this.banks = banks;
     }
@@ -44,7 +45,7 @@ public class NetBankingOptions implements Parcelable {
             return;
         }
 
-        banks = new HashMap<>();
+        banks = new LinkedHashMap<>();
         for (int i = 0; i < size; i++) {
             String key = in.readString();
             String value = in.readString();

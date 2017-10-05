@@ -367,7 +367,7 @@ public class Request {
             JSONObject netbankingOptions = paymentOptionsObject.getJSONObject("netbanking_options");
             String nbURL = netbankingOptions.getString("submission_url");
             JSONArray banksArray = netbankingOptions.getJSONArray("choices");
-            HashMap<String, String> banks = new HashMap<>();
+            LinkedHashMap<String, String> banks = new LinkedHashMap<>();
             JSONObject bank;
             for (int i = 0; i < banksArray.length(); i++) {
                 bank = banksArray.getJSONObject(i);
