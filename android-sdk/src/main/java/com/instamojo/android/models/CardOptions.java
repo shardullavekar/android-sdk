@@ -5,7 +5,7 @@ import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
 /**
- * CardOptions object that holds the Card transaction information received from Mojo Server
+ * CardOptions object that holds the Card transaction information received from Instamojo server
  * for a particular order.
  */
 public class CardOptions implements Parcelable {

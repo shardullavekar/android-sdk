@@ -37,7 +37,7 @@ public class Errors {
     }
 
     /**
-     * Exception to be used when the cause of the failure is related to form errors from MojoServer.
+     * Exception to be used when the cause of the failure is related to form errors from Instamojo server.
      */
     public static final class ServerError extends Exception {
         /**

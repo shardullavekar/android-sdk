@@ -10,7 +10,7 @@ import com.instamojo.android.models.Order;
 
 public interface OrderRequestCallBack {
     /**
-     * Called on finishing the order creation with MojoServer.
+     * Called on finishing the order creation with Instamojo server.
      * {@link Order} will be unchanged if the error is not null.
      *
      * @param order - original order if the error is not null else
@@ -19,7 +19,7 @@ public interface OrderRequestCallBack {
      * @param error - Appropriate {@link Exception} extended exception.
      *              {@link Errors.ConnectionError} related to all network exceptions
      *              and {@link Errors.ServerError} related to all
-     *              form level validation errors from MojoServer.
+     *              form level validation errors from Instamojo server.
      */
     void onFinish(Order order, Exception error);
 
