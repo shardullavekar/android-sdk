@@ -5,10 +5,6 @@ import android.view.View;
 
 /**
  * An abstract Fragment
- *
- * @author vedhavyas
- * @version 1.0
- * @since 14/03/16
  */
 public abstract class BaseFragment extends Fragment {
 

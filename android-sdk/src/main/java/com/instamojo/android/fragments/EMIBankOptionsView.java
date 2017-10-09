@@ -14,9 +14,6 @@ import com.instamojo.android.models.EMIBank;
 import java.math.BigDecimal;
 import java.util.Map;
 
-/**
- * Authored by vedhavyas on 22/07/16.
- */
 public class EMIBankOptionsView extends BaseFragment {
 
     private PaymentDetailsActivity parentActivity;
@@ -32,9 +29,9 @@ public class EMIBankOptionsView extends BaseFragment {
         return optionsView;
     }
 
-    private static double getEmiAmount(String totalAmount, int rate, int tenure) {
+    private static double getEmiAmount(String totalAmount, BigDecimal rate, int tenure) {
         double parsedAmount = Double.parseDouble(totalAmount);
-        double perRate = ((double) rate) / 1200;
+        double perRate = rate.doubleValue() / 1200;
         double emiAmount = parsedAmount * perRate / (1 - Math.pow((1 / (1 + perRate)), tenure));
         return getRoundedValue(emiAmount, 2);
     }
@@ -79,7 +76,7 @@ public class EMIBankOptionsView extends BaseFragment {
     private void loadOptions() {
         optionsContainer.removeAllViews();
         String orderAmount = parentActivity.getOrder().getAmount();
-        for (final Map.Entry<Integer, Integer> option : selectedBank.getRates().entrySet()) {
+        for (final Map.Entry<Integer, BigDecimal> option : selectedBank.getRates().entrySet()) {
             View optionView = LayoutInflater.from(getContext()).inflate(R.layout.emi_option_view,
                     optionsContainer, false);
             double emiAmount = getEmiAmount(orderAmount, option.getValue(), option.getKey());

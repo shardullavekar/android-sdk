@@ -2,10 +2,6 @@ package com.instamojo.android.models;
 
 /**
  * Response Model for UPISubmission submission Call.
- *
- * @author vedhavyas
- * @version 1.2.4
- * @since 20/10/16
  */
 
 public class UPISubmissionResponse {

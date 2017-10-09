@@ -18,10 +18,6 @@ import java.lang.reflect.Method;
  * Implements Calligraphy using reflection. The default font will be applied through context wrappers
  * as defined in the Calligraphy Documentation. Any newly created activity must extend this BaseActivity
  * for the proper application of the default font.
- *
- * @author vedhavyas
- * @version 1.0
- * @since 14/03/16
  */
 public abstract class BaseActivity extends AppCompatActivity {
 

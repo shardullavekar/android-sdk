@@ -12,10 +12,6 @@ import com.instamojo.android.models.Order;
 
 /**
  * Fragment holds the available Payment options for the User
- *
- * @author vedhavyas
- * @version 1.0
- * @since 14/03/16
  */
 public class ChoosePaymentOption extends BaseFragment implements View.OnClickListener {
 

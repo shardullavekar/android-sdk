@@ -28,6 +28,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -46,10 +47,6 @@ import okhttp3.Response;
 
 /**
  * Network Request Class.
- *
- * @author vedhavyas
- * @version 1.0
- * @since 14/03/16
  */
 
 public class Request {
@@ -370,7 +367,7 @@ public class Request {
             JSONObject netbankingOptions = paymentOptionsObject.getJSONObject("netbanking_options");
             String nbURL = netbankingOptions.getString("submission_url");
             JSONArray banksArray = netbankingOptions.getJSONArray("choices");
-            HashMap<String, String> banks = new HashMap<>();
+            LinkedHashMap<String, String> banks = new LinkedHashMap<>();
             JSONObject bank;
             for (int i = 0; i < banksArray.length(); i++) {
                 bank = banksArray.getJSONObject(i);
@@ -393,23 +390,23 @@ public class Request {
                 emiOptionRaw = emiListRaw.getJSONObject(i);
                 String bankName = emiOptionRaw.getString("bank_name");
                 String bankCode = emiOptionRaw.getString("bank_code");
-                Map<Integer, Integer> rates = new HashMap<>();
+                Map<Integer, BigDecimal> rates = new HashMap<>();
                 ratesRaw = emiOptionRaw.getJSONArray("rates");
                 for (int j = 0; j < ratesRaw.length(); j++) {
                     rateRaw = ratesRaw.getJSONObject(j);
                     int tenure = rateRaw.getInt("tenure");
-                    int interest = rateRaw.getInt("interest");
-                    rates.put(tenure, interest);
+                    String interest = rateRaw.getString("interest");
+                    rates.put(tenure, new BigDecimal(interest));
                 }
-                LinkedList<Map.Entry<Integer, Integer>> ratesList = new LinkedList<>(rates.entrySet());
-                Collections.sort(ratesList, new Comparator<Map.Entry<Integer, Integer>>() {
+                LinkedList<Map.Entry<Integer, BigDecimal>> ratesList = new LinkedList<>(rates.entrySet());
+                Collections.sort(ratesList, new Comparator<Map.Entry<Integer, BigDecimal>>() {
                     @Override
-                    public int compare(Map.Entry<Integer, Integer> lhs, Map.Entry<Integer, Integer> rhs) {
+                    public int compare(Map.Entry<Integer, BigDecimal> lhs, Map.Entry<Integer, BigDecimal> rhs) {
                         return lhs.getKey() - rhs.getKey();
                     }
                 });
-                LinkedHashMap<Integer, Integer> sortedRates = new LinkedHashMap<>();
-                for (Map.Entry<Integer, Integer> entry : ratesList) {
+                LinkedHashMap<Integer, BigDecimal> sortedRates = new LinkedHashMap<>();
+                for (Map.Entry<Integer, BigDecimal> entry : ratesList) {
                     sortedRates.put(entry.getKey(), entry.getValue());
                 }
 

@@ -9,10 +9,6 @@ import com.instamojo.android.network.Urls;
 
 /**
  * SDK Base Class.
- *
- * @author vedhavyas
- * @version 1.0
- * @since 14/03/16
  */
 
 public class Instamojo {

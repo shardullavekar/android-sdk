@@ -7,10 +7,6 @@ import java.util.ArrayList;
 
 /**
  * EMIOptions object that holds an array {@link EMIBank} and order details
- *
- * @author vedhavyas
- * @version 1.1
- * @since 12/07/16
  */
 public class EMIOptions implements Parcelable {
 

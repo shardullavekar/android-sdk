@@ -22,7 +22,7 @@
             android:id="@+id/virtual_address_box"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/enter_your_virual_payment_address"
+            android:hint="@string/enter_your_virtual_payment_address"
             android:inputType="textEmailAddress"
             android:textSize="16sp"
             app:met_errorColor="@android:color/holo_red_light"

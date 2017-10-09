@@ -6,10 +6,6 @@ import android.support.annotation.NonNull;
 
 import java.util.ArrayList;
 
-/**
- * Authored by vedhavyas on 25/08/16.
- */
-
 public class WalletOptions implements Parcelable {
     @SuppressWarnings("unused")
     public static final Parcelable.Creator<WalletOptions> CREATOR = new Parcelable.Creator<WalletOptions>() {

@@ -3,16 +3,13 @@ package com.instamojo.android.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
  * EMIBank object that holds the EMI details of a bank
- *
- * @author vedhavyas
- * @version 1.1
- * @since 12/07/16
  */
 
 public class EMIBank implements Parcelable {
@@ -30,9 +27,9 @@ public class EMIBank implements Parcelable {
     };
     private String bankName;
     private String bankCode;
-    private LinkedHashMap<Integer, Integer> rates = new LinkedHashMap<>();
+    private LinkedHashMap<Integer, BigDecimal> rates = new LinkedHashMap<>();
 
-    public EMIBank(String bankName, String bankCode, LinkedHashMap<Integer, Integer> rates) {
+    public EMIBank(String bankName, String bankCode, LinkedHashMap<Integer, BigDecimal> rates) {
         this.bankName = bankName;
         this.bankCode = bankCode;
         this.rates = rates;
@@ -48,10 +45,9 @@ public class EMIBank implements Parcelable {
         rates = new LinkedHashMap<>();
         for (int i = 0; i < ratesSize; i++) {
             int tenure = in.readInt();
-            int interest = in.readInt();
-            rates.put(tenure, interest);
+            String interest = in.readString();
+            rates.put(tenure, new BigDecimal(interest));
         }
-
     }
 
     public String getBankName() {
@@ -70,11 +66,11 @@ public class EMIBank implements Parcelable {
         this.bankCode = bankCode;
     }
 
-    public HashMap<Integer, Integer> getRates() {
+    public HashMap<Integer, BigDecimal> getRates() {
         return rates;
     }
 
-    public void setRates(LinkedHashMap<Integer, Integer> rates) {
+    public void setRates(LinkedHashMap<Integer, BigDecimal> rates) {
         this.rates = rates;
     }
 
@@ -93,9 +89,9 @@ public class EMIBank implements Parcelable {
         }
 
         dest.writeInt(rates.size());
-        for (Map.Entry<Integer, Integer> entry : rates.entrySet()) {
+        for (Map.Entry<Integer, BigDecimal> entry : rates.entrySet()) {
             dest.writeInt(entry.getKey());
-            dest.writeInt(entry.getValue());
+            dest.writeString(entry.getValue().toPlainString());
         }
     }
 }

@@ -1,12 +1,14 @@
 package com.instamojo.android.fragments;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import com.instamojo.android.R;
@@ -21,10 +23,6 @@ import com.rengwuxian.materialedittext.MaterialEditText;
 
 /**
  * A simple {@link Fragment} subclass. The {@link Fragment} to get Virtual Private Address from user.
- *
- * @author vedhavyas
- * @version 1.2.4
- * @since 20/10/16
  */
 
 public class UPIpaymentFragment extends BaseFragment implements View.OnClickListener, UPICallback {
@@ -71,6 +69,18 @@ public class UPIpaymentFragment extends BaseFragment implements View.OnClickList
         postVPALayout = view.findViewById(R.id.post_vpa_layout);
         verifyPayment = view.findViewById(R.id.verify_payment);
         verifyPayment.setOnClickListener(this);
+
+        // Automatically open soft keyboard for VPA field (on display of this fragment).
+        virtualAddressBox.post(new Runnable() {
+            @Override
+            public void run() {
+                virtualAddressBox.requestFocus();
+                InputMethodManager lManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                if (lManager != null) {
+                    lManager.showSoftInput(virtualAddressBox, InputMethodManager.SHOW_IMPLICIT);
+                }
+            }
+        });
     }
 
     @Override

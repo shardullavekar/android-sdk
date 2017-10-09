@@ -5,10 +5,6 @@ import android.os.Parcelable;
 
 /**
  * UPIOptions Class to hold the details of a UPISubmission options.
- *
- * @author vedhavyas
- * @version 1.2.4
- * @since 20/10/16
  */
 
 public class UPIOptions implements Parcelable {

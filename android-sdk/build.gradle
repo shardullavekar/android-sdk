@@ -29,14 +29,18 @@ repositories {
     maven {
         url "https://s3-ap-southeast-1.amazonaws.com/godel-release/godel/"
     }
+
+    maven {
+        url "https://maven.google.com"
+    }
 }
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion '25.0.2'
+    compileSdkVersion 26
+    buildToolsVersion '26.0.2'
     defaultConfig {
         minSdkVersion 15
-        targetSdkVersion 25
+        targetSdkVersion 26
         versionCode 11
         versionName "1.2.6"
         vectorDrawables.useSupportLibrary = true
@@ -72,10 +76,10 @@ android {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'com.android.support:appcompat-v7:25.2.0'
-    compile 'com.squareup.okhttp3:okhttp:3.6.0'
+    compile 'com.android.support:appcompat-v7:26.1.0'
+    compile 'com.squareup.okhttp3:okhttp:3.9.0'
     compile 'com.rengwuxian.materialedittext:library:2.1.4'
-    compile 'in.juspay:godel:0.6.18.1423'
+    compile 'in.juspay:godel:0.6.23.1423'
 }
 
 apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/installv1.gradle'

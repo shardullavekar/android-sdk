@@ -10,10 +10,6 @@ import java.util.Locale;
 
 /**
  * Card Validator class to validate card details.
- *
- * @author vedhavyas
- * @version 1.0
- * @since 14/03/16
  */
 public class CardValidator {
 

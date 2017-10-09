@@ -2,9 +2,6 @@ package com.instamojo.android.helpers;
 
 import com.instamojo.android.models.Order;
 
-/**
- * Authored by vedhavyas on 23/05/16.
- */
 public class Constants {
 
     /**

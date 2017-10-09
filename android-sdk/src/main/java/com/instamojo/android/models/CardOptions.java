@@ -5,12 +5,8 @@ import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
 /**
- * CardOptions object that holds the Card transaction information received from Mojo Server
+ * CardOptions object that holds the Card transaction information received from Instamojo server
  * for a particular order.
- *
- * @author vedhavyas
- * @version 1.0
- * @since 14/03/16
  */
 public class CardOptions implements Parcelable {
     @SuppressWarnings("unused")

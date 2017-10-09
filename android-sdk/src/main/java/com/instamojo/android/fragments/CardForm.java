@@ -30,10 +30,6 @@ import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass. The {@link Fragment} to get Debit Card details from user.
- *
- * @author vedhavyas
- * @version 1.0
- * @since 14/03/16
  */
 public class CardForm extends BaseFragment implements View.OnClickListener {
 

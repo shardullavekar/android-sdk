@@ -2,9 +2,6 @@ package com.instamojo.android.helpers;
 
 import android.util.Log;
 
-/**
- * Authored by vedhavyas on 28/04/16.
- */
 public class Logger {
 
     private static int logLevel = Log.WARN;
