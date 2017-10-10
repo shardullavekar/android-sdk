@@ -121,11 +121,12 @@ public class Request {
 
     /**
      * Network request to fetch the order
-     * @param accessToken           String
-     * @param orderID               String
-     * @param orderRequestCallback  {@link OrderRequestCallBack}
+     *
+     * @param accessToken          String
+     * @param orderID              String
+     * @param orderRequestCallback {@link OrderRequestCallBack}
      */
-    public Request(@NonNull String accessToken, @NonNull String orderID, @NonNull OrderRequestCallBack orderRequestCallback){
+    public Request(@NonNull String accessToken, @NonNull String orderID, @NonNull OrderRequestCallBack orderRequestCallback) {
         this.mode = MODE.FetchOrder;
         this.accessToken = accessToken;
         this.orderID = orderID;
@@ -230,7 +231,7 @@ public class Request {
         return args;
     }
 
-    private void executeFetchOrder(){
+    private void executeFetchOrder() {
         HashMap<String, String> headers = new HashMap<>();
         headers.put("User-Agent", getUserAgent());
         headers.put("Authorization", "Bearer " + accessToken);
@@ -553,8 +554,9 @@ public class Request {
     }
 
     private String getUserAgent() {
-        return "Instamojo Android SDK;" + Build.MODEL + ";" + Build.BRAND + ";" + Build.VERSION.SDK_INT
-                + ";" + BuildConfig.APPLICATION_ID + ";" + BuildConfig.VERSION_NAME + ";" + BuildConfig.VERSION_CODE;
+        return "instamojo-android/" + BuildConfig.VERSION_NAME
+                + " android/" + Build.VERSION.RELEASE
+                + " " + Build.BRAND + "/" + Build.MODEL;
     }
 
     private enum MODE {
