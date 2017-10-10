@@ -3,9 +3,6 @@ package com.instamojo.android.fragments;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
 import com.instamojo.android.activities.PaymentActivity;
 import com.instamojo.android.helpers.Logger;
