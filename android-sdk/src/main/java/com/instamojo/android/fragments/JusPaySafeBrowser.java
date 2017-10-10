@@ -17,7 +17,7 @@ import org.json.JSONObject;
 import in.juspay.godel.ui.JuspayBrowserFragment;
 
 /**
- * JuspaySafe Brwoser Fragment extending {@link in.juspay.godel.ui.JuspayBrowserFragment}.
+ * JuspaySafe Browser Fragment extending {@link in.juspay.godel.ui.JuspayBrowserFragment}.
  */
 public class JusPaySafeBrowser extends JuspayBrowserFragment {
 
@@ -29,12 +29,6 @@ public class JusPaySafeBrowser extends JuspayBrowserFragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        return super.onCreateView(inflater, container, savedInstanceState);
-    }
-
-    @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         loadWebView();
@@ -43,11 +37,6 @@ public class JusPaySafeBrowser extends JuspayBrowserFragment {
     @SuppressLint({"SetJavaScriptEnabled", "AddJavascriptInterface"})
     private void loadWebView() {
         setupJuspayBackButtonCallbackInterface(new JuspayBackButtonCallback() {
-            @Override
-            public void transactionCancelled() {
-
-            }
-
             @Override
             public void transactionCancelled(JSONObject jsonObject) throws JSONException {
                 ((PaymentActivity) getActivity()).returnResult(Activity.RESULT_CANCELED);
