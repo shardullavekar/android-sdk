@@ -52,7 +52,7 @@ import okhttp3.Response;
 public class Request {
 
     private Order order;
-    private OrderRequestCallBack orderRequestCallBack;
+    private OrderRequestCallBack orderRequestCallback;
     private JusPayRequestCallback jusPayRequestCallback;
     private UPICallback upiCallback;
     private String virtualPaymentAddress;
@@ -66,12 +66,12 @@ public class Request {
      * Network Request to create an order ID from Instamojo server.
      *
      * @param order                Order model with all the mandatory fields set.
-     * @param orderRequestCallBack Callback interface for the Asynchronous Network Call.
+     * @param orderRequestCallback Callback interface for the Asynchronous Network Call.
      */
-    public Request(@NonNull Order order, @NonNull OrderRequestCallBack orderRequestCallBack) {
+    public Request(@NonNull Order order, @NonNull OrderRequestCallBack orderRequestCallback) {
         this.mode = MODE.OrderCreate;
         this.order = order;
-        this.orderRequestCallBack = orderRequestCallBack;
+        this.orderRequestCallback = orderRequestCallback;
     }
 
 
@@ -121,13 +121,13 @@ public class Request {
      * Network request to fetch the order
      * @param accessToken           String
      * @param orderID               String
-     * @param orderRequestCallBack  {@link OrderRequestCallBack}
+     * @param orderRequestCallback  {@link OrderRequestCallBack}
      */
-    public Request(@NonNull String accessToken, @NonNull String orderID, @NonNull OrderRequestCallBack orderRequestCallBack){
+    public Request(@NonNull String accessToken, @NonNull String orderID, @NonNull OrderRequestCallBack orderRequestCallback){
         this.mode = MODE.FetchOrder;
         this.accessToken = accessToken;
         this.orderID = orderID;
-        this.orderRequestCallBack = orderRequestCallBack;
+        this.orderRequestCallback = orderRequestCallback;
     }
 
     /**
@@ -246,7 +246,7 @@ public class Request {
             @Override
             public void onFailure(Call call, IOException e) {
                 Logger.logError(this.getClass().getSimpleName(), "Error while making Instamojo request - " + e.getMessage());
-                orderRequestCallBack.onFinish(null, new Errors.ConnectionError(e.getMessage()));
+                orderRequestCallback.onFinish(null, new Errors.ConnectionError(e.getMessage()));
             }
 
             @Override
@@ -256,13 +256,13 @@ public class Request {
                     responseBody = r.body().string();
                     r.body().close();
                     parseOrder(responseBody);
-                    orderRequestCallBack.onFinish(order, null);
+                    orderRequestCallback.onFinish(order, null);
                 } catch (IOException e) {
                     Logger.logError(this.getClass().getSimpleName(), "Error while making Instamojo request - " + e.getMessage());
-                    orderRequestCallBack.onFinish(order, new Errors.ServerError(e.getMessage()));
+                    orderRequestCallback.onFinish(order, new Errors.ServerError(e.getMessage()));
                 } catch (JSONException e) {
                     Logger.logError(this.getClass().getSimpleName(), "Error while making Instamojo request - " + e.getMessage());
-                    orderRequestCallBack.onFinish(order, Errors.getAppropriateError(responseBody));
+                    orderRequestCallback.onFinish(order, Errors.getAppropriateError(responseBody));
                 }
             }
         });
@@ -301,7 +301,7 @@ public class Request {
             @Override
             public void onFailure(Call call, IOException e) {
                 Logger.logError(this.getClass().getSimpleName(), "Error while making Instamojo request - " + e.getMessage());
-                orderRequestCallBack.onFinish(order, new Errors.ConnectionError(e.getMessage()));
+                orderRequestCallback.onFinish(order, new Errors.ConnectionError(e.getMessage()));
             }
 
             @Override
@@ -316,13 +316,13 @@ public class Request {
                     order.setTransactionID(orderObject.getString("transaction_id"));
                     order.setResourceURI(orderObject.getString("resource_uri"));
                     updateTransactionDetails(responseObject);
-                    orderRequestCallBack.onFinish(order, null);
+                    orderRequestCallback.onFinish(order, null);
                 } catch (IOException e) {
                     Logger.logError(this.getClass().getSimpleName(), "Error while making Instamojo request - " + e.getMessage());
-                    orderRequestCallBack.onFinish(order, new Errors.ServerError(e.getMessage()));
+                    orderRequestCallback.onFinish(order, new Errors.ServerError(e.getMessage()));
                 } catch (JSONException e) {
                     Logger.logError(this.getClass().getSimpleName(), "Error while making Instamojo request - " + e.getMessage());
-                    orderRequestCallBack.onFinish(order, Errors.getAppropriateError(responseBody));
+                    orderRequestCallback.onFinish(order, Errors.getAppropriateError(responseBody));
                 }
             }
         });
