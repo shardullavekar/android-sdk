@@ -62,6 +62,8 @@ public class Request {
     private String accessToken;
     private String orderID;
 
+    private static final OkHttpClient client = new OkHttpClient();
+
     /**
      * Network Request to create an order ID from Instamojo server.
      *
@@ -156,8 +158,6 @@ public class Request {
     }
 
     private void executeJuspayRequest() {
-        OkHttpClient client = new OkHttpClient();
-
         //For maestro, add the default values if empty
         if (CardValidator.maestroCard(card.getCardNumber())) {
             if (card.getDate() == null || card.getDate().isEmpty()) {
@@ -231,7 +231,6 @@ public class Request {
     }
 
     private void executeFetchOrder(){
-        OkHttpClient client = new OkHttpClient();
         HashMap<String, String> headers = new HashMap<>();
         headers.put("User-Agent", getUserAgent());
         headers.put("Authorization", "Bearer " + accessToken);
@@ -269,8 +268,6 @@ public class Request {
     }
 
     private void executeCreateOrder() {
-        OkHttpClient client = new OkHttpClient();
-
         FormBody.Builder builder = new FormBody.Builder()
                 .add("name", order.getBuyerName())
                 .add("email", order.getBuyerEmail())
@@ -452,8 +449,6 @@ public class Request {
     }
 
     private void executeUPIRequest() {
-        OkHttpClient client = new OkHttpClient();
-
         RequestBody body = new FormBody.Builder()
                 .add("virtual_address", this.virtualPaymentAddress)
                 .build();
@@ -508,8 +503,6 @@ public class Request {
     }
 
     private void executeUPIStatusCheck() {
-        OkHttpClient client = new OkHttpClient();
-
         HashMap<String, String> headers = new HashMap<>();
         headers.put("User-Agent", getUserAgent());
         headers.put("Authorization", "Bearer " + order.getAuthToken());
@@ -564,12 +557,11 @@ public class Request {
                 + ";" + BuildConfig.APPLICATION_ID + ";" + BuildConfig.VERSION_NAME + ";" + BuildConfig.VERSION_CODE;
     }
 
-    private static enum MODE {
+    private enum MODE {
         OrderCreate,
         FetchOrder,
         Juspay,
         UPISubmission,
         UPIStatusCheck
     }
-
 }
