@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.instamojo.android.R;
 import com.instamojo.android.activities.PaymentDetailsActivity;
+import com.instamojo.android.helpers.MoneyUtils;
 import com.instamojo.android.models.EMIBank;
 
 import java.math.BigDecimal;
@@ -31,19 +32,11 @@ public class EMIBankOptionsView extends BaseFragment {
 
     private static double getEmiAmount(String totalAmount, BigDecimal rate, int tenure) {
         double parsedAmount = Double.parseDouble(totalAmount);
-        double perRate = rate.doubleValue() / 1200;
-        double emiAmount = parsedAmount * perRate / (1 - Math.pow((1 / (1 + perRate)), tenure));
-        return getRoundedValue(emiAmount, 2);
+        return MoneyUtils.getMonthlyEMI(parsedAmount, rate, tenure);
     }
 
     private static double getTotalAmount(double emiAmount, int tenure) {
-        return getRoundedValue(emiAmount * tenure, 2);
-    }
-
-    private static double getRoundedValue(double value, int precision) {
-        BigDecimal bigDecimal = new BigDecimal(value);
-        bigDecimal = bigDecimal.setScale(precision, BigDecimal.ROUND_HALF_DOWN);
-        return bigDecimal.doubleValue();
+        return MoneyUtils.getRoundedValue(emiAmount * tenure, 2);
     }
 
     @SuppressWarnings("unchecked")
