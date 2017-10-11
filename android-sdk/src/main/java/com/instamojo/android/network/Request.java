@@ -278,8 +278,7 @@ public class Request {
                 .add("currency", order.getCurrency())
                 .add("transaction_id", order.getTransactionID())
                 .add("redirect_url", order.getRedirectionUrl())
-                .add("advanced_payment_options", "true")
-                .add("mode", order.getMode());
+                .add("advanced_payment_options", "true");
         if (order.getWebhook() != null) {
             builder.add("webhook_url", order.getWebhook());
         }
