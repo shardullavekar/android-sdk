@@ -40,7 +40,7 @@ import java.util.Map;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.FormBody;
-import okhttp3.Headers;
+import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
 import okhttp3.Response;
@@ -62,7 +62,9 @@ public class Request {
     private String accessToken;
     private String orderID;
 
-    private static final OkHttpClient client = new OkHttpClient();
+    private static final OkHttpClient client = new OkHttpClient.Builder()
+            .addInterceptor(new DefaultHeadersInterceptor())
+            .build();
 
     /**
      * Network Request to create an order ID from Instamojo server.
@@ -232,14 +234,9 @@ public class Request {
     }
 
     private void executeFetchOrder() {
-        HashMap<String, String> headers = new HashMap<>();
-        headers.put("User-Agent", getUserAgent());
-        headers.put("Authorization", "Bearer " + accessToken);
-
         okhttp3.Request request = new okhttp3.Request.Builder()
                 .url(Urls.getOrderFetchURL(orderID))
-                .removeHeader("User-Agent")
-                .headers(Headers.of(headers))
+                .header("Authorization", "Bearer " + accessToken)
                 .get()
                 .build();
         client.newCall(request).enqueue(new Callback() {
@@ -283,14 +280,9 @@ public class Request {
             builder.add("webhook_url", order.getWebhook());
         }
         RequestBody body = builder.build();
-        HashMap<String, String> headers = new HashMap<>();
-        headers.put("User-Agent", getUserAgent());
-        headers.put("Authorization", "Bearer " + order.getAuthToken());
-
         okhttp3.Request request = new okhttp3.Request.Builder()
                 .url(Urls.getOrderCreateUrl())
-                .removeHeader("User-Agent")
-                .headers(Headers.of(headers))
+                .header("Authorization", "Bearer " + order.getAuthToken())
                 .post(body)
                 .build();
 
@@ -453,14 +445,9 @@ public class Request {
                 .add("virtual_address", this.virtualPaymentAddress)
                 .build();
 
-        HashMap<String, String> headers = new HashMap<>();
-        headers.put("User-Agent", getUserAgent());
-        headers.put("Authorization", "Bearer " + order.getAuthToken());
-
         okhttp3.Request request = new okhttp3.Request.Builder()
                 .url(order.getUpiOptions().getUrl())
-                .removeHeader("User-Agent")
-                .headers(Headers.of(headers))
+                .header("Authorization", "Bearer " + order.getAuthToken())
                 .post(body)
                 .build();
 
@@ -503,14 +490,9 @@ public class Request {
     }
 
     private void executeUPIStatusCheck() {
-        HashMap<String, String> headers = new HashMap<>();
-        headers.put("User-Agent", getUserAgent());
-        headers.put("Authorization", "Bearer " + order.getAuthToken());
-
         okhttp3.Request request = new okhttp3.Request.Builder()
                 .url(upiSubmissionResponse.getStatusCheckURL())
-                .removeHeader("User-Agent")
-                .headers(Headers.of(headers))
+                .header("Authorization", "Bearer " + order.getAuthToken())
                 .build();
 
         client.newCall(request).enqueue(new Callback() {
@@ -552,17 +534,27 @@ public class Request {
         return responseObject.getInt("status_code") != Constants.PENDING_PAYMENT;
     }
 
-    private String getUserAgent() {
-        return "instamojo-android/" + BuildConfig.VERSION_NAME
-                + " android/" + Build.VERSION.RELEASE
-                + " " + Build.BRAND + "/" + Build.MODEL;
-    }
-
     private enum MODE {
         OrderCreate,
         FetchOrder,
         Juspay,
         UPISubmission,
         UPIStatusCheck
+    }
+
+    private static class DefaultHeadersInterceptor implements Interceptor {
+        @Override
+        public Response intercept(Chain chain) throws IOException {
+            return chain.proceed(chain.request()
+                    .newBuilder()
+                    .header("User-Agent", getUserAgent())
+                    .build());
+        }
+
+        private static String getUserAgent() {
+            return "instamojo-android/" + BuildConfig.VERSION_NAME
+                    + " android/" + Build.VERSION.RELEASE
+                    + " " + Build.BRAND + "/" + Build.MODEL;
+        }
     }
 }
