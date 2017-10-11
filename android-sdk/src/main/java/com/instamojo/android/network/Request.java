@@ -1,10 +1,13 @@
 package com.instamojo.android.network;
 
+import android.content.Context;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 
 import com.instamojo.android.BuildConfig;
+import com.instamojo.android.Instamojo;
 import com.instamojo.android.callbacks.JusPayRequestCallback;
 import com.instamojo.android.callbacks.OrderRequestCallBack;
 import com.instamojo.android.callbacks.UPICallback;
@@ -543,18 +546,46 @@ public class Request {
     }
 
     private static class DefaultHeadersInterceptor implements Interceptor {
+        private String userAgent;
+        private String referer;
+
         @Override
         public Response intercept(Chain chain) throws IOException {
             return chain.proceed(chain.request()
                     .newBuilder()
                     .header("User-Agent", getUserAgent())
+                    .header("Referer", getReferer())
                     .build());
         }
 
-        private static String getUserAgent() {
-            return "instamojo-android/" + BuildConfig.VERSION_NAME
-                    + " android/" + Build.VERSION.RELEASE
-                    + " " + Build.BRAND + "/" + Build.MODEL;
+        private String getUserAgent() {
+            if (this.userAgent == null || this.userAgent.length() == 0) {
+                userAgent = "instamojo-android/" + BuildConfig.VERSION_NAME
+                        + " android/" + Build.VERSION.RELEASE
+                        + " " + Build.BRAND + "/" + Build.MODEL;
+            }
+
+            return this.userAgent;
+        }
+
+        private String getReferer() {
+            if (this.referer == null || this.referer.length() == 0) {
+                if (!Instamojo.isInitialised()) {
+                    return "";
+                }
+
+                Context appContext = Instamojo.getInstance().getAppContext();
+
+                String packageName = appContext.getPackageName();
+                this.referer = "android-app://" + packageName;
+
+                try {
+                    this.referer += "/" + appContext.getPackageManager().getPackageInfo(packageName, 0).versionName;
+                } catch (PackageManager.NameNotFoundException e) {
+                    Logger.logError("Request", "Unable to get version of the current application.");
+                }
+            }
+            return this.referer;
         }
     }
 }

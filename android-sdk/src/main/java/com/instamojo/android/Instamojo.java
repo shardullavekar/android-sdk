@@ -55,7 +55,7 @@ public class Instamojo {
         Urls.setBaseUrl(baseUrl);
     }
 
-    private static boolean isInitialised() {
+    public static boolean isInitialised() {
         if (instance != null) {
             return true;
         }
