@@ -180,13 +180,17 @@ public class Request {
                 .add("merchant_id", order.getCardOptions().getMerchantID())
                 .add("payment_method_type", "CARD")
                 .add("card_number", card.getCardNumber())
-                .add("name_on_card", card.getCardHolderName())
                 .add("card_exp_month", card.getMonth())
                 .add("card_exp_year", card.getYear())
                 .add("card_security_code", card.getCvv())
                 .add("save_to_locker", card.canSaveCard() ? "true" : "false")
                 .add("redirect_after_payment", "true")
                 .add("format", "json");
+
+        if (card.getCardHolderName() != null) {
+            body.add("name_on_card", card.getCardHolderName());
+        }
+
         if (order.getEmiOptions() != null
                 && order.getEmiOptions().getSelectedBankCode() != null) {
             Logger.logDebug(this.getClass().getSimpleName(), "emi selected....");
