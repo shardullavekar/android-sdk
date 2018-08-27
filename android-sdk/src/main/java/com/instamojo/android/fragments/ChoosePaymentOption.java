@@ -39,8 +39,8 @@ public class ChoosePaymentOption extends BaseFragment implements View.OnClickLis
     @Override
     public void inflateXML(View view) {
         Order order = parentActivity.getOrder();
-        View debitCardLayout = view.findViewById(R.id.debit_card_layout);
-        View creditCardLayout = view.findViewById(R.id.credit_card_layout);
+        //View debitCardLayout = view.findViewById(R.id.debit_card_layout);
+        //View creditCardLayout = view.findViewById(R.id.credit_card_layout);
         View netBankingLayout = view.findViewById(R.id.net_banking_layout);
         View emiLayout = view.findViewById(R.id.emi_layout);
         View walletLayout = view.findViewById(R.id.wallet_layout);
@@ -51,11 +51,11 @@ public class ChoosePaymentOption extends BaseFragment implements View.OnClickLis
             netBankingLayout.setVisibility(View.GONE);
         }
 
-        if (order.getCardOptions() == null) {
-            Logger.logDebug(this.getClass().getSimpleName(), "Hiding Debit and Credit Card Layout");
-            debitCardLayout.setVisibility(View.GONE);
-            creditCardLayout.setVisibility(View.GONE);
-        }
+//         if (order.getCardOptions() == null) {
+//             Logger.logDebug(this.getClass().getSimpleName(), "Hiding Debit and Credit Card Layout");
+//             debitCardLayout.setVisibility(View.GONE);
+//             creditCardLayout.setVisibility(View.GONE);
+//         }
 
         if (order.getEmiOptions() == null) {
             Logger.logDebug(this.getClass().getSimpleName(), "Hiding EMI Layout");
@@ -72,8 +72,8 @@ public class ChoosePaymentOption extends BaseFragment implements View.OnClickLis
             upiLayout.setVisibility(View.GONE);
         }
 
-        debitCardLayout.setOnClickListener(this);
-        creditCardLayout.setOnClickListener(this);
+        //debitCardLayout.setOnClickListener(this);
+        //creditCardLayout.setOnClickListener(this);
         netBankingLayout.setOnClickListener(this);
         emiLayout.setOnClickListener(this);
         walletLayout.setOnClickListener(this);
@@ -106,11 +106,11 @@ public class ChoosePaymentOption extends BaseFragment implements View.OnClickLis
                 parentActivity.getOrder().getEmiOptions().setSelectedTenure(-1);
             }
 
-            if (id == R.id.debit_card_layout) {
-                parentActivity.loadFragment(CardForm.getCardForm(CardForm.Mode.DebitCard), true);
-            } else {
-                parentActivity.loadFragment(CardForm.getCardForm(CardForm.Mode.CreditCard), true);
-            }
+//             if (id == R.id.debit_card_layout) {
+//                 parentActivity.loadFragment(CardForm.getCardForm(CardForm.Mode.DebitCard), true);
+//             } else {
+//                 parentActivity.loadFragment(CardForm.getCardForm(CardForm.Mode.CreditCard), true);
+//             }
         }
     }
 
